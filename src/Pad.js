@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useTools from "./ToolsContext";
-import PathElement from "./PathElement";
-import PolylineElement from "./PolylineElement";
+import Element from "./Element";
 import useBoard from "./BoardContext";
 
 export default function Pad() {
@@ -45,9 +44,6 @@ export default function Pad() {
     }
   };
 
-  const hasTempPath = points.length && pressed && tool === "path";
-  const hasTempLine = points.length && drawing && tool === "line";
-
   return (
     <svg
       className="artboard"
@@ -56,30 +52,11 @@ export default function Pad() {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
     >
-      {hasTempPath && <PathElement />}
-      {hasTempLine && <PolylineElement />}
+      <Element vector={{ type: tool, points }} />
       <g>
-        {Object.values(vectors).map((v) => {
-          switch (v.type) {
-            case "line":
-              return (
-                <PolylineElement
-                  key={v.createdAt}
-                  points={v.points}
-                  color={v.color}
-                />
-              );
-            case "path":
-            default:
-              return (
-                <PathElement
-                  key={v.createdAt}
-                  points={v.points}
-                  color={v.color}
-                />
-              );
-          }
-        })}
+        {Object.values(vectors).map((v) => (
+          <Element key={v.createdAt} vector={v} />
+        ))}
       </g>
     </svg>
   );
