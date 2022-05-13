@@ -1,13 +1,8 @@
-import { useState } from "react";
-import useBoard from "./BoardContext";
 import useTools from "./ToolsContext";
 
-export default function PolylineElement(props) {
-  const { drawing, color, tool } = useTools();
-  const { points } = useBoard();
-  const renderedPoints = props.points || points;
-  const renderedColor = props.color || color;
-  const pointsString = renderedPoints.map((p) => `${p.x},${p.y}`).join(" ");
+export default function PolylineElement({ points, color, drawing }) {
+  const { tool } = useTools();
+  const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
 
   return (
     <g className={tool === "select" ? "selectable" : ""}>
@@ -36,7 +31,7 @@ export default function PolylineElement(props) {
       <polyline
         fill="none"
         className="vector"
-        stroke={renderedColor}
+        stroke={color}
         strokeWidth="1"
         points={`${pointsString}`}
       />
