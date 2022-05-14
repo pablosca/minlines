@@ -60,3 +60,7 @@ button.selected {
 .grabbable:hover {
   stroke: blue;
 }
+
+.selection-wrapper {
+  pointer-events: none;
+}

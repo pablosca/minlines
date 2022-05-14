@@ -37,7 +37,8 @@ export const colors = [
 const initialState = {
   tool: null,
   color: "#000",
-  drawing: false
+  drawing: false,
+  selectedVector: null
 };
 
 const ToolsContext = createContext(initialState);
@@ -46,6 +47,7 @@ export const ToolsProvider = ({ children }) => {
   const [tool, setTool] = useState(null);
   const [color, setColor] = useState(initialState.color);
   const [drawing, setDrawing] = useState(false);
+  const [selectedVector, setSelectedVector] = useState(null);
 
   const selectTool = (tool) => {
     setDrawing(false);
@@ -54,7 +56,16 @@ export const ToolsProvider = ({ children }) => {
 
   return (
     <ToolsContext.Provider
-      value={{ tool, selectTool, drawing, setDrawing, color, setColor }}
+      value={{
+        tool,
+        selectTool,
+        drawing,
+        setDrawing,
+        color,
+        setColor,
+        selectedVector,
+        setSelectedVector
+      }}
     >
       {children}
     </ToolsContext.Provider>
