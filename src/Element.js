@@ -79,8 +79,6 @@ export default function Element({ vector }) {
     if (isSelected) {
       updateBoxRect();
     } else {
-      //isSelected.current = false;
-      console.log("box rect null");
       setBoxRect(null);
     }
   }, [isSelected, vector]);
