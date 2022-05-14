@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useTools from "./ToolsContext";
 import Element from "./Element";
 import PathElement from "./PathElement";
@@ -7,7 +7,8 @@ import useBoard from "./BoardContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, color } = useTools();
+  const { tool, drawing, setDrawing, color, selectedVector } = useTools();
+  const { removeVector } = useBoard();
   const {
     points,
     vectors,
@@ -45,6 +46,24 @@ export default function Pad() {
       setPressed(false);
     }
   };
+
+  const deleteVector = useCallback(
+    (e) => {
+      if (![8, 46].includes(e.keyCode)) return;
+      if (tool !== "select" && !selectedVector) return;
+
+      removeVector(selectedVector);
+    },
+    [tool, selectedVector, removeVector]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keyup", deleteVector);
+
+    return () => {
+      document.removeEventListener("keyup", deleteVector);
+    };
+  }, [deleteVector]);
 
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";

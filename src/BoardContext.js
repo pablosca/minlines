@@ -79,6 +79,13 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const removeVector = (id) => {
+    setVectors((vectors) => {
+      delete vectors[id];
+      return { ...vectors };
+    });
+  };
+
   return (
     <BoardContext.Provider
       value={{
@@ -90,7 +97,8 @@ export const BoardProvider = ({ children }) => {
         savePointsVector,
         clearPointByIndex,
         clearLastPoint,
-        updatePointsVector
+        updatePointsVector,
+        removeVector
       }}
     >
       {children}
