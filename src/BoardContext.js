@@ -59,6 +59,26 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const updatePointsVector = (id, { deltaX, deltaY }) => {
+    const vector = vectors[id];
+
+    const newPoints = vector.points.map((p) => {
+      return {
+        ...p,
+        x: p.x + deltaX,
+        y: p.y + deltaY
+      };
+    });
+
+    setVectors({
+      ...vectors,
+      [id]: {
+        ...vector,
+        points: newPoints
+      }
+    });
+  };
+
   return (
     <BoardContext.Provider
       value={{
@@ -69,7 +89,8 @@ export const BoardProvider = ({ children }) => {
         clearPoints,
         savePointsVector,
         clearPointByIndex,
-        clearLastPoint
+        clearLastPoint,
+        updatePointsVector
       }}
     >
       {children}

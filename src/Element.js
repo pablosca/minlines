@@ -2,31 +2,31 @@ import { useRef, useState } from "react";
 import useTools from "./ToolsContext";
 import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
+import useBoard from "./BoardContext";
 
 export default function Element({ vector }) {
-  const { drawing, color, tool } = useTools();
+  const { tool } = useTools();
+  const { updatePointsVector } = useBoard();
   const isDragging = useRef(null);
   const initialCoords = useRef(null);
-  const [draggingCoords, setDraggingCoords] = useState({});
+  const draggingCoords = useRef(null);
+  const [style, setStyle] = useState();
 
-  const onPointerMove = (e) => {
-    if (drawing || (!isDragging && !initialCoords.current)) return;
+  const updatePosition = (coords) => {
+    if (coords) {
+      setStyle({
+        transform: `translate(${coords.x}px, ${coords.y}px)`
+      });
+    } else {
+      setStyle(null);
+    }
 
-    setDraggingCoords({
-      x: e.clientX - initialCoords.current.x,
-      y: e.clientY - initialCoords.current.y
-    });
-  };
-
-  const onPointerUp = (e) => {
-    isDragging.current = false;
-    document.removeEventListener("pointermove", onPointerMove);
-    document.removeEventListener("pointerup", onPointerUp);
+    draggingCoords.current = coords;
   };
 
   const onPointerDown = (e) => {
     if (tool !== "select") return;
-    console.log("POINTER DOWN", e.currentTarget);
+
     e.stopPropagation();
     isDragging.current = true;
     initialCoords.current = { x: e.clientX, y: e.clientY };
@@ -35,11 +35,30 @@ export default function Element({ vector }) {
     document.addEventListener("pointerup", onPointerUp);
   };
 
-  const style = {};
+  const onPointerMove = (e) => {
+    if (!isDragging && !initialCoords.current) return;
 
-  if (draggingCoords) {
-    style.transform = `translate(${draggingCoords.x}px, ${draggingCoords.y}px)`;
-  }
+    updatePosition({
+      x: e.clientX - initialCoords.current.x,
+      y: e.clientY - initialCoords.current.y
+    });
+  };
+
+  const onPointerUp = (e) => {
+    isDragging.current = false;
+
+    if (!draggingCoords.current) return;
+
+    updatePointsVector(vector.createdAt, {
+      deltaX: draggingCoords.current.x,
+      deltaY: draggingCoords.current.y
+    });
+
+    updatePosition(null);
+
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", onPointerUp);
+  };
 
   return (
     <g style={style} onPointerDown={onPointerDown}>

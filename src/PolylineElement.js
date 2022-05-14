@@ -5,7 +5,7 @@ export default function PolylineElement({ points, color, drawing }) {
   const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
 
   return (
-    <g className={tool === "select" ? "selectable" : ""}>
+    <g>
       {drawing &&
         points.map((p) => (
           <circle
