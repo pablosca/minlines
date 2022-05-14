@@ -47,6 +47,16 @@ button.selected {
   width: 20px;
 }
 
+.selectable .vector {
+  pointer-events: none;
+}
+
+.grabbable {
+  fill: none;
+  stroke: transparent;
+  stroke-opacity: 0.2;
+}
+
 .grabbable:hover {
   stroke: blue;
 }

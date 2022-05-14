@@ -20,10 +20,7 @@ export default function PolylineElement({ points, color, drawing }) {
         ))}
       {tool === "select" && (
         <polyline
-          fill="none"
           className="grabbable"
-          stroke="transparent"
-          strokeOpacity=".1"
           strokeWidth="6"
           points={`${pointsString}`}
         />

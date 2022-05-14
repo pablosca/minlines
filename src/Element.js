@@ -61,7 +61,11 @@ export default function Element({ vector }) {
   };
 
   return (
-    <g style={style} onPointerDown={onPointerDown}>
+    <g
+      style={style}
+      className={tool === "select" ? "selectable" : ""}
+      onPointerDown={onPointerDown}
+    >
       {vector.type === "line" && (
         <PolylineElement
           key={vector.createdAt}
