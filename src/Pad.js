@@ -3,11 +3,21 @@ import useTools from "./ToolsContext";
 import Element from "./Element";
 import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
+import SelectionWrapper from "./SelectionWrapper";
 import useBoard from "./BoardContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, color, selectedVector } = useTools();
+  const {
+    tool,
+    drawing,
+    setDrawing,
+    color,
+    selectedVector,
+    selectionBox,
+    isDragging,
+    setSelectedVector
+  } = useTools();
   const { removeVector } = useBoard();
   const {
     points,
@@ -65,6 +75,13 @@ export default function Pad() {
     };
   }, [deleteVector]);
 
+  // TODO: put this in a better place
+  useEffect(() => {
+    if (tool !== "select") {
+      setSelectedVector(null);
+    }
+  }, [tool, setSelectedVector]);
+
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";
 
@@ -80,6 +97,9 @@ export default function Pad() {
       {hasTempLine && (
         <PolylineElement drawing={drawing} points={points} color={color} />
       )}
+
+      {selectedVector && !isDragging && selectionBox && <SelectionWrapper />}
+
       <g>
         {Object.values(vectors).map((v) => (
           <Element key={v.createdAt} vector={v} />
