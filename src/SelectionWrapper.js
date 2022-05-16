@@ -1,30 +1,21 @@
-import { useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import useSelection from "./SelectionContext";
 
 export default function SelectionWrapper() {
-  const {
-    isResizing,
-    setIsResizing,
-    setResizingCoords,
-    selectionRect,
-    resizingStyle
-  } = useSelection();
-  const { x, y, width, height } = selectionRect;
+  const { setResizingCoords, selectionRect, resizingCoords } = useSelection();
+  const isResizing = useRef(null);
+  const [rect, setRect] = useState(selectionRect);
 
-  const onPointerDown = useCallback(
-    (e) => {
-      e.stopPropagation();
-      setIsResizing(true);
+  const startResize = (e) => {
+    e.stopPropagation();
+    isResizing.current = true;
 
-      document.addEventListener("pointermove", onPointerMove);
-      document.addEventListener("pointerup", onPointerUp);
-    },
-    [setIsResizing]
-  );
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", onPointerUp);
+  };
 
   const onPointerMove = (e) => {
-    if (!isResizing) return;
-
+    if (!isResizing.current) return;
     setResizingCoords({
       x: x - e.clientX,
       y: y - e.clientY
@@ -32,21 +23,32 @@ export default function SelectionWrapper() {
   };
 
   const onPointerUp = (e) => {
-    setIsResizing(false);
+    isResizing.current = false;
 
     document.removeEventListener("pointermove", onPointerMove);
     document.removeEventListener("pointerup", onPointerUp);
   };
 
+  useEffect(() => {
+    console.log(isResizing && selectionRect && resizingCoords);
+    if (isResizing.current && selectionRect && resizingCoords) {
+      setRect({
+        x: selectionRect.x - resizingCoords.x,
+        y: selectionRect.y - resizingCoords.y,
+        width: selectionRect.width + resizingCoords.x,
+        height: selectionRect.height + resizingCoords.y
+      });
+    } else {
+      setRect(selectionRect);
+    }
+  }, [isResizing, selectionRect, resizingCoords]);
+
+  const { x, y, height, width } = rect;
+
   return (
-    <g style={resizingStyle}>
-      {isResizing && (
-        <text x={x + 50} y={y + 50}>
-          is resizing
-        </text>
-      )}
+    <g>
       <circle
-        onPointerDown={onPointerDown}
+        onPointerDown={startResize}
         className="point-handler left-top"
         cx={x}
         cy={y}

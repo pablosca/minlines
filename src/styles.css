@@ -51,6 +51,11 @@ button.selected {
   pointer-events: none;
 }
 
+.selectable {
+  border: 3px solid red;
+  fill: red;
+}
+
 .grabbable {
   fill: none;
   stroke: transparent;

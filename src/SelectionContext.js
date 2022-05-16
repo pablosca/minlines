@@ -10,7 +10,7 @@ const initialState = {
 const SelectionContext = createContext(initialState);
 
 export const SelectionProvider = ({ children }) => {
-  const [isResizing, setIsResizing] = useState();
+  const [isResizing, setIsResizing] = useState(false);
   const [resizingCoords, setResizingCoords] = useState(null);
   const [resizingStyle, setResizingStyle] = useState(null);
   const [selectionBox, setSelectionBox] = useState(null);
@@ -33,11 +33,11 @@ export const SelectionProvider = ({ children }) => {
 
   useEffect(() => {
     if (resizingCoords && selectionRect) {
-      const scaleX = selectionRect.x / resizingCoords.x;
-      const scaleY = selectionRect.y / resizingCoords.y;
-      console.log("scale x", scaleX);
+      const scaleX = selectionRect.x / (selectionRect.x - resizingCoords.x);
+      const scaleY = selectionRect.y / (selectionRect.y - resizingCoords.y);
+
       setResizingStyle({
-        transform: `scale(${scaleX}, ${scaleY})`,
+        transform: `translate(${resizingCoords.x}px, ${resizingCoords.y}px) scale(${scaleX}, ${scaleY})`,
         transformOrigin: "right bottom"
       });
     } else {

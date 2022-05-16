@@ -13,7 +13,7 @@ export default function Element({ vector }) {
     isDragging,
     setIsDragging
   } = useTools();
-  const { setSelectionBox, updateSelection } = useSelection();
+  const { updateSelection, resizingStyle } = useSelection();
   const { updatePointsVector } = useBoard();
   const initialCoords = useRef(null);
   const draggingCoords = useRef(null);
@@ -82,7 +82,6 @@ export default function Element({ vector }) {
   };
 
   useEffect(() => {
-    console.log("AA");
     if (isSelected) {
       updateBoxRect();
     } else {
@@ -92,7 +91,7 @@ export default function Element({ vector }) {
 
   return (
     <g
-      style={style}
+      style={style || resizingStyle}
       className={tool === "select" ? "selectable" : ""}
       onPointerDown={onPointerDown}
       ref={elementRef}
