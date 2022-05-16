@@ -74,6 +74,16 @@ button.selected {
   r: 4;
 }
 
+.left-top,
+.right-bottom {
+  cursor: nwse-resize;
+}
+
+.right-top,
+.left-bottom {
+  cursor: nesw-resize;
+}
+
 .selection-wrapper {
   pointer-events: none;
 }
