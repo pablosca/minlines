@@ -39,7 +39,6 @@ const initialState = {
   color: "#000",
   drawing: false,
   selectedVector: null,
-  selectionBox: null,
   isDragging: false
 };
 
@@ -50,7 +49,6 @@ export const ToolsProvider = ({ children }) => {
   const [color, setColor] = useState(initialState.color);
   const [drawing, setDrawing] = useState(false);
   const [selectedVector, setSelectedVector] = useState(null);
-  const [selectionBox, setSelectionBox] = useState(null);
   const [isDragging, setIsDragging] = useState(null);
 
   const selectTool = (tool) => {
@@ -69,8 +67,6 @@ export const ToolsProvider = ({ children }) => {
         setColor,
         selectedVector,
         setSelectedVector,
-        selectionBox,
-        setSelectionBox,
         isDragging,
         setIsDragging
       }}

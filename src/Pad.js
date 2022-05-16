@@ -5,6 +5,7 @@ import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
 import SelectionWrapper from "./SelectionWrapper";
 import useBoard from "./BoardContext";
+import useSelection from "./SelectionContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
@@ -14,7 +15,6 @@ export default function Pad() {
     setDrawing,
     color,
     selectedVector,
-    selectionBox,
     isDragging,
     setSelectedVector
   } = useTools();
@@ -27,6 +27,7 @@ export default function Pad() {
     clearPoints,
     savePointsVector
   } = useBoard();
+  const { selectionBox } = useSelection();
 
   const onPointerDown = (e) => {
     if (tool === "select") return;

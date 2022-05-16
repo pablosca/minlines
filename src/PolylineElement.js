@@ -9,12 +9,9 @@ export default function PolylineElement({ points, color, drawing }) {
       {drawing &&
         points.map((p) => (
           <circle
-            fill="none"
-            strokeWidth=".75"
-            stroke="blue"
+            className="point-handler"
             cx={p.x}
             cy={p.y}
-            r="4"
             key={p.ts}
           ></circle>
         ))}

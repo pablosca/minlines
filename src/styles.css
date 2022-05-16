@@ -61,6 +61,14 @@ button.selected {
   stroke: blue;
 }
 
+.point-handler {
+  fill: blue;
+  fill-opacity: 0.25;
+  stroke-width: 0.75;
+  stroke: blue;
+  r: 4;
+}
+
 .selection-wrapper {
   pointer-events: none;
 }

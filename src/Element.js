@@ -3,16 +3,17 @@ import useTools from "./ToolsContext";
 import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
 import useBoard from "./BoardContext";
+import useSelection from "./SelectionContext";
 
 export default function Element({ vector }) {
   const {
     tool,
     selectedVector,
     setSelectedVector,
-    setSelectionBox,
     isDragging,
     setIsDragging
   } = useTools();
+  const { setSelectionBox, updateSelection } = useSelection();
   const { updatePointsVector } = useBoard();
   const initialCoords = useRef(null);
   const draggingCoords = useRef(null);
@@ -77,14 +78,15 @@ export default function Element({ vector }) {
   const updateBoxRect = () => {
     // TODO: do this better and check unnecesary calls
     // TODO: fix slight flashing of wrong position
-    setSelectionBox(elementRef.current.querySelector(".vector").getBBox());
+    updateSelection(elementRef.current.querySelector(".vector").getBBox());
   };
 
   useEffect(() => {
+    console.log("AA");
     if (isSelected) {
       updateBoxRect();
     } else {
-      setSelectionBox(null);
+      updateSelection(null);
     }
   }, [isSelected, vector]);
 
