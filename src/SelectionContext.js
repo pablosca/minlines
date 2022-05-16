@@ -33,12 +33,20 @@ export const SelectionProvider = ({ children }) => {
 
   useEffect(() => {
     if (resizingCoords && selectionRect) {
-      const scaleX = selectionRect.x / (selectionRect.x - resizingCoords.x);
-      const scaleY = selectionRect.y / (selectionRect.y - resizingCoords.y);
+      const scaleX =
+        (selectionBox.width + resizingCoords.x) / selectionBox.width;
+      const scaleY =
+        (selectionBox.height + resizingCoords.y) / selectionBox.height;
+
+      console.log("SCALE X", scaleX);
+      console.log("sele x", selectionRect.x);
+      console.log("resi x", resizingCoords.x);
+      console.log("width", selectionBox.width);
 
       setResizingStyle({
-        transform: `translate(${resizingCoords.x}px, ${resizingCoords.y}px) scale(${scaleX}, ${scaleY})`,
-        transformOrigin: "right bottom"
+        transform: `scale(${scaleX}, ${scaleY})`,
+        transformOrigin: "right bottom",
+        transformBox: "fill-box"
       });
     } else {
       setResizingStyle(null);
