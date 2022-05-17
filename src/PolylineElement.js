@@ -20,6 +20,7 @@ export default function PolylineElement({ points, color, drawing }) {
           className="grabbable"
           strokeWidth="6"
           points={`${pointsString}`}
+          vectorEffect="non-scaling-stroke"
         />
       )}
       <polyline
@@ -28,6 +29,7 @@ export default function PolylineElement({ points, color, drawing }) {
         stroke={color}
         strokeWidth="1"
         points={`${pointsString}`}
+        vectorEffect="non-scaling-stroke"
       />
     </g>
   );
