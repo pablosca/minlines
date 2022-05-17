@@ -19,6 +19,7 @@ export default function Element({ vector }) {
   const draggingCoords = useRef(null);
   const [style, setStyle] = useState();
   const elementRef = useRef(null);
+  const isSelected = selectedVector === vector.createdAt;
 
   const updatePosition = (coords) => {
     if (coords) {
@@ -82,16 +83,16 @@ export default function Element({ vector }) {
   };
 
   useEffect(() => {
-    if (selectedVector === vector.createdAt) {
+    if (isSelected) {
       updateBoxRect();
     } else {
       updateSelection(null);
     }
-  }, [selectedVector, vector]);
+  }, [isSelected, vector]);
 
   return (
     <g
-      style={style || resizingStyle}
+      style={style || (isSelected ? resizingStyle : null)}
       className={tool === "select" ? "selectable" : ""}
       onPointerDown={onPointerDown}
       ref={elementRef}
