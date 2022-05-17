@@ -4,7 +4,8 @@ const initialState = {
   isResizing: false,
   resizingCoords: null,
   resizingStyle: null,
-  selectionBox: null
+  selectionBox: null,
+  selectedVector: null
 };
 
 const SelectionContext = createContext(initialState);
@@ -15,6 +16,7 @@ export const SelectionProvider = ({ children }) => {
   const [resizingStyle, setResizingStyle] = useState(null);
   const [selectionBox, setSelectionBox] = useState(null);
   const [selectionRect, setSelectionRect] = useState(null);
+  const [selectedVector, setSelectedVector] = useState(null);
 
   const updateSelection = (box) => {
     setSelectionBox(box);
@@ -31,17 +33,17 @@ export const SelectionProvider = ({ children }) => {
     }
   };
 
+  const clearSelection = () => {
+    updateSelection(null);
+    setSelectedVector(null);
+  };
+
   useEffect(() => {
-    if (resizingCoords && selectionRect) {
+    if (resizingCoords && selectionBox) {
       const scaleX =
         (selectionBox.width + resizingCoords.x) / selectionBox.width;
       const scaleY =
         (selectionBox.height + resizingCoords.y) / selectionBox.height;
-
-      console.log("SCALE X", scaleX);
-      console.log("sele x", selectionRect.x);
-      console.log("resi x", resizingCoords.x);
-      console.log("width", selectionBox.width);
 
       setResizingStyle({
         transform: `scale(${scaleX}, ${scaleY})`,
@@ -51,7 +53,7 @@ export const SelectionProvider = ({ children }) => {
     } else {
       setResizingStyle(null);
     }
-  }, [resizingCoords, selectionRect]);
+  }, [resizingCoords, selectionBox]);
 
   return (
     <SelectionContext.Provider
@@ -65,7 +67,10 @@ export const SelectionProvider = ({ children }) => {
         selectionBox,
         setSelectionBox,
         selectionRect,
-        updateSelection
+        updateSelection,
+        selectedVector,
+        setSelectedVector,
+        clearSelection
       }}
     >
       {children}

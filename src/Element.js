@@ -6,20 +6,19 @@ import useBoard from "./BoardContext";
 import useSelection from "./SelectionContext";
 
 export default function Element({ vector }) {
+  const { tool, isDragging, setIsDragging } = useTools();
   const {
-    tool,
+    updateSelection,
+    resizingStyle,
     selectedVector,
     setSelectedVector,
-    isDragging,
-    setIsDragging
-  } = useTools();
-  const { updateSelection, resizingStyle } = useSelection();
+    clearSelection
+  } = useSelection();
   const { updatePointsVector } = useBoard();
   const initialCoords = useRef(null);
   const draggingCoords = useRef(null);
   const [style, setStyle] = useState();
   const elementRef = useRef(null);
-  const isSelected = selectedVector === vector.createdAt;
 
   const updatePosition = (coords) => {
     if (coords) {
@@ -34,8 +33,9 @@ export default function Element({ vector }) {
   };
 
   const onClick = useCallback(() => {
+    clearSelection();
     setSelectedVector(vector.createdAt);
-  }, [setSelectedVector, vector]);
+  }, [setSelectedVector, vector, clearSelection]);
 
   const onPointerDown = (e) => {
     if (tool !== "select") return;
@@ -82,12 +82,12 @@ export default function Element({ vector }) {
   };
 
   useEffect(() => {
-    if (isSelected) {
+    if (selectedVector === vector.createdAt) {
       updateBoxRect();
     } else {
       updateSelection(null);
     }
-  }, [isSelected, vector]);
+  }, [selectedVector, vector]);
 
   return (
     <g

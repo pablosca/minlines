@@ -9,15 +9,7 @@ import useSelection from "./SelectionContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
-  const {
-    tool,
-    drawing,
-    setDrawing,
-    color,
-    selectedVector,
-    isDragging,
-    setSelectedVector
-  } = useTools();
+  const { tool, drawing, setDrawing, color, isDragging } = useTools();
   const { removeVector } = useBoard();
   const {
     points,
@@ -27,7 +19,7 @@ export default function Pad() {
     clearPoints,
     savePointsVector
   } = useBoard();
-  const { selectionBox } = useSelection();
+  const { selectionRect, selectedVector, setSelectedVector } = useSelection();
 
   const onPointerDown = (e) => {
     if (tool === "select") return;
@@ -81,7 +73,8 @@ export default function Pad() {
     if (tool !== "select") {
       setSelectedVector(null);
     }
-  }, [tool, setSelectedVector]);
+    console.log("VECTORS", vectors);
+  }, [tool, setSelectedVector, vectors]);
 
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";
@@ -99,7 +92,7 @@ export default function Pad() {
         <PolylineElement drawing={drawing} points={points} color={color} />
       )}
 
-      {selectedVector && !isDragging && selectionBox && <SelectionWrapper />}
+      {selectedVector && !isDragging && selectionRect && <SelectionWrapper />}
 
       <g>
         {Object.values(vectors).map((v) => (

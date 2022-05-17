@@ -6,6 +6,8 @@ export default function SelectionWrapper() {
   const isResizing = useRef(null);
   const [rect, setRect] = useState(selectionRect);
 
+  const { x, y, height, width } = rect;
+
   const startResize = (e) => {
     e.stopPropagation();
     isResizing.current = true;
@@ -30,7 +32,6 @@ export default function SelectionWrapper() {
   };
 
   useEffect(() => {
-    console.log(isResizing && selectionRect && resizingCoords);
     if (isResizing.current && selectionRect && resizingCoords) {
       setRect({
         x: selectionRect.x - resizingCoords.x,
@@ -42,8 +43,6 @@ export default function SelectionWrapper() {
       setRect(selectionRect);
     }
   }, [isResizing, selectionRect, resizingCoords]);
-
-  const { x, y, height, width } = rect;
 
   return (
     <g>
