@@ -32,6 +32,7 @@ export default function Pad() {
   const onPointerMove = (e) => {
     if (tool === "select") {
       if (!isDragging && !initialCoords) return;
+
       drag({
         x: e.clientX - initialCoords.x,
         y: e.clientY - initialCoords.y
@@ -50,7 +51,7 @@ export default function Pad() {
   };
 
   const onPointerUp = (e) => {
-    if (tool === "select") {
+    if (tool === "select" && isDragging) {
       completeDrag();
     } else if (tool === "path" && pressed) {
       savePointsVector("path", color);

@@ -73,10 +73,14 @@ export const DragProvider = ({ children }) => {
     },
 
     completeDrag: () => {
-      updatePointsVectorDelta(state.vectorId, {
-        deltaX: state.draggingCoords.x,
-        deltaY: state.draggingCoords.y
-      });
+      const { vectorId, draggingCoords } = state;
+
+      if (vectorId && draggingCoords) {
+        updatePointsVectorDelta(vectorId, {
+          deltaX: draggingCoords.x,
+          deltaY: draggingCoords.y
+        });
+      }
 
       dispatch({
         type: "STOP_DRAG"
