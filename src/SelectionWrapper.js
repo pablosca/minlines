@@ -1,8 +1,16 @@
 import { useEffect, useState, useRef } from "react";
+import useBoard from "./BoardContext";
 import useSelection from "./SelectionContext";
 
 export default function SelectionWrapper() {
-  const { setResizingCoords, selectionRect, resizingCoords } = useSelection();
+  const {
+    setResizingCoords,
+    selectionRect,
+    resizingCoords,
+    selectedVector,
+    selectionBox
+  } = useSelection();
+  const { updatePointsVectorResize } = useBoard();
   const isResizing = useRef(null);
   const [rect, setRect] = useState(selectionRect);
 
@@ -25,6 +33,14 @@ export default function SelectionWrapper() {
   };
 
   const onPointerUp = (e) => {
+    if (selectedVector && selectionBox && resizingCoords) {
+      updatePointsVectorResize(selectedVector, {
+        scaleX: (selectionBox.width + resizingCoords.x) / selectionBox.width,
+        scaleY: (selectionBox.height + resizingCoords.y) / selectionBox.height
+      });
+      setResizingCoords(null);
+    }
+
     isResizing.current = false;
 
     document.removeEventListener("pointermove", onPointerMove);

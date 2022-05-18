@@ -59,7 +59,7 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const updatePointsVector = (id, { deltaX, deltaY }) => {
+  const updatePointsVectorDelta = (id, { deltaX, deltaY }) => {
     const vector = vectors[id];
 
     const newPoints = vector.points.map((p) => {
@@ -67,6 +67,27 @@ export const BoardProvider = ({ children }) => {
         ...p,
         x: p.x + deltaX,
         y: p.y + deltaY
+      };
+    });
+
+    setVectors({
+      ...vectors,
+      [id]: {
+        ...vector,
+        points: newPoints
+      }
+    });
+  };
+
+  const updatePointsVectorResize = (id, { scaleX, scaleY }) => {
+    const vector = vectors[id];
+    const max = vector.points[0];
+
+    const newPoints = vector.points.map((p) => {
+      return {
+        ...p,
+        x: p.x * ((p.x * scaleX) / 100),
+        y: p.y * ((p.y * scaleY) / 100)
       };
     });
 
@@ -97,8 +118,9 @@ export const BoardProvider = ({ children }) => {
         savePointsVector,
         clearPointByIndex,
         clearLastPoint,
-        updatePointsVector,
-        removeVector
+        updatePointsVectorDelta,
+        removeVector,
+        updatePointsVectorResize
       }}
     >
       {children}
