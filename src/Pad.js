@@ -9,14 +9,7 @@ import useSelection from "./SelectionContext";
 import useDrag from "./DragContext";
 
 export default function Pad() {
-  const {
-    drag,
-    stopDrag,
-    isDragging,
-    initialCoords,
-    draggingCoords,
-    vectorId
-  } = useDrag();
+  const { drag, completeDrag, isDragging, initialCoords } = useDrag();
   const [pressed, setPressed] = useState(false);
   const { tool, drawing, setDrawing, color } = useTools();
   const {
@@ -26,8 +19,7 @@ export default function Pad() {
     replaceLastPoint,
     clearPoints,
     savePointsVector,
-    removeVector,
-    updatePointsVectorDelta
+    removeVector
   } = useBoard();
   const { selectionRect, selectedVector, setSelectedVector } = useSelection();
 
@@ -59,13 +51,7 @@ export default function Pad() {
 
   const onPointerUp = (e) => {
     if (tool === "select") {
-      if (draggingCoords) {
-        updatePointsVectorDelta(vectorId, {
-          deltaX: draggingCoords.x,
-          deltaY: draggingCoords.y
-        });
-      }
-      stopDrag();
+      completeDrag();
     } else if (tool === "path" && pressed) {
       savePointsVector("path", color);
       clearPoints();

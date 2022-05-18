@@ -1,4 +1,5 @@
 import { useReducer, createContext, useContext } from "react";
+import useBoard from "./BoardContext";
 
 function dragReducer(state, action) {
   const { type, payload } = action;
@@ -45,6 +46,7 @@ const initialState = {
 const DragContext = createContext(initialState);
 
 export const DragProvider = ({ children }) => {
+  const { updatePointsVectorDelta } = useBoard();
   const [state, dispatch] = useReducer(dragReducer, initialState);
 
   const value = {
@@ -70,7 +72,12 @@ export const DragProvider = ({ children }) => {
       });
     },
 
-    stopDrag: () => {
+    completeDrag: () => {
+      updatePointsVectorDelta(state.vectorId, {
+        deltaX: state.draggingCoords.x,
+        deltaY: state.draggingCoords.y
+      });
+
       dispatch({
         type: "STOP_DRAG"
       });

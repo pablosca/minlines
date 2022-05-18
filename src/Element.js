@@ -6,7 +6,7 @@ import useSelection from "./SelectionContext";
 import useDrag from "./DragContext";
 
 export default function Element({ vector }) {
-  const { style: dragStyle, startDrag, vectorId } = useDrag();
+  const { style: dragStyle, startDrag, vectorId: draggingVectorId } = useDrag();
   const { tool } = useTools();
   const {
     updateSelection,
@@ -56,7 +56,7 @@ export default function Element({ vector }) {
   return (
     <g
       style={
-        (vectorId === vector.createdAt && dragStyle) ||
+        (draggingVectorId === vector.createdAt && dragStyle) ||
         (isSelected ? resizingStyle : null)
       }
       className={tool === "select" ? "selectable" : ""}
