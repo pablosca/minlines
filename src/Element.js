@@ -13,12 +13,13 @@ export default function Element({ vector }) {
   const isSelected = selectedVector === vector.createdAt;
 
   const onClick = useCallback(() => {
-    console.log("SELECT");
+    if (tool !== "select") return;
+
     select({
       box: elementRef.current.querySelector(".vector").getBBox(),
       selectedVector: vector.createdAt
     });
-  }, [vector, select]);
+  }, [tool, vector, select]);
 
   const onPointerDown = useCallback(
     (e) => {

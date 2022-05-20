@@ -21,7 +21,7 @@ export default function Pad() {
     savePointsVector,
     removeVector
   } = useBoard();
-  const { selectionRect, selectedVector } = useSelection();
+  const { selectionRect, selectedVector, deselect } = useSelection();
 
   const onPointerDown = (e, vector) => {
     tool === "path" && setPressed(true);
@@ -79,9 +79,9 @@ export default function Pad() {
   }, [deleteVector]);
 
   // TODO: put this in a better place
-  /*useEffect(() => {
+  useEffect(() => {
     if (tool !== "select") deselect();
-  }, [tool, deselect, vectors]);*/
+  }, [tool]);
 
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";

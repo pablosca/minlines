@@ -20,8 +20,9 @@ function selectReducer(state, action) {
     case "DESELECT":
       return {
         ...state,
-        selectedVectorId: null,
-        selectionBox: null
+        selectedVector: null,
+        selectionBox: null,
+        selectionRect: null
       };
     default:
       return state;
@@ -96,14 +97,7 @@ export const SelectionProvider = ({ children }) => {
     },
 
     deselect: () => {
-      dispatch({
-        type: "DESELECT",
-        payload: {
-          selectedVector: null,
-          selectionBox: null,
-          selectionRect: null
-        }
-      });
+      dispatch({ type: "DESELECT" });
     }
   };
 
