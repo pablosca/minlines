@@ -83,8 +83,6 @@ export default function Pad() {
     if (tool !== "select") deselect();
   }, [tool, deselect, vectors]);*/
 
-  console.log("SELECTION RECT", selectionRect);
-
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";
 

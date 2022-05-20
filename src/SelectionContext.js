@@ -48,26 +48,6 @@ export const SelectionProvider = ({ children }) => {
   const [resizingCoords, setResizingCoords] = useState(null);
   const [resizingStyle, setResizingStyle] = useState(null);
 
-  /*const updateSelection = (box) => {
-    setSelectionBox(box);
-
-    if (box) {
-      setSelectionRect({
-        x: box.x - 10,
-        y: box.y - 10,
-        width: box.width + 20,
-        height: box.height + 20
-      });
-    } else {
-      setSelectionBox(null);
-    }
-  };
-
-  const clearSelection = () => {
-    updateSelection(null);
-    setSelectedVector(null);
-  };*/
-
   useEffect(() => {
     const { selectionBox } = state;
     if (resizingCoords && selectionBox) {
