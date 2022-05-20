@@ -8,20 +8,17 @@ import useDrag from "./DragContext";
 export default function Element({ vector }) {
   const { style: dragStyle, startDrag, vectorId: draggingVectorId } = useDrag();
   const { tool } = useTools();
-  const {
-    updateSelection,
-    resizingStyle,
-    selectedVector,
-    setSelectedVector,
-    clearSelection
-  } = useSelection();
+  const { resizingStyle, selectedVector, select } = useSelection();
   const elementRef = useRef(null);
   const isSelected = selectedVector === vector.createdAt;
 
   const onClick = useCallback(() => {
-    clearSelection();
-    setSelectedVector(vector.createdAt);
-  }, [setSelectedVector, vector, clearSelection]);
+    console.log("SELECT");
+    select({
+      box: elementRef.current.querySelector(".vector").getBBox(),
+      selectedVector: vector.createdAt
+    });
+  }, [vector, select]);
 
   const onPointerDown = useCallback(
     (e) => {
@@ -40,7 +37,7 @@ export default function Element({ vector }) {
     [tool, vector]
   );
 
-  const updateBoxRect = () => {
+  /*const updateBoxRect = () => {
     // TODO: do this better and check unnecesary calls
     updateSelection(elementRef.current.querySelector(".vector").getBBox());
   };
@@ -51,7 +48,7 @@ export default function Element({ vector }) {
     } else {
       updateSelection(null);
     }
-  }, [isSelected, vector, resizingStyle]);
+  }, [isSelected, vector, resizingStyle]);*/
 
   return (
     <g

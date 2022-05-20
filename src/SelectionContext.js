@@ -1,24 +1,54 @@
-import { useState, createContext, useContext, useEffect } from "react";
+import {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  useReducer
+} from "react";
+
+function selectReducer(state, action) {
+  const { type, payload } = action;
+
+  switch (type) {
+    case "SELECT":
+      return {
+        ...state,
+        selectedVector: payload.selectedVector,
+        selectionBox: payload.selectionBox,
+        selectionRect: payload.selectionRect
+      };
+    case "DESELECT":
+      return {
+        ...state,
+        selectedVectorId: null,
+        selectionBox: null
+      };
+    default:
+      return state;
+  }
+}
 
 const initialState = {
   isResizing: false,
   resizingCoords: null,
-  resizingStyle: null,
+  resizingStyle: null
+};
+
+const initialSelectState = {
   selectionBox: null,
+  selectionRect: null,
   selectedVector: null
 };
 
 const SelectionContext = createContext(initialState);
 
 export const SelectionProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(selectReducer, initialSelectState);
   const [isResizing, setIsResizing] = useState(false);
   const [resizingCoords, setResizingCoords] = useState(null);
   const [resizingStyle, setResizingStyle] = useState(null);
-  const [selectionBox, setSelectionBox] = useState(null);
-  const [selectionRect, setSelectionRect] = useState(null);
-  const [selectedVector, setSelectedVector] = useState(null);
 
-  const updateSelection = (box) => {
+  /*const updateSelection = (box) => {
     setSelectionBox(box);
 
     if (box) {
@@ -36,9 +66,10 @@ export const SelectionProvider = ({ children }) => {
   const clearSelection = () => {
     updateSelection(null);
     setSelectedVector(null);
-  };
+  };*/
 
   useEffect(() => {
+    const { selectionBox } = state;
     if (resizingCoords && selectionBox) {
       const scaleX =
         (selectionBox.width + resizingCoords.x) / selectionBox.width;
@@ -53,26 +84,51 @@ export const SelectionProvider = ({ children }) => {
     } else {
       setResizingStyle(null);
     }
-  }, [resizingCoords, selectionBox]);
+  }, [resizingCoords, state]);
+
+  const value = {
+    isResizing,
+    setIsResizing,
+    resizingCoords,
+    setResizingCoords,
+    resizingStyle,
+    setResizingStyle,
+    selectionRect: state.selectionRect,
+
+    select: (payload) => {
+      const { selectedVector, box } = payload;
+      const { x, y, width, height } = box;
+      const selectionRect = {
+        x: x - 10,
+        y: y - 10,
+        width: width + 20,
+        height: height + 20
+      };
+
+      dispatch({
+        type: "SELECT",
+        payload: {
+          selectedVector: selectedVector,
+          selectionBox: { x, y, width, height },
+          selectionRect: selectionRect
+        }
+      });
+    },
+
+    deselect: () => {
+      dispatch({
+        type: "DESELECT",
+        payload: {
+          selectedVector: null,
+          selectionBox: null,
+          selectionRect: null
+        }
+      });
+    }
+  };
 
   return (
-    <SelectionContext.Provider
-      value={{
-        isResizing,
-        setIsResizing,
-        resizingCoords,
-        setResizingCoords,
-        resizingStyle,
-        setResizingStyle,
-        selectionBox,
-        setSelectionBox,
-        selectionRect,
-        updateSelection,
-        selectedVector,
-        setSelectedVector,
-        clearSelection
-      }}
-    >
+    <SelectionContext.Provider value={value}>
       {children}
     </SelectionContext.Provider>
   );
