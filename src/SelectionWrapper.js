@@ -16,7 +16,7 @@ export default function SelectionWrapper() {
 
   return (
     <g>
-      <circle className="point-handler left-top" cx={x} cy={y}></circle>
+      {/*<circle className="point-handler left-top" cx={x} cy={y}></circle>
       <circle
         className="point-handler right-top"
         cx={x + width}
@@ -26,7 +26,7 @@ export default function SelectionWrapper() {
         className="point-handler left-bottom"
         cx={x}
         cy={y + height}
-      ></circle>
+  ></circle>*/}
       <circle
         className="point-handler right-bottom"
         cx={x + width}
