@@ -1,10 +1,6 @@
-import {
-  useState,
-  createContext,
-  useContext,
-  useEffect,
-  useReducer
-} from "react";
+import { createContext, useContext, useReducer } from "react";
+
+import useBoard from "./BoardContext";
 
 function selectReducer(state, action) {
   const { type, payload } = action;
@@ -24,57 +20,69 @@ function selectReducer(state, action) {
         selectionBox: null,
         selectionRect: null
       };
+    case "START_RESIZE":
+      return {
+        ...state,
+        isResizing: true,
+        initialResizeRect: { ...state.selectionRect }
+      };
+    case "RESIZE":
+      const { initialResizeRect } = state;
+      const { x, y, width, height } = initialResizeRect;
+      const { resizingCoords } = payload;
+      const newSelectionRect = {
+        x: resizingCoords.x,
+        y: resizingCoords.y,
+        width: width + x - resizingCoords.x,
+        height: height + y - resizingCoords.y
+      };
+      const scaleX = newSelectionRect.width / width;
+      const scaleY = newSelectionRect.height / height;
+
+      return {
+        ...state,
+        resizingCoords,
+        selectionRect: newSelectionRect,
+        resizeStyle: {
+          transform: `scale(${scaleX}, ${scaleY})`,
+          transformOrigin: "right bottom",
+          transformBox: "fill-box"
+        }
+      };
+    case "STOP_RESIZE":
+      return {
+        ...state,
+        resizingCoords: null,
+        isResizing: false,
+        resizeStyle: null,
+        initialResizeCoords: null
+      };
     default:
       return state;
   }
 }
 
-const initialState = {
-  isResizing: false,
-  resizingCoords: null,
-  resizingStyle: null
-};
-
 const initialSelectState = {
   selectionBox: null,
   selectionRect: null,
-  selectedVector: null
+  selectedVector: null,
+  isResizing: false,
+  resizingCoords: null,
+  resizeStyle: null
 };
 
-const SelectionContext = createContext(initialState);
+const SelectionContext = createContext(initialSelectState);
 
 export const SelectionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(selectReducer, initialSelectState);
-  const [isResizing, setIsResizing] = useState(false);
-  const [resizingCoords, setResizingCoords] = useState(null);
-  const [resizingStyle, setResizingStyle] = useState(null);
-
-  useEffect(() => {
-    const { selectionBox } = state;
-    if (resizingCoords && selectionBox) {
-      const scaleX =
-        (selectionBox.width + resizingCoords.x) / selectionBox.width;
-      const scaleY =
-        (selectionBox.height + resizingCoords.y) / selectionBox.height;
-
-      setResizingStyle({
-        transform: `scale(${scaleX}, ${scaleY})`,
-        transformOrigin: "right bottom",
-        transformBox: "fill-box"
-      });
-    } else {
-      setResizingStyle(null);
-    }
-  }, [resizingCoords, state]);
+  const { updatePointsVectorResize } = useBoard();
 
   const value = {
-    isResizing,
-    setIsResizing,
-    resizingCoords,
-    setResizingCoords,
-    resizingStyle,
-    setResizingStyle,
+    isResizing: state.isResizing,
+    resizingCoords: state.resizingCoords,
+    resizeStyle: state.resizeStyle,
     selectionRect: state.selectionRect,
+    selectedVector: state.selectedVector,
 
     select: (payload) => {
       const { selectedVector, box } = payload;
@@ -98,6 +106,30 @@ export const SelectionProvider = ({ children }) => {
 
     deselect: () => {
       dispatch({ type: "DESELECT" });
+    },
+
+    startResize: () => {
+      dispatch({ type: "START_RESIZE" });
+    },
+
+    resize: (resizingCoords) => {
+      dispatch({
+        type: "RESIZE",
+        payload: { resizingCoords }
+      });
+    },
+
+    completeResize: () => {
+      const { selectedVector, selectionBox, resizingCoords } = state;
+
+      if (selectedVector && selectionBox && resizingCoords) {
+        updatePointsVectorResize(selectedVector, {
+          scaleX: (selectionBox.width + resizingCoords.x) / selectionBox.width,
+          scaleY: (selectionBox.height + resizingCoords.y) / selectionBox.height
+        });
+      }
+
+      dispatch({ type: "STOP_RESIZE" });
     }
   };
 

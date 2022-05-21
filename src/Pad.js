@@ -21,22 +21,37 @@ export default function Pad() {
     savePointsVector,
     removeVector
   } = useBoard();
-  const { selectionRect, selectedVector, deselect } = useSelection();
+  const {
+    selectionRect,
+    selectedVector,
+    deselect,
+    isResizing,
+    resize,
+    completeResize
+  } = useSelection();
 
   const onPointerDown = (e, vector) => {
     tool === "path" && setPressed(true);
     tool === "line" && setDrawing(true);
-    addPoint({ x: e.clientX, y: e.clientY });
+
+    if (tool.match(/path|line/)) {
+      addPoint({ x: e.clientX, y: e.clientY });
+    }
   };
 
   const onPointerMove = (e) => {
     if (tool === "select") {
-      if (!isDragging && !initialCoords) return;
-
-      drag({
-        x: e.clientX - initialCoords.x,
-        y: e.clientY - initialCoords.y
-      });
+      if (isDragging && initialCoords) {
+        drag({
+          x: e.clientX - initialCoords.x,
+          y: e.clientY - initialCoords.y
+        });
+      } else if (isResizing) {
+        resize({
+          x: e.clientX,
+          y: e.clientY
+        });
+      }
     } else if (tool === "path" && pressed) {
       addPoint({
         x: e.clientX,
@@ -51,8 +66,12 @@ export default function Pad() {
   };
 
   const onPointerUp = (e) => {
-    if (tool === "select" && isDragging) {
-      completeDrag();
+    if (tool === "select") {
+      if (isDragging) {
+        completeDrag();
+      } else if (isResizing) {
+        completeResize();
+      }
     } else if (tool === "path" && pressed) {
       savePointsVector("path", color);
       clearPoints();
