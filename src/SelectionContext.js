@@ -2,6 +2,8 @@ import { createContext, useContext, useReducer } from "react";
 
 import useBoard from "./BoardContext";
 
+const SELECTION_PADDING = 20;
+
 function selectReducer(state, action) {
   const { type, payload } = action;
 
@@ -36,8 +38,12 @@ function selectReducer(state, action) {
         width: width + x - resizingCoords.x,
         height: height + y - resizingCoords.y
       };
-      const scaleX = newSelectionRect.width / width;
-      const scaleY = newSelectionRect.height / height;
+      const scaleX =
+        (newSelectionRect.width - SELECTION_PADDING) /
+        (width - SELECTION_PADDING);
+      const scaleY =
+        (newSelectionRect.height - SELECTION_PADDING) /
+        (height - SELECTION_PADDING);
 
       return {
         ...state,
@@ -88,10 +94,10 @@ export const SelectionProvider = ({ children }) => {
       const { selectedVector, box } = payload;
       const { x, y, width, height } = box;
       const selectionRect = {
-        x: x - 10,
-        y: y - 10,
-        width: width + 20,
-        height: height + 20
+        x: x - SELECTION_PADDING / 2,
+        y: y - SELECTION_PADDING / 2,
+        width: width + SELECTION_PADDING,
+        height: height + SELECTION_PADDING
       };
 
       dispatch({
