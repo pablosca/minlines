@@ -33,10 +33,10 @@ function selectReducer(state, action) {
       const { x, y, width, height } = initialResizeRect;
       const { resizingCoords } = payload;
       const newSelectionRect = {
-        x: resizingCoords.x,
-        y: resizingCoords.y,
-        width: width + x - resizingCoords.x,
-        height: height + y - resizingCoords.y
+        x: x,
+        y: y,
+        width: resizingCoords.x - x,
+        height: resizingCoords.y - y
       };
       const scaleX =
         (newSelectionRect.width - SELECTION_PADDING) /
@@ -51,7 +51,7 @@ function selectReducer(state, action) {
         selectionRect: newSelectionRect,
         resizeStyle: {
           transform: `scale(${scaleX}, ${scaleY})`,
-          transformOrigin: "right bottom",
+          transformOrigin: "left top",
           transformBox: "fill-box"
         }
       };
@@ -126,12 +126,21 @@ export const SelectionProvider = ({ children }) => {
     },
 
     completeResize: () => {
-      const { selectedVector, selectionBox, resizingCoords } = state;
+      const {
+        selectedVector,
+        selectionRect,
+        isResizing,
+        initialResizeRect
+      } = state;
 
-      if (selectedVector && selectionBox && resizingCoords) {
+      if (selectedVector && selectionRect && isResizing) {
         updatePointsVectorResize(selectedVector, {
-          scaleX: (selectionBox.width + resizingCoords.x) / selectionBox.width,
-          scaleY: (selectionBox.height + resizingCoords.y) / selectionBox.height
+          scaleX:
+            (selectionRect.width - SELECTION_PADDING) /
+            (initialResizeRect.width - SELECTION_PADDING),
+          scaleY:
+            (selectionRect.height - SELECTION_PADDING) /
+            (initialResizeRect.height - SELECTION_PADDING)
         });
       }
 

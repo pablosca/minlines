@@ -16,12 +16,7 @@ export default function SelectionWrapper() {
 
   return (
     <g>
-      <circle
-        onPointerDown={onPointerDown}
-        className="point-handler left-top"
-        cx={x}
-        cy={y}
-      ></circle>
+      <circle className="point-handler left-top" cx={x} cy={y}></circle>
       <circle
         className="point-handler right-top"
         cx={x + width}
@@ -36,6 +31,7 @@ export default function SelectionWrapper() {
         className="point-handler right-bottom"
         cx={x + width}
         cy={y + height}
+        onPointerDown={onPointerDown}
       ></circle>
       <rect
         x={x}
