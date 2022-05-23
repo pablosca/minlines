@@ -79,15 +79,25 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const updatePointsVectorResize = (id, { scaleX, scaleY }) => {
+  const updatePointsVectorResize = (
+    id,
+    { scaleX, scaleY, selectionBox, selectionRect }
+  ) => {
     const vector = vectors[id];
-    const max = vector.points[0];
+    const first = vector.points[0];
+    const lastX = selectionRect.width;
+    const lastY = selectionRect.height;
 
     const newPoints = vector.points.map((p) => {
+      const newX = p.x + (1 / (p.x - selectionRect.x)) * scaleX;
+      const newY = p.y + (p.y - selectionRect.y) * scaleY;
+      console.log("p.x", p.x);
+      console.log("NEW X", newX);
+
       return {
         ...p,
-        x: p.x * ((p.x * scaleX) / 100),
-        y: p.y * ((p.y * scaleY) / 100)
+        x: newX,
+        y: newY
       };
     });
 

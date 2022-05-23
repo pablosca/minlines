@@ -130,7 +130,8 @@ export const SelectionProvider = ({ children }) => {
         selectedVector,
         selectionRect,
         isResizing,
-        initialResizeRect
+        initialResizeRect,
+        selectionBox
       } = state;
 
       if (selectedVector && selectionRect && isResizing) {
@@ -140,7 +141,9 @@ export const SelectionProvider = ({ children }) => {
             (initialResizeRect.width - SELECTION_PADDING),
           scaleY:
             (selectionRect.height - SELECTION_PADDING) /
-            (initialResizeRect.height - SELECTION_PADDING)
+            (initialResizeRect.height - SELECTION_PADDING),
+          selectionBox,
+          selectionRect
         });
       }
 
