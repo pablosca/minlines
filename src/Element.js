@@ -7,10 +7,21 @@ import useDrag from "./DragContext";
 
 export default function Element({ vector }) {
   const { tool } = useTools();
-  const { style: dragStyle, startDrag, vectorId: draggingVectorId } = useDrag();
+  const { style: dragStyle, startDrag, vectorId: draggingVectorId, isDragging } = useDrag();
   const { resizeStyle, selectedVector, select, isResizing } = useSelection();
-  const [style, setStyle] = useState(null);
   const elementRef = useRef(null);
+
+  const isSelected = selectedVector === vector.createdAt;
+  const isElementDragging = draggingVectorId === vector.createdAt;
+  let style = null;
+
+  if (isSelected && isResizing) {
+    style = resizeStyle;
+  }
+
+  if (isDragging && isElementDragging) {
+    style = dragStyle;
+  }
 
   const onClick = useCallback(() => {
     if (tool !== "select") return;
@@ -37,29 +48,6 @@ export default function Element({ vector }) {
     },
     [tool, vector]
   );
-
-  useEffect(() => {
-    const isSelected = selectedVector === vector.createdAt;
-    const isDragging = draggingVectorId === vector.createdAt;
-    let style = null;
-
-    if (isSelected && isResizing) {
-      style = resizeStyle;
-    }
-
-    if (isDragging) {
-      style = dragStyle;
-    }
-
-    setStyle(style);
-  }, [
-    selectedVector,
-    vector,
-    draggingVectorId,
-    dragStyle,
-    resizeStyle,
-    isResizing
-  ]);
 
   /*const updateBoxRect = () => {
     // TODO: do this better and check unnecesary calls
