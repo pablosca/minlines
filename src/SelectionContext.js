@@ -121,6 +121,7 @@ export const SelectionProvider = ({ children }) => {
         updatePointsVectorResize(selectedVector, {
           scaleX: selectionBox.width / initialResizeRect.width,
           scaleY: selectionBox.height / initialResizeRect.height,
+          selectionBox,
         });
       }
 

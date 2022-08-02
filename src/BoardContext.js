@@ -81,14 +81,15 @@ export const BoardProvider = ({ children }) => {
 
   const updatePointsVectorResize = (
     id,
-    { scaleX, scaleY }
+    { scaleX, scaleY, selectionBox }
   ) => {
     const vector = vectors[id];
-    const first = vector.points[0];
+    const firstX = selectionBox.x;
+    const firstY = selectionBox.y;
 
     const newPoints = vector.points.map((p) => {
-      const newX = scaleX * p.x + (1 - scaleX) * first.x; // (cx+(1-c)a,cy+(1-c)b),
-      const newY = scaleY * p.y + (1 - scaleY) * first.y;
+      const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
+      const newY = scaleY * p.y + (1 - scaleY) * firstY;
 
       return {
         ...p,

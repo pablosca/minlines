@@ -105,7 +105,7 @@ export default function Pad() {
 
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";
-  console.log('SELECTION BOX',selectionBox);
+  
   return (
     <svg
       className="artboard"
