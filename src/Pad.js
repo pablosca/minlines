@@ -22,7 +22,7 @@ export default function Pad() {
     removeVector
   } = useBoard();
   const {
-    selectionRect,
+    selectionBox,
     selectedVector,
     deselect,
     isResizing,
@@ -105,7 +105,7 @@ export default function Pad() {
 
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";
-
+  console.log('SELECTION BOX',selectionBox);
   return (
     <svg
       className="artboard"
@@ -119,7 +119,7 @@ export default function Pad() {
         <PolylineElement drawing={drawing} points={points} color={color} />
       )}
 
-      {!isDragging && selectionRect && <SelectionWrapper />}
+      {!isDragging && selectionBox && <SelectionWrapper />}
 
       <g>
         {Object.values(vectors).map((v) => (

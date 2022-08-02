@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import useSelection from "./SelectionContext";
 
 export default function SelectionWrapper() {
-  const { selectionRect, startResize } = useSelection();
-  const { x, y, width, height } = selectionRect;
+  const { selectionBox, startResize } = useSelection();
+  const { x, y, width, height } = selectionBox;
 
   const onPointerDown = useCallback(
     (e) => {

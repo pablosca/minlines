@@ -2,8 +2,6 @@ import { createContext, useContext, useReducer } from "react";
 
 import useBoard from "./BoardContext";
 
-const SELECTION_PADDING = 20;
-
 function selectReducer(state, action) {
   const { type, payload } = action;
 
@@ -13,42 +11,36 @@ function selectReducer(state, action) {
         ...state,
         selectedVector: payload.selectedVector,
         selectionBox: payload.selectionBox,
-        selectionRect: payload.selectionRect
       };
     case "DESELECT":
       return {
         ...state,
         selectedVector: null,
         selectionBox: null,
-        selectionRect: null
       };
     case "START_RESIZE":
       return {
         ...state,
         isResizing: true,
-        initialResizeRect: { ...state.selectionRect }
+        initialResizeRect: { ...state.selectionBox }
       };
     case "RESIZE":
       const { initialResizeRect } = state;
       const { x, y, width, height } = initialResizeRect;
       const { resizingCoords } = payload;
-      const newSelectionRect = {
-        x: x,
-        y: y,
+      const newSelectionBox = {
+        x,
+        y,
         width: resizingCoords.x - x,
         height: resizingCoords.y - y
       };
-      const scaleX =
-        (newSelectionRect.width - SELECTION_PADDING) /
-        (width - SELECTION_PADDING);
-      const scaleY =
-        (newSelectionRect.height - SELECTION_PADDING) /
-        (height - SELECTION_PADDING);
+      const scaleX = newSelectionBox.width / width;
+      const scaleY = newSelectionBox.height / height;
 
       return {
         ...state,
         resizingCoords,
-        selectionRect: newSelectionRect,
+        selectionBox: newSelectionBox,
         resizeStyle: {
           transform: `scale(${scaleX}, ${scaleY})`,
           transformOrigin: "left top",
@@ -70,7 +62,6 @@ function selectReducer(state, action) {
 
 const initialSelectState = {
   selectionBox: null,
-  selectionRect: null,
   selectedVector: null,
   isResizing: false,
   resizingCoords: null,
@@ -87,25 +78,18 @@ export const SelectionProvider = ({ children }) => {
     isResizing: state.isResizing,
     resizingCoords: state.resizingCoords,
     resizeStyle: state.resizeStyle,
-    selectionRect: state.selectionRect,
     selectedVector: state.selectedVector,
+    selectionBox: state.selectionBox,
 
     select: (payload) => {
       const { selectedVector, box } = payload;
       const { x, y, width, height } = box;
-      const selectionRect = {
-        x: x - SELECTION_PADDING / 2,
-        y: y - SELECTION_PADDING / 2,
-        width: width + SELECTION_PADDING,
-        height: height + SELECTION_PADDING
-      };
 
       dispatch({
         type: "SELECT",
         payload: {
           selectedVector: selectedVector,
           selectionBox: { x, y, width, height },
-          selectionRect: selectionRect
         }
       });
     },
@@ -128,22 +112,15 @@ export const SelectionProvider = ({ children }) => {
     completeResize: () => {
       const {
         selectedVector,
-        selectionRect,
         isResizing,
         initialResizeRect,
         selectionBox
       } = state;
 
-      if (selectedVector && selectionRect && isResizing) {
+      if (selectedVector && isResizing) {
         updatePointsVectorResize(selectedVector, {
-          scaleX:
-            (selectionRect.width - SELECTION_PADDING) /
-            (initialResizeRect.width - SELECTION_PADDING),
-          scaleY:
-            (selectionRect.height - SELECTION_PADDING) /
-            (initialResizeRect.height - SELECTION_PADDING),
-          selectionBox,
-          selectionRect
+          scaleX: selectionBox.width / initialResizeRect.width,
+          scaleY: selectionBox.height / initialResizeRect.height,
         });
       }
 
