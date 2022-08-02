@@ -6,32 +6,40 @@ export default function SelectionWrapper() {
   const { x, y, width, height } = selectionBox;
 
   const onPointerDown = useCallback(
+    (corners) =>
     (e) => {
       e.stopPropagation();
 
-      startResize();
+      startResize(corners);
     },
     [startResize]
   );
 
   return (
     <g>
-      {/*<circle className="point-handler left-top" cx={x} cy={y}></circle>
+      <circle 
+        className="point-handler left-top"
+        cx={x}
+        cy={y}
+        onPointerDown={onPointerDown({ left: true, top: true })}
+      ></circle>
       <circle
         className="point-handler right-top"
         cx={x + width}
         cy={y}
+        onPointerDown={onPointerDown({ right: true, top: true })}
       ></circle>
       <circle
         className="point-handler left-bottom"
         cx={x}
         cy={y + height}
-  ></circle>*/}
+        onPointerDown={onPointerDown({ left: true, bottom: true })}
+      ></circle>
       <circle
         className="point-handler right-bottom"
         cx={x + width}
         cy={y + height}
-        onPointerDown={onPointerDown}
+        onPointerDown={onPointerDown({ right: true, bottom: true })}
       ></circle>
       <rect
         x={x}

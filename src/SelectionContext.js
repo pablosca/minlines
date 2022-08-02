@@ -22,18 +22,20 @@ function selectReducer(state, action) {
       return {
         ...state,
         isResizing: true,
+        corners: payload.corners,
         initialResizeRect: { ...state.selectionBox }
       };
     case "RESIZE":
-      const { initialResizeRect } = state;
+      const { initialResizeRect, corners } = state;
       const { x, y, width, height } = initialResizeRect;
       const { resizingCoords } = payload;
       const newSelectionBox = {
-        x,
-        y,
-        width: resizingCoords.x - x,
-        height: resizingCoords.y - y
+        x: corners.right ? x : resizingCoords.x,
+        y: corners.bottom ? y : resizingCoords.y,
+        width: corners.right ? resizingCoords.x - x : x + width - resizingCoords.x,
+        height: corners.bottom ? resizingCoords.y - y : y + height - resizingCoords.y
       };
+
       const scaleX = newSelectionBox.width / width;
       const scaleY = newSelectionBox.height / height;
 
@@ -43,7 +45,7 @@ function selectReducer(state, action) {
         selectionBox: newSelectionBox,
         resizeStyle: {
           transform: `scale(${scaleX}, ${scaleY})`,
-          transformOrigin: "left top",
+          transformOrigin: `${corners.right ? 'left' : 'right'} ${corners.bottom ? 'top' : 'bottom'}`,
           transformBox: "fill-box"
         }
       };
@@ -53,7 +55,8 @@ function selectReducer(state, action) {
         resizingCoords: null,
         isResizing: false,
         resizeStyle: null,
-        initialResizeCoords: null
+        initialResizeCoords: null,
+        corners: null,
       };
     default:
       return state;
@@ -65,7 +68,8 @@ const initialSelectState = {
   selectedVector: null,
   isResizing: false,
   resizingCoords: null,
-  resizeStyle: null
+  resizeStyle: null,
+  corners: null,
 };
 
 const SelectionContext = createContext(initialSelectState);
@@ -98,8 +102,11 @@ export const SelectionProvider = ({ children }) => {
       dispatch({ type: "DESELECT" });
     },
 
-    startResize: () => {
-      dispatch({ type: "START_RESIZE" });
+    startResize: (corners) => {
+      dispatch({
+        type: "START_RESIZE",
+        payload: { corners }
+      });
     },
 
     resize: (resizingCoords) => {
@@ -114,7 +121,8 @@ export const SelectionProvider = ({ children }) => {
         selectedVector,
         isResizing,
         initialResizeRect,
-        selectionBox
+        selectionBox,
+        corners
       } = state;
 
       if (selectedVector && isResizing) {
@@ -122,6 +130,7 @@ export const SelectionProvider = ({ children }) => {
           scaleX: selectionBox.width / initialResizeRect.width,
           scaleY: selectionBox.height / initialResizeRect.height,
           selectionBox,
+          corners,
         });
       }
 
