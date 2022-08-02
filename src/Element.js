@@ -49,18 +49,18 @@ export default function Element({ vector }) {
     [tool, vector]
   );
 
-  /*const updateBoxRect = () => {
-    // TODO: do this better and check unnecesary calls
-    updateSelection(elementRef.current.querySelector(".vector").getBBox());
-  };
+  // const updateBoxRect = () => {
+  //   // TODO: do this better and check unnecesary calls
+  //   updateSelection(elementRef.current.querySelector(".vector").getBBox());
+  // };
 
-  useEffect(() => {
-    if (isSelected) {
-      updateBoxRect();
-    } else {
-      updateSelection(null);
-    }
-  }, [isSelected, vector, resizingStyle]);*/
+  // useEffect(() => {
+  //   if (isSelected) {
+  //     updateBoxRect();
+  //   } else {
+  //     updateSelection(null);
+  //   }
+  // }, [isSelected, vector, resizeStyle]);
 
   return (
     <g

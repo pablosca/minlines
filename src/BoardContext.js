@@ -85,14 +85,13 @@ export const BoardProvider = ({ children }) => {
   ) => {
     const vector = vectors[id];
     const first = vector.points[0];
+    const last = vector.points[vector.points.length - 1];
     const lastX = selectionRect.width;
     const lastY = selectionRect.height;
 
     const newPoints = vector.points.map((p) => {
-      const newX = p.x + (1 / (p.x - selectionRect.x)) * scaleX;
-      const newY = p.y + (p.y - selectionRect.y) * scaleY;
-      console.log("p.x", p.x);
-      console.log("NEW X", newX);
+      const newX = scaleX * p.x + (1 - scaleX) * first.x; // (cx+(1-c)a,cy+(1-c)b),
+      const newY = scaleY * p.y + (1 - scaleY) * first.y;
 
       return {
         ...p,

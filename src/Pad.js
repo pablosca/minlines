@@ -119,7 +119,7 @@ export default function Pad() {
         <PolylineElement drawing={drawing} points={points} color={color} />
       )}
 
-      {/*!isDragging && selectionRect && <SelectionWrapper />*/}
+      {!isDragging && selectionRect && <SelectionWrapper />}
 
       <g>
         {Object.values(vectors).map((v) => (
