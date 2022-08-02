@@ -2,7 +2,7 @@ import useBoard from "./BoardContext";
 import useTools, { tools } from "./ToolsContext";
 
 export default function ToolBar() {
-  const { tool, selectTool, drawing, setDrawing, color } = useTools();
+  const { tool, selectTool, drawing, setDrawing, color, strokeWidth } = useTools();
   const { clearPoints, savePointsVector, clearLastPoint } = useBoard();
 
   const onToolClick = (e, t) => {
@@ -13,7 +13,7 @@ export default function ToolBar() {
   const onDoneClick = (e) => {
     e.stopPropagation();
     clearLastPoint();
-    savePointsVector("line", color);
+    savePointsVector({ type: "line", color, strokeWidth });
     setDrawing(false);
     clearPoints();
   };

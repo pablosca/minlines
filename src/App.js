@@ -5,6 +5,7 @@ import ToolBar from "./ToolBar";
 import Pad from "./Pad";
 import { BoardProvider } from "./BoardContext";
 import ColorPicker from "./ColorPicker";
+import StrokeWidthPicker from "./StrokeWidthPicker";
 import { SelectionProvider } from "./SelectionContext";
 import { DragProvider } from "./DragContext";
 
@@ -18,6 +19,7 @@ export default function App() {
               <Pad />
               <ToolBar />
               <ColorPicker />
+              <StrokeWidthPicker />
             </div>
           </DragProvider>
         </SelectionProvider>

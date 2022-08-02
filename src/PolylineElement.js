@@ -1,6 +1,6 @@
 import useTools from "./ToolsContext";
 
-export default function PolylineElement({ points, color, drawing }) {
+export default function PolylineElement({ points, color, drawing, strokeWidth }) {
   const { tool } = useTools();
   const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
 
@@ -27,7 +27,7 @@ export default function PolylineElement({ points, color, drawing }) {
         fill="none"
         className="vector"
         stroke={color}
-        strokeWidth="1"
+        strokeWidth={strokeWidth}
         points={`${pointsString}`}
         vectorEffect="non-scaling-stroke"
       />

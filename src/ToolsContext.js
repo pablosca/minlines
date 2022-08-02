@@ -34,11 +34,35 @@ export const colors = [
   }
 ];
 
+export const strokeWidths = [
+  {
+    name: "Extra small",
+    width: 1
+  },
+  {
+    name: "Small",
+    width: 2
+  },
+  {
+    name: "Medium",
+    width: 4
+  },
+  {
+    name: "Large",
+    width: 6
+  },
+  {
+    name: "Extra large",
+    width: 10
+  }
+];
+
 const initialState = {
   tool: null,
   color: "#000",
   drawing: false,
-  isDragging: false
+  isDragging: false,
+  strokeWidth: 2
 };
 
 const ToolsContext = createContext(initialState);
@@ -48,6 +72,7 @@ export const ToolsProvider = ({ children }) => {
   const [color, setColor] = useState(initialState.color);
   const [drawing, setDrawing] = useState(false);
   const [isDragging, setIsDragging] = useState(null);
+  const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
 
   const selectTool = (tool) => {
     setDrawing(false);
@@ -64,7 +89,9 @@ export const ToolsProvider = ({ children }) => {
         color,
         setColor,
         isDragging,
-        setIsDragging
+        setIsDragging,
+        strokeWidth,
+        setStrokeWidth,
       }}
     >
       {children}

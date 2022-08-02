@@ -47,6 +47,20 @@ button.selected {
   width: 20px;
 }
 
+.stroke-picker {
+  display: flex;
+  position: fixed;
+  right: 8px;
+  top: 40px;
+}
+
+.stroke {
+  background: black;
+  border-radius: 50%;
+  height: calc(var(--stroke-width) * 2px);
+  width: calc(var(--stroke-width) * 2px);
+}
+
 .selectable .vector {
   pointer-events: none;
 }

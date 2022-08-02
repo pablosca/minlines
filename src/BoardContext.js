@@ -44,13 +44,14 @@ export const BoardProvider = ({ children }) => {
     clearPointByIndex(points.length - 1);
   };
 
-  const savePointsVector = (type, color) => {
+  const savePointsVector = ({ type, color, strokeWidth }) => {
     const now = Date.now();
     const newVector = {
       points,
       createdAt: now,
       type,
-      color
+      color,
+      strokeWidth
     };
 
     setVectors({

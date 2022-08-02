@@ -3,9 +3,10 @@ import useTools from "./ToolsContext";
 
 export default function PathElement(props) {
   const { points } = useBoard();
-  const { color, tool } = useTools();
+  const { color, strokeWidth, tool } = useTools();
   const renderedPoints = props.points || points;
   const renderedColor = props.color || color;
+  const renderedStrokeWidth = props.strokeWidth || strokeWidth;
   const pointsString = renderedPoints.map((p) => `${p.x},${p.y}`).join(" ");
 
   return (
@@ -22,7 +23,7 @@ export default function PathElement(props) {
         className="vector"
         fill="none"
         stroke={renderedColor}
-        strokeWidth="2"
+        strokeWidth={renderedStrokeWidth}
         d={`M${pointsString}`}
         vectorEffect="non-scaling-stroke"
       />

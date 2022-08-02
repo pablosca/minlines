@@ -76,6 +76,7 @@ export default function Element({ vector }) {
           key={vector.createdAt}
           points={vector.points}
           color={vector.color}
+          strokeWidth={vector.strokeWidth}
         />
       )}
       {vector.type === "path" && (
@@ -83,6 +84,7 @@ export default function Element({ vector }) {
           key={vector.createdAt}
           points={vector.points}
           color={vector.color}
+          strokeWidth={vector.strokeWidth}
         />
       )}
     </g>

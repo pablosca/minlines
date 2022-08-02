@@ -11,7 +11,7 @@ import useDrag from "./DragContext";
 export default function Pad() {
   const { drag, completeDrag, isDragging, initialCoords } = useDrag();
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, color } = useTools();
+  const { tool, drawing, setDrawing, color, strokeWidth } = useTools();
   const {
     points,
     vectors,
@@ -74,7 +74,7 @@ export default function Pad() {
         completeResize();
       }
     } else if (tool === "path" && pressed) {
-      savePointsVector("path", color);
+      savePointsVector({ type: "path", color, strokeWidth });
       clearPoints();
       setPressed(false);
     }
@@ -116,7 +116,7 @@ export default function Pad() {
     >
       {hasTempPath && <PathElement />}
       {hasTempLine && (
-        <PolylineElement drawing={drawing} points={points} color={color} />
+        <PolylineElement drawing={drawing} points={points} color={color} strokeWidth={strokeWidth} />
       )}
 
       {!isDragging && selectionBox && <SelectionWrapper />}
