@@ -11,7 +11,7 @@ import useDrag from "./DragContext";
 export default function Pad() {
   const { drag, completeDrag, isDragging, initialCoords } = useDrag();
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, color, strokeWidth } = useTools();
+  const { tool, drawing, setDrawing, color, strokeWidth, withGrid } = useTools();
   const {
     points,
     vectors,
@@ -108,7 +108,7 @@ export default function Pad() {
   
   return (
     <svg
-      className="artboard"
+      className={`artboard ${withGrid && 'with-grid'}`}
       viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

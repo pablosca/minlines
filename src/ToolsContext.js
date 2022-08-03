@@ -62,7 +62,8 @@ const initialState = {
   color: "#000",
   drawing: false,
   isDragging: false,
-  strokeWidth: 2
+  strokeWidth: 2,
+  withGrid: false,
 };
 
 const ToolsContext = createContext(initialState);
@@ -73,6 +74,7 @@ export const ToolsProvider = ({ children }) => {
   const [drawing, setDrawing] = useState(false);
   const [isDragging, setIsDragging] = useState(null);
   const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
+  const [withGrid, setWithGrid] = useState(false);
 
   const selectTool = (tool) => {
     setDrawing(false);
@@ -92,6 +94,8 @@ export const ToolsProvider = ({ children }) => {
         setIsDragging,
         strokeWidth,
         setStrokeWidth,
+        withGrid,
+        setWithGrid,
       }}
     >
       {children}

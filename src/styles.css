@@ -16,6 +16,13 @@ body {
   height: 100vh;
 }
 
+.artboard.with-grid {
+  background-size: 20px 20px;
+  background-image:
+    linear-gradient(to right, #0002 1px, transparent 1px),
+    linear-gradient(to bottom, #0002 1px, transparent 1px);
+}
+
 .toolbar {
   position: fixed;
   z-index: 2;
