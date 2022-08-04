@@ -13,7 +13,7 @@ export default function ToolBar() {
   const onDoneClick = (e) => {
     e.stopPropagation();
     clearLastPoint();
-    savePointsVector({ type: "line", color, strokeWidth });
+    savePointsVector({ type: "polyline", color, strokeWidth });
     setDrawing(false);
     clearPoints();
   };

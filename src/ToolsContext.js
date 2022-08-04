@@ -6,8 +6,8 @@ export const tools = [
     key: "path"
   },
   {
-    name: "Line",
-    key: "line"
+    name: "Polyline",
+    key: "polyline"
   },
   {
     name: "Select",

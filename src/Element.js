@@ -73,7 +73,7 @@ export default function Element({ vector }) {
       onClick={onClick}
       onPointerDown={onPointerDown}
     >
-      {vector.type === "line" && (
+      {vector.type === "polyline" && (
         <PolylineElement
           key={vector.createdAt}
           points={vector.points}

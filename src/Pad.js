@@ -37,9 +37,9 @@ export default function Pad() {
   const onPointerDown = (e, vector) => {
     if (!tool) return;
     tool === "path" && setPressed(true);
-    tool === "line" && setDrawing(true);
+    tool === "polyline" && setDrawing(true);
 
-    if (tool.match(/path|line/)) {
+    if (tool.match(/path|polyline/)) {
       addPoint({ x: e.clientX, y: e.clientY });
     }
   };
@@ -62,7 +62,7 @@ export default function Pad() {
         x: e.clientX,
         y: e.clientY
       });
-    } else if (tool === "line" && drawing) {
+    } else if (tool === "polyline" && drawing) {
       replaceLastPoint({
         x: e.clientX,
         y: e.clientY
@@ -110,7 +110,7 @@ export default function Pad() {
   }, [tool]);
 
   const hasTempPath = points.length && pressed && tool === "path";
-  const hasTempLine = points.length && drawing && tool === "line";
+  const hasTempLine = points.length && drawing && tool === "polyline";
   const hasTempText = tempText && tool === "text";
 
   const onTextChange = useCallback((e) => {
