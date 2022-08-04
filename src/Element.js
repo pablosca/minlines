@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import useTools from "./ToolsContext";
 import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
+import TextElement from "./TextElement";
 import useSelection from "./SelectionContext";
 import useDrag from "./DragContext";
 
@@ -27,7 +28,7 @@ export default function Element({ vector }) {
     if (tool !== "select") return;
 
     select({
-      box: elementRef.current.querySelector(".vector").getBBox(),
+      box: elementRef.current.querySelector(".vector").getBoundingClientRect(),
       selectedVector: vector.createdAt
     });
   }, [tool, vector, select]);
@@ -43,7 +44,8 @@ export default function Element({ vector }) {
           x: e.clientX,
           y: e.clientY
         },
-        vectorId: vector.createdAt
+        vectorId: vector.createdAt,
+        type: vector.type,
       });
     },
     [tool, vector]
@@ -87,6 +89,12 @@ export default function Element({ vector }) {
           strokeWidth={vector.strokeWidth}
         />
       )}
+      {/* {vector.type === "text" && (
+        <TextElement
+          key={vector.createdAt}
+          data={vector}
+        />
+      )} */}
     </g>
   );
 }

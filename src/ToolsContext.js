@@ -12,7 +12,11 @@ export const tools = [
   {
     name: "Select",
     key: "select"
-  }
+  },
+  // {
+  //   name: "Text",
+  //   key: "text"
+  // },
 ];
 
 export const colors = [

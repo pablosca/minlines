@@ -10,7 +10,8 @@ function dragReducer(state, action) {
         ...state,
         isDragging: true,
         initialCoords: payload.initialCoords,
-        vectorId: payload.vectorId
+        vectorId: payload.vectorId,
+        type: payload.type,
       };
     case "DRAGGING":
       const { x, y } = payload.draggingCoords;
@@ -28,7 +29,8 @@ function dragReducer(state, action) {
         initialCoords: null,
         draggingCoords: null,
         vectorId: null,
-        style: null
+        style: null,
+        type: null,
       };
     default:
       return state;
@@ -46,7 +48,7 @@ const initialState = {
 const DragContext = createContext(initialState);
 
 export const DragProvider = ({ children }) => {
-  const { updatePointsVectorDelta } = useBoard();
+  const { updatePointsVectorDelta, updateVectorDelta } = useBoard();
   const [state, dispatch] = useReducer(dragReducer, initialState);
 
   const value = {
@@ -60,7 +62,8 @@ export const DragProvider = ({ children }) => {
         type: "START_DRAG",
         payload: {
           initialCoords: payload.initialCoords,
-          vectorId: payload.vectorId
+          vectorId: payload.vectorId,
+          type: payload.type,
         }
       });
     },
@@ -73,14 +76,24 @@ export const DragProvider = ({ children }) => {
     },
 
     completeDrag: () => {
-      const { vectorId, draggingCoords } = state;
+      const { vectorId, draggingCoords, type } = state;
 
-      if (vectorId && draggingCoords) {
-        updatePointsVectorDelta(vectorId, {
-          deltaX: draggingCoords.x,
-          deltaY: draggingCoords.y
-        });
+      if (vectorId) {
+        if (type.match(/polyline|path/) && draggingCoords) {
+          updatePointsVectorDelta(vectorId, {
+            deltaX: draggingCoords.x,
+            deltaY: draggingCoords.y
+          });
+        }
+
+        if (type === 'text' && draggingCoords) {
+          updateVectorDelta(vectorId, {
+            deltaX: draggingCoords.x,
+            deltaY: draggingCoords.y
+          });
+        }
       }
+
 
       dispatch({
         type: "STOP_DRAG"

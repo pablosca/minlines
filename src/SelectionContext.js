@@ -76,7 +76,7 @@ const SelectionContext = createContext(initialSelectState);
 
 export const SelectionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(selectReducer, initialSelectState);
-  const { updatePointsVectorResize } = useBoard();
+  const { updateVectorResize } = useBoard();
 
   const value = {
     isResizing: state.isResizing,
@@ -122,15 +122,17 @@ export const SelectionProvider = ({ children }) => {
         isResizing,
         initialResizeRect,
         selectionBox,
-        corners
+        corners,
+        resizeStyle,
       } = state;
 
       if (selectedVector && isResizing) {
-        updatePointsVectorResize(selectedVector, {
+        updateVectorResize(selectedVector, {
           scaleX: selectionBox.width / initialResizeRect.width,
           scaleY: selectionBox.height / initialResizeRect.height,
           selectionBox,
           corners,
+          resizeStyle,
         });
       }
 

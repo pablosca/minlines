@@ -8,7 +8,8 @@ import { useState, createContext, useContext } from "react";
 
 const initialState = {
   points: [],
-  vectors: {}
+  vectors: {},
+  tempText: null,
 };
 
 const BoardContext = createContext(initialState);
@@ -16,6 +17,7 @@ const BoardContext = createContext(initialState);
 export const BoardProvider = ({ children }) => {
   const [points, setPoints] = useState([]);
   const [vectors, setVectors] = useState({});
+  const [tempText, setTempText] = useState(null);
 
   const clearPoints = () => setPoints([]);
 
@@ -60,6 +62,24 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const saveTextVector = ({ x, y, content, fontSize = 16, color = 'black' }) => {
+    const now = Date.now();
+    const newVector = {
+      createdAt: now,
+      type: 'text',
+      x,
+      y,
+      content,
+      fontSize,
+      color,
+    };
+
+    setVectors({
+      ...vectors,
+      [now]: newVector
+    });
+  };
+
   const updatePointsVectorDelta = (id, { deltaX, deltaY }) => {
     const vector = vectors[id];
 
@@ -80,32 +100,55 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const updatePointsVectorResize = (
-    id,
-    { scaleX, scaleY, selectionBox, corners }
-  ) => {
-    const {x, y, width, height } = selectionBox;
+  const updateVectorDelta = (id, { deltaX, deltaY }) => {
     const vector = vectors[id];
-    const firstX = corners.right ? x : x + width;
-    const firstY = corners.bottom ? y : y + height;
-
-    const newPoints = vector.points.map((p) => {
-      const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
-      const newY = scaleY * p.y + (1 - scaleY) * firstY;
-
-      return {
-        ...p,
-        x: newX,
-        y: newY
-      };
-    });
 
     setVectors({
       ...vectors,
       [id]: {
         ...vector,
-        points: newPoints
+        x: vector.x + deltaX,
+        y: vector.y + deltaY,
       }
+    });
+  };
+
+  const updateVectorResize = (
+    id,
+    { scaleX, scaleY, selectionBox, corners, resizeStyle }
+  ) => {
+    const {x, y, width, height } = selectionBox;
+    const vector = vectors[id];
+    const newVector = { ...vector };
+    let newPoints = [];
+
+    if (vector.type.match(/polyline|path/)) {
+      const firstX = corners.right ? x : x + width;
+      const firstY = corners.bottom ? y : y + height;
+  
+      newPoints = vector.points.map((p) => {
+        const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
+        const newY = scaleY * p.y + (1 - scaleY) * firstY;
+  
+        return {
+          ...p,
+          x: newX,
+          y: newY
+        };
+      });
+
+      newVector.points = newPoints;
+    }
+
+    if (vector.type === 'text') {
+      newVector.x = scaleX * vector.x + (1 - scaleX) * vector.x;
+      newVector.y = scaleY * vector.y + (1 - scaleY) * vector.y;
+      newVector.resizeStyle = resizeStyle;
+    }
+
+    setVectors({
+      ...vectors,
+      [id]: newVector
     });
   };
 
@@ -128,8 +171,12 @@ export const BoardProvider = ({ children }) => {
         clearPointByIndex,
         clearLastPoint,
         updatePointsVectorDelta,
+        updateVectorDelta,
         removeVector,
-        updatePointsVectorResize
+        updateVectorResize,
+        tempText,
+        setTempText,
+        saveTextVector,
       }}
     >
       {children}

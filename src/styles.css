@@ -68,7 +68,7 @@ button.selected {
   width: calc(var(--stroke-width) * 2px);
 }
 
-.selectable .vector {
+.selectable .vector:not(.grabbable) {
   pointer-events: none;
 }
 
@@ -77,7 +77,7 @@ button.selected {
   fill: red;
 }
 
-.grabbable {
+.grabbable:not(.vector) {
   fill: none;
   stroke: transparent;
   stroke-opacity: 0.2;

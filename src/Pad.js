@@ -3,6 +3,7 @@ import useTools from "./ToolsContext";
 import Element from "./Element";
 import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
+import TextElement from "./TextElement";
 import SelectionWrapper from "./SelectionWrapper";
 import useBoard from "./BoardContext";
 import useSelection from "./SelectionContext";
@@ -19,7 +20,10 @@ export default function Pad() {
     replaceLastPoint,
     clearPoints,
     savePointsVector,
-    removeVector
+    removeVector,
+    tempText,
+    setTempText,
+    saveTextVector,
   } = useBoard();
   const {
     selectionBox,
@@ -77,6 +81,8 @@ export default function Pad() {
       savePointsVector({ type: "path", color, strokeWidth });
       clearPoints();
       setPressed(false);
+    } else if (tool === 'text') {
+      setTempText({ x: e.clientX, y: e.clientY, content: '' });
     }
   };
 
@@ -105,27 +111,55 @@ export default function Pad() {
 
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "line";
+  const hasTempText = tempText && tool === "text";
+
+  const onTextChange = useCallback((e) => {
+    setTempText({ ...tempText, content: e.currentTarget.value });
+  });
+
+  const onTextBlur = useCallback(e => {
+    const { x, y, content } = tempText;
+    saveTextVector({
+      x,
+      y,
+      content,
+      color,
+      fontSize: 16,
+    });
+  });
   
   return (
-    <svg
-      className={`artboard ${withGrid && 'with-grid'}`}
-      viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-    >
-      {hasTempPath && <PathElement />}
-      {hasTempLine && (
-        <PolylineElement drawing={drawing} points={points} color={color} strokeWidth={strokeWidth} />
-      )}
+    <>
+      {tempText && <textarea
+        style={{ 'position': 'fixed', left: tempText.x + 'px', top: tempText.y + 'px', background: 'red', opacity: 0.01 }}
+        autoFocus
+        onChange={onTextChange}
+        onBlur={onTextBlur}
+        value={tempText.content}
+      />}
 
-      {!isDragging && selectionBox && <SelectionWrapper />}
+      <svg
+        className={`artboard ${withGrid && 'with-grid'}`}
+        viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+      >
+        {hasTempPath && <PathElement />}
+        {hasTempLine && (
+          <PolylineElement drawing={drawing} points={points} color={color} strokeWidth={strokeWidth} />
+        )}
 
-      <g>
-        {Object.values(vectors).map((v) => (
-          <Element key={v.createdAt} vector={v} />
-        ))}
-      </g>
-    </svg>
+        {/* {hasTempText && <TextElement data={tempText} />} */}
+
+        {!isDragging && selectionBox && <SelectionWrapper />}
+
+        <g>
+          {Object.values(vectors).map((v) => (
+            <Element key={v.createdAt} vector={v} />
+          ))}
+        </g>
+      </svg>
+    </>
   );
 }
