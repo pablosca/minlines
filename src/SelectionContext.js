@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 
 import useBoard from "./BoardContext";
 
@@ -70,12 +70,14 @@ const initialSelectState = {
   resizingCoords: null,
   resizeStyle: null,
   corners: null,
+  isShiftOn: false,
 };
 
 const SelectionContext = createContext(initialSelectState);
 
 export const SelectionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(selectReducer, initialSelectState);
+  const [isShiftOn, setIsShiftOn] = useState(false);
   const { updateVectorResize } = useBoard();
 
   const value = {
@@ -86,14 +88,38 @@ export const SelectionProvider = ({ children }) => {
     selectionBox: state.selectionBox,
 
     select: (payload) => {
-      const { selectedVectors, box } = payload;
-      const { x, y, width, height } = box;
+      let { selectedVectors, box } = payload;
+      let { x: newX1, y: newY1, width: newWidth, height: newHeight } = box;
+      let newX2 = newX1 + newWidth;
+      let newY2 = newY1 + newHeight;
+
+      if (state.selectionBox) {
+        const { x: currentX1, y: currentY1, width: currentWidth, height: currentHeight } = state.selectionBox;
+        const currentX2 = currentX1 + currentWidth;
+        const currentY2 = currentY1 + currentHeight;
+  
+        // check if boundaries are further than those in the state
+        // otherwise keep what we have
+        if (newX1 > currentX1) newX1 = currentX1;
+        if (newX2 < currentX2) newX2 = currentX2;;
+        if (newY1 > currentY1) newY1 = currentY1;
+        if (newY2 < currentY2) newY2 = currentY2;;
+      }
+
+      if (isShiftOn) {
+        selectedVectors = [...new Set([...state.selectedVectors, ...selectedVectors])];
+      }
 
       dispatch({
         type: "SELECT",
         payload: {
           selectedVectors,
-          selectionBox: { x, y, width, height },
+          selectionBox: {
+            x: newX1,
+            y: newY1,
+            width: newX2 - newX1,
+            height: newY2 - newY1,
+          },
         }
       });
     },
@@ -139,6 +165,19 @@ export const SelectionProvider = ({ children }) => {
       dispatch({ type: "STOP_RESIZE" });
     }
   };
+
+  // TODO: put this in a more global context (WindowContext?)
+  useEffect(() => {
+    const onShiftChange = (e) => setIsShiftOn(e.shiftKey);
+
+    window.addEventListener('keyup', onShiftChange);
+    window.addEventListener('keydown', onShiftChange);
+
+    return () => {
+      window.removeEventListener('keyup', onShiftChange);
+      window.removeEventListener('keydown', onShiftChange);
+    }
+  }, []);
 
   return (
     <SelectionContext.Provider value={value}>
