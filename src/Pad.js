@@ -76,6 +76,8 @@ export default function Pad() {
         completeDrag();
       } else if (isResizing) {
         completeResize();
+      } else {
+        deselect();
       }
     } else if (tool === "path" && pressed) {
       savePointsVector({ type: "path", color, strokeWidth });
