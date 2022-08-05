@@ -9,13 +9,13 @@ function selectReducer(state, action) {
     case "SELECT":
       return {
         ...state,
-        selectedVector: payload.selectedVector,
+        selectedVectors: payload.selectedVectors,
         selectionBox: payload.selectionBox,
       };
     case "DESELECT":
       return {
         ...state,
-        selectedVector: null,
+        selectedVectors: [],
         selectionBox: null,
       };
     case "START_RESIZE":
@@ -65,7 +65,7 @@ function selectReducer(state, action) {
 
 const initialSelectState = {
   selectionBox: null,
-  selectedVector: null,
+  selectedVectors: [],
   isResizing: false,
   resizingCoords: null,
   resizeStyle: null,
@@ -82,17 +82,17 @@ export const SelectionProvider = ({ children }) => {
     isResizing: state.isResizing,
     resizingCoords: state.resizingCoords,
     resizeStyle: state.resizeStyle,
-    selectedVector: state.selectedVector,
+    selectedVectors: state.selectedVectors,
     selectionBox: state.selectionBox,
 
     select: (payload) => {
-      const { selectedVector, box } = payload;
+      const { selectedVectors, box } = payload;
       const { x, y, width, height } = box;
 
       dispatch({
         type: "SELECT",
         payload: {
-          selectedVector: selectedVector,
+          selectedVectors,
           selectionBox: { x, y, width, height },
         }
       });
@@ -118,7 +118,7 @@ export const SelectionProvider = ({ children }) => {
 
     completeResize: () => {
       const {
-        selectedVector,
+        selectedVectors,
         isResizing,
         initialResizeRect,
         selectionBox,
@@ -126,8 +126,8 @@ export const SelectionProvider = ({ children }) => {
         resizeStyle,
       } = state;
 
-      if (selectedVector && isResizing) {
-        updateVectorResize(selectedVector, {
+      if (selectedVectors.length && isResizing) {
+        updateVectorResize(selectedVectors, {
           scaleX: selectionBox.width / initialResizeRect.width,
           scaleY: selectionBox.height / initialResizeRect.height,
           selectionBox,

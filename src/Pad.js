@@ -27,7 +27,7 @@ export default function Pad() {
   } = useBoard();
   const {
     selectionBox,
-    selectedVector,
+    selectedVectors,
     deselect,
     isResizing,
     resize,
@@ -89,11 +89,11 @@ export default function Pad() {
   const deleteVector = useCallback(
     (e) => {
       if (![8, 46].includes(e.keyCode)) return;
-      if (tool !== "select" && !selectedVector) return;
+      if (tool !== "select" && !selectedVectors.length) return;
 
-      removeVector(selectedVector);
+      removeVector(selectedVectors);
     },
-    [tool, selectedVector, removeVector]
+    [tool, selectedVectors, removeVector]
   );
 
   useEffect(() => {

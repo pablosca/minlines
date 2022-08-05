@@ -9,10 +9,10 @@ import useDrag from "./DragContext";
 export default function Element({ vector }) {
   const { tool } = useTools();
   const { style: dragStyle, startDrag, vectorId: draggingVectorId, isDragging } = useDrag();
-  const { resizeStyle, selectedVector, select, isResizing } = useSelection();
+  const { resizeStyle, selectedVectors, select, isResizing } = useSelection();
   const elementRef = useRef(null);
 
-  const isSelected = selectedVector === vector.createdAt;
+  const isSelected = selectedVectors.includes(vector.createdAt);
   const isElementDragging = draggingVectorId === vector.createdAt;
   let style = null;
 
@@ -29,7 +29,7 @@ export default function Element({ vector }) {
 
     select({
       box: elementRef.current.querySelector(".vector").getBoundingClientRect(),
-      selectedVector: vector.createdAt
+      selectedVectors: [vector.createdAt],
     });
   }, [tool, vector, select]);
 
@@ -67,7 +67,7 @@ export default function Element({ vector }) {
   return (
     <g
       style={style}
-      dataselected={selectedVector}
+      dataselected={selectedVectors}
       className={tool === "select" ? "selectable" : ""}
       ref={elementRef}
       onClick={onClick}
