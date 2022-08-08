@@ -38,6 +38,10 @@ export default function Pad() {
     pointedVectorId,
     select,
     isShiftOn,
+    isSelectingArea,
+    startSelectArea,
+    moveSelectArea,
+    stopSelectArea,
   } = useSelection();
 
   const onPadPointerDown = (e, vector) => {
@@ -47,6 +51,15 @@ export default function Pad() {
 
     if (tool.match(/path|polyline/)) {
       addPoint({ x: e.clientX, y: e.clientY });
+    }
+
+    if (tool === 'select') {
+      startSelectArea({
+        selectionBox: {
+          x: e.clientX,
+          y: e.clientY,
+        },
+      });
     }
   };
 
@@ -62,6 +75,11 @@ export default function Pad() {
           x: e.clientX,
           y: e.clientY
         });
+      } else if (isSelectingArea) {
+        moveSelectArea({
+          width: Math.max(e.clientX, selectionBox.x) - Math.min(e.clientX, selectionBox.x),
+          height: Math.max(e.clientY, selectionBox.y) - Math.min(e.clientY, selectionBox.y),
+        });
       }
     } else if (tool === "path" && pressed) {
       addPoint({
@@ -76,12 +94,14 @@ export default function Pad() {
     }
   };
 
-  const onPadPointerUp = (e) => {
+  const onPadPointerUp = async (e) => {
     if (tool === 'select') {
       if (isResizing) {
         completeResize();
-      } else if (!isDragging) {
+      } else if (!isDragging && !isSelectingArea || !selectionBox.width) {
         deselect();
+      } else if (isSelectingArea) {
+        await stopSelectArea();
       }
     } else if (tool === "path" && pressed) {
       savePointsVector({
@@ -118,13 +138,17 @@ export default function Pad() {
     }, [tool, isShiftOn, selectedVectors]);
 
   const onElementPointerUp = (e) => {
+      if (isSelectingArea && selectionBox) return;
+
       e.stopPropagation();
       if (tool !== "select") return;
 
       const isPointedVectorSelected = selectedVectors.includes(pointedVectorId);
 
       if (pointedVectorId) unPointVector();
-      if (!isPointedVectorSelected && !isResizing) select({ newSelectedId: pointedVectorId });
+      if (!isPointedVectorSelected && !isResizing && !isSelectingArea) {
+        select({ newSelectedId: pointedVectorId });
+      }
 
       if (isResizing) {
         completeResize();

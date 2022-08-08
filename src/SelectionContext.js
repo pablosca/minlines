@@ -30,6 +30,20 @@ function selectReducer(state, action) {
         ...state,
         selectedVectors: [],
         selectionBox: null,
+        isSelectingArea: false,
+      };
+    }
+    case "START_SELECT_AREA": {
+      return {
+        ...state,
+        isSelectingArea: true,
+        selectionBox: payload.selectionBox,
+      };
+    }
+    case "STOP_SELECT_AREA": {
+      return {
+        ...state,
+        isSelectingArea: false,
       };
     }
     case "START_RESIZE":
@@ -128,6 +142,7 @@ const initialSelectState = {
   draggingCoords: null,
   dragStyle: null,
   pointedVectorId: null,
+  isSelectingArea: false,
 };
 
 const SelectionContext = createContext(initialSelectState);
@@ -155,6 +170,7 @@ export const SelectionProvider = ({ children }) => {
     draggingCoords: state.draggingCoords,
     dragStyle: state.dragStyle,
     pointedVectorId: state.pointedVectorId,
+    isSelectingArea: state.isSelectingArea,
 
     select: (payload) => {
       const { newSelectedId } = payload;
@@ -186,7 +202,6 @@ export const SelectionProvider = ({ children }) => {
       }
 
       if (state.isShiftOn) {
-        console.log('SELECT IS SHIFT ON', state.isShiftOn);
         newSelectedVectors = [...new Set([...state.selectedVectors, newSelectedId])];
       }
 
@@ -195,6 +210,85 @@ export const SelectionProvider = ({ children }) => {
         payload: {
           selectedVectors: newSelectedVectors,
           selectionBox: newSelectionBox,
+        }
+      });
+    },
+
+    startSelectArea: ({ selectionBox }) => {
+      dispatch({
+        type: "START_SELECT_AREA",
+        payload: {
+          selectionBox: {
+            x: selectionBox.x,
+            y: selectionBox.y,
+            height: 0,
+            width: 0,
+          }
+        }
+      });
+    },
+
+    moveSelectArea: ({ width, height }) => {
+      const newSelectionBox = {
+        ...state.selectionBox,
+        height,
+        width,
+      };
+      const selectedVectors = [];
+      const selectionX2 = newSelectionBox.x + width;
+      const selectionY2 = newSelectionBox.y + height;
+
+      Object.values(vectors).forEach(v => {
+        const { box, createdAt} = v;
+        const isInsideX = box.x >= newSelectionBox.x && box.x <= selectionX2;
+        const isInsideY = box.y >= newSelectionBox.y && box.y <= selectionY2;
+
+        if (isInsideX && isInsideY) {
+          selectedVectors.push(createdAt);
+        }
+      });
+
+      dispatch({
+        type: "SELECT",
+        payload: {
+          selectedVectors: [...new Set([...selectedVectors])],
+          selectionBox: newSelectionBox,
+        }
+      });
+    },
+
+    stopSelectArea: () => {
+      dispatch({ type: "STOP_SELECT_AREA" });
+      
+      if (!state.selectedVectors.length) {
+        dispatch({ type: "DESELECT" });
+        return;
+      }
+
+      // adjust selection box
+      let x1 = Infinity;
+      let y1 = Infinity;
+      let x2 = 0;
+      let y2 = 0;
+
+      state.selectedVectors.forEach(id => {
+        const { box } = vectors[id];
+
+        x1 = Math.min(box.x, x1);
+        y1 = Math.min(box.y, y1);
+        x2 = Math.max(box.x + box.width, x2);
+        y2 = Math.max(box.y + box.height, y2);
+      });
+
+      dispatch({
+        type: "UPDATE_SELECTION_BOX",
+        payload: {
+          selectionBox: {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+          },
         }
       });
     },
