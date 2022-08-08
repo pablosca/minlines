@@ -37,6 +37,7 @@ export default function Pad() {
     initialCoords,
     pointedVectorId,
     select,
+    isShiftOn,
   } = useSelection();
 
   const onPadPointerDown = (e, vector) => {
@@ -97,14 +98,8 @@ export default function Pad() {
       e.stopPropagation();
 
       const isSelected = selectedVectors.includes(vector.createdAt);
-      // if (tool !== "select" || isSelected) return;
 
-      // select({
-      //   box: elementRef.current.querySelector(".vector").getBoundingClientRect(),
-      //   newSelectedId: vector.createdAt,
-      // });
-
-      if (!isSelected) {
+      if (!isSelected && !isShiftOn) {
         deselect();
       }
 
@@ -116,7 +111,7 @@ export default function Pad() {
         type: vector.type,
         pointedVectorId: vector.createdAt,
       });
-    }, [tool]);
+    }, [tool, isShiftOn]);
 
   const onElementPointerUp = (e) => {
       e.stopPropagation();

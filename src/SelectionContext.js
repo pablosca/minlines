@@ -6,6 +6,12 @@ function selectReducer(state, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case "SHIFT_CHANGE": {
+      return {
+        ...state,
+        isShiftOn: payload.isShiftOn,
+      };
+    }
     case "SELECT": {
       return {
         ...state,
@@ -128,10 +134,17 @@ const SelectionContext = createContext(initialSelectState);
 
 export const SelectionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(selectReducer, initialSelectState);
-  const [isShiftOn, setIsShiftOn] = useState(false);
   const { vectors, updateVectorResize, updateVectorPosition } = useBoard();
 
+  const setShift = (isShiftOn) => {
+    dispatch({
+      type: 'SHIFT_CHANGE',
+      payload: { isShiftOn }
+    });
+  };
+
   const value = {
+    isShiftOn: state.isShiftOn,
     isResizing: state.isResizing,
     resizingCoords: state.resizingCoords,
     resizeStyle: state.resizeStyle,
@@ -172,7 +185,8 @@ export const SelectionProvider = ({ children }) => {
         };
       }
 
-      if (isShiftOn) {
+      if (state.isShiftOn) {
+        console.log('SELECT IS SHIFT ON', state.isShiftOn);
         newSelectedVectors = [...new Set([...state.selectedVectors, newSelectedId])];
       }
 
@@ -294,7 +308,7 @@ export const SelectionProvider = ({ children }) => {
 
   // TODO: put this in a more global context (WindowContext?)
   useEffect(() => {
-    const onShiftChange = (e) => setIsShiftOn(e.shiftKey);
+    const onShiftChange = (e) => setShift(e.shiftKey);
 
     window.addEventListener('keyup', onShiftChange);
     window.addEventListener('keydown', onShiftChange);
