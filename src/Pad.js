@@ -138,6 +138,7 @@ export default function Pad() {
       if (tool !== "select" && !selectedVectors.length) return;
 
       removeVector(selectedVectors);
+      deselect();
     },
     [tool, selectedVectors, removeVector]
   );
