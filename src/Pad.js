@@ -77,8 +77,12 @@ export default function Pad() {
   };
 
   const onPadPointerUp = (e) => {
-    if (tool === 'select' && isResizing) {
-      completeResize();
+    if (tool === 'select') {
+      if (isResizing) {
+        completeResize();
+      } else if (!isDragging) {
+        deselect();
+      }
     } else if (tool === "path" && pressed) {
       savePointsVector({
         type: "path",
@@ -111,7 +115,7 @@ export default function Pad() {
         type: vector.type,
         pointedVectorId: vector.createdAt,
       });
-    }, [tool, isShiftOn]);
+    }, [tool, isShiftOn, selectedVectors]);
 
   const onElementPointerUp = (e) => {
       e.stopPropagation();
