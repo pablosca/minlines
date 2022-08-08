@@ -10,10 +10,10 @@ export default function ToolBar() {
     selectTool(t === tool ? null : t);
   };
 
-  const onDoneClick = (e) => {
+  const onDoneClick = async (e) => {
     e.stopPropagation();
-    clearLastPoint();
-    savePointsVector({ type: "polyline", color, strokeWidth });
+    await clearLastPoint();
+    await savePointsVector({ type: "polyline", color, strokeWidth });
     setDrawing(false);
     clearPoints();
   };

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useTools from "./ToolsContext";
 import Element from "./Element";
 import PathElement from "./PathElement";
@@ -7,10 +7,8 @@ import TextElement from "./TextElement";
 import SelectionWrapper from "./SelectionWrapper";
 import useBoard from "./BoardContext";
 import useSelection from "./SelectionContext";
-import useDrag from "./DragContext";
 
 export default function Pad() {
-  const { drag, completeDrag, isDragging, initialCoords } = useDrag();
   const [pressed, setPressed] = useState(false);
   const { tool, drawing, setDrawing, color, strokeWidth, withGrid } = useTools();
   const {
@@ -31,10 +29,17 @@ export default function Pad() {
     deselect,
     isResizing,
     resize,
-    completeResize
+    completeResize,
+    pointVector,
+    drag,
+    unPointVector,
+    isDragging,
+    initialCoords,
+    pointedVectorId,
+    select,
   } = useSelection();
 
-  const onPointerDown = (e, vector) => {
+  const onPadPointerDown = (e, vector) => {
     if (!tool) return;
     tool === "path" && setPressed(true);
     tool === "polyline" && setDrawing(true);
@@ -44,9 +49,9 @@ export default function Pad() {
     }
   };
 
-  const onPointerMove = (e) => {
+  const onPadPointerMove = (e) => {
     if (tool === "select") {
-      if (isDragging && initialCoords) {
+      if (pointedVectorId) {
         drag({
           x: e.clientX - initialCoords.x,
           y: e.clientY - initialCoords.y
@@ -70,23 +75,62 @@ export default function Pad() {
     }
   };
 
-  const onPointerUp = (e) => {
-    if (tool === "select") {
-      if (isDragging) {
-        completeDrag();
-      } else if (isResizing) {
-        completeResize();
-      } else {
-        deselect();
-      }
+  const onPadPointerUp = (e) => {
+    if (tool === 'select' && isResizing) {
+      completeResize();
     } else if (tool === "path" && pressed) {
-      savePointsVector({ type: "path", color, strokeWidth });
+      savePointsVector({
+        type: "path",
+        color,
+        strokeWidth,
+      });
       clearPoints();
       setPressed(false);
     } else if (tool === 'text') {
       setTempText({ x: e.clientX, y: e.clientY, content: '' });
     }
   };
+
+  // Element's pointer events, TODO: put this in the Element component itself?
+  const onElementPointerDown = useCallback(
+    (vector) => (e) => {
+      e.stopPropagation();
+
+      const isSelected = selectedVectors.includes(vector.createdAt);
+      // if (tool !== "select" || isSelected) return;
+
+      // select({
+      //   box: elementRef.current.querySelector(".vector").getBoundingClientRect(),
+      //   newSelectedId: vector.createdAt,
+      // });
+
+      if (!isSelected) {
+        deselect();
+      }
+
+      pointVector({
+        initialCoords: {
+          x: e.clientX,
+          y: e.clientY
+        },
+        type: vector.type,
+        pointedVectorId: vector.createdAt,
+      });
+    }, [tool]);
+
+  const onElementPointerUp = (e) => {
+      e.stopPropagation();
+      if (tool !== "select") return;
+
+      const isPointedVectorSelected = selectedVectors.includes(pointedVectorId);
+
+      if (pointedVectorId) unPointVector();
+      if (!isPointedVectorSelected && !isResizing) select({ newSelectedId: pointedVectorId });
+
+      if (isResizing) {
+        completeResize();
+      }
+    };
 
   const deleteVector = useCallback(
     (e) => {
@@ -108,7 +152,9 @@ export default function Pad() {
 
   // TODO: put this in a better place
   useEffect(() => {
-    if (tool !== "select") deselect();
+    if (tool !== "select") {
+      deselect();
+    }
   }, [tool]);
 
   const hasTempPath = points.length && pressed && tool === "path";
@@ -143,22 +189,34 @@ export default function Pad() {
       <svg
         className={`artboard ${withGrid && 'with-grid'}`}
         viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
+        onPointerDown={onPadPointerDown}
+        onPointerMove={onPadPointerMove}
+        onPointerUp={onPadPointerUp}
       >
-        {hasTempPath && <PathElement />}
+        {/* TODO: Instead of using id, use a global ref? */}
+        {hasTempPath && <PathElement id="temp-element" />}
         {hasTempLine && (
-          <PolylineElement drawing={drawing} points={points} color={color} strokeWidth={strokeWidth} />
+          <PolylineElement
+            id="temp-element"
+            drawing={drawing}
+            points={points}
+            color={color}
+            strokeWidth={strokeWidth}
+          />
         )}
 
-        {/* {hasTempText && <TextElement data={tempText} />} */}
+        {/* {hasTempText && <TextElement id="temp-element" data={tempText} />} */}
 
         {!isDragging && selectionBox && <SelectionWrapper />}
 
         <g>
           {Object.values(vectors).map((v) => (
-            <Element key={v.createdAt} vector={v} />
+            <Element
+              key={v.createdAt}
+              vector={v}
+              onPointerDown={onElementPointerDown}
+              onPointerUp={onElementPointerUp}
+            />
           ))}
         </g>
       </svg>

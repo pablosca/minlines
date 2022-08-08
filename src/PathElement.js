@@ -20,6 +20,7 @@ export default function PathElement(props) {
         />
       )}
       <path
+        id={props.id}
         className="vector"
         fill="none"
         stroke={renderedColor}

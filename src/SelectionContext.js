@@ -6,18 +6,26 @@ function selectReducer(state, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case "SELECT":
+    case "SELECT": {
       return {
         ...state,
         selectedVectors: payload.selectedVectors,
         selectionBox: payload.selectionBox,
       };
-    case "DESELECT":
+    }
+    case "UPDATE_SELECTION_BOX": {
+      return {
+        ...state,
+        selectionBox: payload.selectionBox,
+      };
+    }
+    case "DESELECT": {
       return {
         ...state,
         selectedVectors: [],
         selectionBox: null,
       };
+    }
     case "START_RESIZE":
       return {
         ...state,
@@ -25,7 +33,7 @@ function selectReducer(state, action) {
         corners: payload.corners,
         initialResizeRect: { ...state.selectionBox }
       };
-    case "RESIZE":
+    case "RESIZE": {
       const { initialResizeRect, corners } = state;
       const { x, y, width, height } = initialResizeRect;
       const { resizingCoords } = payload;
@@ -49,6 +57,7 @@ function selectReducer(state, action) {
           transformBox: "fill-box"
         }
       };
+    }
     case "STOP_RESIZE":
       return {
         ...state,
@@ -58,6 +67,42 @@ function selectReducer(state, action) {
         initialResizeCoords: null,
         corners: null,
       };
+    case "DRAGGING": {
+      const { x, y } = payload.draggingCoords;
+
+      return {
+        ...state,
+        isDragging: true,
+        draggingCoords: { x, y },
+        dragStyle: {
+          transform: `translate(${x}px, ${y}px)`
+        },
+      }
+    }
+    case "POINT_VECTOR": {
+      return {
+        ...state,
+        initialCoords: payload.initialCoords,
+        pointedVectorId: payload.pointedVectorId,
+        type: payload.type,
+      };
+    }
+    case "UNPOINT_VECTOR": {
+      return {
+        ...state,
+        initialCoords: null,
+        type: null,
+        pointedVectorId: null,
+      };
+    }
+    case "STOP_DRAG": {
+      return {
+        ...state,
+        isDragging: false,
+        draggingCoords: null,
+        dragStyle: null,
+      };
+    }
     default:
       return state;
   }
@@ -71,6 +116,12 @@ const initialSelectState = {
   resizeStyle: null,
   corners: null,
   isShiftOn: false,
+  // dragging:
+  isDragging: false,
+  initialCoords: null,
+  draggingCoords: null,
+  dragStyle: null,
+  pointedVectorId: null,
 };
 
 const SelectionContext = createContext(initialSelectState);
@@ -78,7 +129,7 @@ const SelectionContext = createContext(initialSelectState);
 export const SelectionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(selectReducer, initialSelectState);
   const [isShiftOn, setIsShiftOn] = useState(false);
-  const { updateVectorResize } = useBoard();
+  const { vectors, updateVectorResize, updateVectorPosition } = useBoard();
 
   const value = {
     isResizing: state.isResizing,
@@ -86,12 +137,20 @@ export const SelectionProvider = ({ children }) => {
     resizeStyle: state.resizeStyle,
     selectedVectors: state.selectedVectors,
     selectionBox: state.selectionBox,
+    isDragging: state.isDragging,
+    initialCoords: state.initialCoords,
+    draggingCoords: state.draggingCoords,
+    dragStyle: state.dragStyle,
+    pointedVectorId: state.pointedVectorId,
 
     select: (payload) => {
-      let { selectedVectors, box } = payload;
+      const { newSelectedId } = payload;
+      const { box } = vectors[newSelectedId];
       let { x: newX1, y: newY1, width: newWidth, height: newHeight } = box;
       let newX2 = newX1 + newWidth;
       let newY2 = newY1 + newHeight;
+      let newSelectedVectors = [newSelectedId];
+      let newSelectionBox = box;
 
       if (state.selectionBox) {
         const { x: currentX1, y: currentY1, width: currentWidth, height: currentHeight } = state.selectionBox;
@@ -101,25 +160,27 @@ export const SelectionProvider = ({ children }) => {
         // check if boundaries are further than those in the state
         // otherwise keep what we have
         if (newX1 > currentX1) newX1 = currentX1;
-        if (newX2 < currentX2) newX2 = currentX2;;
+        if (newX2 < currentX2) newX2 = currentX2;
         if (newY1 > currentY1) newY1 = currentY1;
-        if (newY2 < currentY2) newY2 = currentY2;;
+        if (newY2 < currentY2) newY2 = currentY2;
+
+        newSelectionBox = {
+          x: newX1,
+          y: newY1,
+          width: newX2 - newX1,
+          height: newY2 - newY1,
+        };
       }
 
       if (isShiftOn) {
-        selectedVectors = [...new Set([...state.selectedVectors, ...selectedVectors])];
+        newSelectedVectors = [...new Set([...state.selectedVectors, newSelectedId])];
       }
 
       dispatch({
         type: "SELECT",
         payload: {
-          selectedVectors,
-          selectionBox: {
-            x: newX1,
-            y: newY1,
-            width: newX2 - newX1,
-            height: newY2 - newY1,
-          },
+          selectedVectors: newSelectedVectors,
+          selectionBox: newSelectionBox,
         }
       });
     },
@@ -142,7 +203,7 @@ export const SelectionProvider = ({ children }) => {
       });
     },
 
-    completeResize: () => {
+    completeResize: async () => {
       const {
         selectedVectors,
         isResizing,
@@ -153,17 +214,82 @@ export const SelectionProvider = ({ children }) => {
       } = state;
 
       if (selectedVectors.length && isResizing) {
-        updateVectorResize(selectedVectors, {
+        await updateVectorResize({
           scaleX: selectionBox.width / initialResizeRect.width,
           scaleY: selectionBox.height / initialResizeRect.height,
           selectionBox,
           corners,
           resizeStyle,
+          selectedVectors,
         });
       }
 
       dispatch({ type: "STOP_RESIZE" });
-    }
+    },
+
+    pointVector: ({ initialCoords, type, pointedVectorId }) => {
+      dispatch({
+        type: "POINT_VECTOR",
+        payload: {
+          initialCoords,
+          type,
+          pointedVectorId,
+        }
+      });
+    },
+
+    unPointVector: async () => {
+      const { draggingCoords, selectedVectors, isDragging, pointedVectorId } = state;
+      const vector = vectors[pointedVectorId];
+
+      if ((selectedVectors.length || pointedVectorId) && draggingCoords) {
+        const idsToChange = selectedVectors.length ? selectedVectors : [pointedVectorId];
+
+        await updateVectorPosition({
+          idsToChange,
+          deltaX: draggingCoords.x,
+          deltaY: draggingCoords.y,
+        });
+      }
+
+      dispatch({ type: "UNPOINT_VECTOR" });
+      
+      if (isDragging) {
+        const isPointedVectorSelected = selectedVectors.includes(pointedVectorId);
+        let newSelectionBox = vector.box;
+
+        dispatch({ type: "STOP_DRAG" });
+        
+
+        if (state.selectionBox) {
+          newSelectionBox = {
+            ...state.selectionBox,
+            x: state.selectionBox.x + draggingCoords.x,
+            y: state.selectionBox.y + draggingCoords.y,
+          }
+        } else {
+          newSelectionBox = {
+            ...vector.box,
+            x: vector.box.x + draggingCoords.x,
+            y: vector.box.y + draggingCoords.y,
+          };
+        }
+
+        dispatch({
+          type: "UPDATE_SELECTION_BOX",
+          payload: {
+            selectionBox: newSelectionBox,
+          }
+        });
+      }
+    },
+
+    drag: (draggingCoords) => {
+      dispatch({
+        type: "DRAGGING",
+        payload: { draggingCoords }
+      });
+    },
   };
 
   // TODO: put this in a more global context (WindowContext?)

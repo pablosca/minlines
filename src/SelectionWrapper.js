@@ -17,7 +17,16 @@ export default function SelectionWrapper() {
 
   return (
     <g>
-      <circle 
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        stroke="blue"
+        strokeOpacity=".4"
+        fill="none"
+      ></rect>
+      <circle
         className="point-handler left-top"
         cx={x}
         cy={y}
@@ -41,15 +50,6 @@ export default function SelectionWrapper() {
         cy={y + height}
         onPointerDown={onPointerDown({ right: true, bottom: true })}
       ></circle>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        stroke="blue"
-        strokeOpacity=".4"
-        fill="none"
-      ></rect>
     </g>
   );
 }

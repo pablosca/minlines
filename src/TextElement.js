@@ -1,6 +1,6 @@
 import useTools from "./ToolsContext";
 
-export default function TextElement({ data }) {
+export default function TextElement({ data, id }) {
   const { tool } = useTools();
   const lines = data.content.split('\n');
 
@@ -15,6 +15,7 @@ export default function TextElement({ data }) {
         </text>
       )} */}
       <text
+        id={id}
         className={`vector ${tool === 'select' && 'grabbable'}`}
         x={data.x}
         y={data.y}

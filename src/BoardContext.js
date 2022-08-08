@@ -1,4 +1,5 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useRef } from "react";
+import useSelection from "./SelectionContext";
 
 /*type Vector = {
   points?: Array,
@@ -47,13 +48,17 @@ export const BoardProvider = ({ children }) => {
   };
 
   const savePointsVector = ({ type, color, strokeWidth }) => {
+    // TODO: Use a useRef, instead of using the id
+    const tempElement = document.getElementById('temp-element');
+    const { x, y, height, width } = tempElement.getBoundingClientRect();
     const now = Date.now();
     const newVector = {
       points,
       createdAt: now,
       type,
       color,
-      strokeWidth
+      strokeWidth,
+      box: { x, y, height, width },
     };
 
     setVectors({
@@ -80,75 +85,94 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const updatePointsVectorDelta = (id, { deltaX, deltaY }) => {
-    const vector = vectors[id];
+  const updateVectorPosition = ({ deltaX, deltaY, idsToChange }) => {
+    const updatedVectors = {};
 
-    const newPoints = vector.points.map((p) => {
-      return {
-        ...p,
-        x: p.x + deltaX,
-        y: p.y + deltaY
-      };
-    });
-
-    setVectors({
-      ...vectors,
-      [id]: {
-        ...vector,
-        points: newPoints
-      }
-    });
-  };
-
-  const updateVectorDelta = (id, { deltaX, deltaY }) => {
-    const vector = vectors[id];
-
-    setVectors({
-      ...vectors,
-      [id]: {
-        ...vector,
-        x: vector.x + deltaX,
-        y: vector.y + deltaY,
-      }
-    });
-  };
-
-  const updateVectorResize = (
-    id,
-    { scaleX, scaleY, selectionBox, corners, resizeStyle }
-  ) => {
-    const {x, y, width, height } = selectionBox;
-    const vector = vectors[id];
-    const newVector = { ...vector };
-    let newPoints = [];
-
-    if (vector.type.match(/polyline|path/)) {
-      const firstX = corners.right ? x : x + width;
-      const firstY = corners.bottom ? y : y + height;
+    idsToChange.forEach(id => {
+      const vector = vectors[id];
+      
+      // vectors with points
+      if (vector.type.match(/polyline|path/)) {
+        const newPoints = vector.points.map((p) => {
+          return {
+            ...p,
+            x: p.x + deltaX,
+            y: p.y + deltaY
+          };
+        });
   
-      newPoints = vector.points.map((p) => {
-        const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
-        const newY = scaleY * p.y + (1 - scaleY) * firstY;
-  
-        return {
-          ...p,
-          x: newX,
-          y: newY
+        updatedVectors[id] = {
+          ...vector,
+          points: newPoints,
+          box: {
+            ...vector.box,
+            x: vector.box.x + deltaX,
+            y: vector.box.y + deltaY,
+          }
         };
-      });
+      }
 
-      newVector.points = newPoints;
-    }
-
-    if (vector.type === 'text') {
-      newVector.x = scaleX * vector.x + (1 - scaleX) * vector.x;
-      newVector.y = scaleY * vector.y + (1 - scaleY) * vector.y;
-      newVector.resizeStyle = resizeStyle;
-    }
+      // text vectors
+      if (vector.type.match(/text/)) {
+        newVector[id] = {
+          ...vector,
+          x: vector.x + deltaX,
+          y: vector.y + deltaY,
+        }
+      }
+    });
 
     setVectors({
       ...vectors,
-      [id]: newVector
+      ...updatedVectors,
+    });
+  };
+
+  const updateVectorResize = ({ scaleX, scaleY, selectionBox, corners, resizeStyle, selectedVectors }) => {
+    const {x, y, width, height } = selectionBox;
+    const updatedVectors = {};
+
+    selectedVectors.forEach(id => {
+      const vector = vectors[id];
+      const newVector = { ...vector };
+      let newPoints = [];
+
+      if (vector.type.match(/polyline|path/)) {
+        const firstX = corners.right ? x : x + width;
+        const firstY = corners.bottom ? y : y + height;
+    
+        newPoints = vector.points.map((p) => {
+          const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
+          const newY = scaleY * p.y + (1 - scaleY) * firstY;
+    
+          return {
+            ...p,
+            x: newX,
+            y: newY
+          };
+        });
+
+        newVector.points = newPoints;
+        newVector.box = {
+          x: scaleX * vector.box.x + (1 - scaleX) * firstX,
+          y: scaleY * vector.box.y + (1 - scaleY) * firstY,
+          width: vector.box.width * scaleX,
+          height: vector.box.height * scaleY,
+        };
+      }
+
+      if (vector.type === 'text') {
+        newVector.x = scaleX * vector.x + (1 - scaleX) * vector.x;
+        newVector.y = scaleY * vector.y + (1 - scaleY) * vector.y;
+        newVector.resizeStyle = resizeStyle;
+      }
+
+      updatedVectors[id] = newVector;
+    });
+
+    setVectors({
+      ...vectors,
+      ...updatedVectors
     });
   };
 
@@ -170,8 +194,7 @@ export const BoardProvider = ({ children }) => {
         savePointsVector,
         clearPointByIndex,
         clearLastPoint,
-        updatePointsVectorDelta,
-        updateVectorDelta,
+        updateVectorPosition,
         removeVector,
         updateVectorResize,
         tempText,
