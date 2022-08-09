@@ -37,7 +37,8 @@ function selectReducer(state, action) {
       return {
         ...state,
         isSelectingArea: true,
-        selectionBox: payload.selectionBox,
+        startingPoint: payload.startingPoint,
+        // selectionBox: payload.selectionBox,
       };
     }
     case "STOP_SELECT_AREA": {
@@ -143,6 +144,7 @@ const initialSelectState = {
   dragStyle: null,
   pointedVectorId: null,
   isSelectingArea: false,
+  startingPoint: {},
 };
 
 const SelectionContext = createContext(initialSelectState);
@@ -218,32 +220,55 @@ export const SelectionProvider = ({ children }) => {
       dispatch({
         type: "START_SELECT_AREA",
         payload: {
-          selectionBox: {
+          startingPoint: {
             x: selectionBox.x,
             y: selectionBox.y,
-            height: 0,
-            width: 0,
-          }
+          },
+          // selectionBox: {
+          //   x: selectionBox.x,
+          //   y: selectionBox.y,
+          //   height: 0,
+          //   width: 0,
+          // }
         }
       });
     },
 
-    moveSelectArea: ({ width, height }) => {
-      const newSelectionBox = {
-        ...state.selectionBox,
-        height,
-        width,
-      };
+    moveSelectArea: ({ x, y }) => {
+      const newSelectionBox = {};
+
+      // x axis
+      if (x > state.startingPoint.x) {
+        // going right
+        newSelectionBox.x = state.startingPoint.x;
+        newSelectionBox.width = x - state.startingPoint.x;
+      } else {
+        newSelectionBox.x = x;
+        newSelectionBox.width = state.startingPoint.x - x;
+      }
+
+      // y axis
+      if (y > state.startingPoint.y) {
+        // going right
+        newSelectionBox.y = state.startingPoint.y;
+        newSelectionBox.height = y - state.startingPoint.y;
+      } else {
+        newSelectionBox.y = y;
+        newSelectionBox.height = state.startingPoint.y - y;
+      }
+
       const selectedVectors = [];
-      const selectionX2 = newSelectionBox.x + width;
-      const selectionY2 = newSelectionBox.y + height;
+      const selectionX2 = newSelectionBox.x + newSelectionBox.width;
+      const selectionY2 = newSelectionBox.y + newSelectionBox.height;
 
       Object.values(vectors).forEach(v => {
         const { box, createdAt} = v;
-        const isInsideX = box.x >= newSelectionBox.x && box.x <= selectionX2;
-        const isInsideY = box.y >= newSelectionBox.y && box.y <= selectionY2;
+        const x1IsInsideX = box.x >= newSelectionBox.x && box.x <= selectionX2;
+        const y1IsInsideY = box.y >= newSelectionBox.y && box.y <= selectionY2;
+        const x2IsInsideX = (box.x + box.width) >= newSelectionBox.x && (box.x + box.width) <= selectionX2;
+        const y2IsInsideY = (box.y + box.height) >= newSelectionBox.y && (box.y + box.height) <= selectionY2;
 
-        if (isInsideX && isInsideY) {
+        if (x1IsInsideX && y1IsInsideY || x2IsInsideX && y2IsInsideY) {
           selectedVectors.push(createdAt);
         }
       });

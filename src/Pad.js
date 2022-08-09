@@ -77,8 +77,8 @@ export default function Pad() {
         });
       } else if (isSelectingArea) {
         moveSelectArea({
-          width: Math.max(e.clientX, selectionBox.x) - Math.min(e.clientX, selectionBox.x),
-          height: Math.max(e.clientY, selectionBox.y) - Math.min(e.clientY, selectionBox.y),
+          x: e.clientX,
+          y: e.clientY,
         });
       }
     } else if (tool === "path" && pressed) {
@@ -98,7 +98,7 @@ export default function Pad() {
     if (tool === 'select') {
       if (isResizing) {
         completeResize();
-      } else if (!isDragging && !isSelectingArea || !selectionBox.width) {
+      } else if (!isDragging && !isSelectingArea || !selectionBox) {
         deselect();
       } else if (isSelectingArea) {
         await stopSelectArea();
