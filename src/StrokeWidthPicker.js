@@ -1,7 +1,7 @@
 import useTools, { strokeWidths } from "./ToolsContext";
 
 export default function StrokeWidthPicker() {
-  const { setStrokeWidth } = useTools();
+  const { strokeWidth, setStrokeWidth } = useTools();
 
   const onStrokeClick = (width) => {
     setStrokeWidth(width);
@@ -9,14 +9,14 @@ export default function StrokeWidthPicker() {
 
   return (
     <div className="stroke-picker toolbar">
-      {strokeWidths.map((c) => (
+      {strokeWidths.map((s) => (
         <button
-          className="picker-button"
-          key={c.name}
-          onClick={(e) => onStrokeClick(c.width)}
-          title={c.name}
+          className={`picker-button ${strokeWidth === s.width && 'active'}`}
+          key={s.name}
+          onClick={(e) => onStrokeClick(s.width)}
+          title={s.name}
         >
-          <div className="stroke" style={{ "--stroke-width": c.width }}></div>
+          <div className="stroke" style={{ "--stroke-width": s.width }}></div>
         </button>
       ))}
     </div>

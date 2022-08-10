@@ -62,23 +62,23 @@ export const strokeWidths = [
 ];
 
 const initialState = {
-  tool: null,
+  tool: 'path',
   color: "#000",
   drawing: false,
   isDragging: false,
   strokeWidth: 2,
-  withGrid: false,
+  withGrid: true,
 };
 
 const ToolsContext = createContext(initialState);
 
 export const ToolsProvider = ({ children }) => {
-  const [tool, setTool] = useState(null);
+  const [tool, setTool] = useState(initialState.tool);
   const [color, setColor] = useState(initialState.color);
   const [drawing, setDrawing] = useState(false);
   const [isDragging, setIsDragging] = useState(null);
   const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
-  const [withGrid, setWithGrid] = useState(false);
+  const [withGrid, setWithGrid] = useState(initialState.withGrid);
 
   const selectTool = (tool) => {
     setDrawing(false);
