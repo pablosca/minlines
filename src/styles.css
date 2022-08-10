@@ -1,6 +1,13 @@
 body {
   margin: 0;
 }
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -9,11 +16,11 @@ body {
 }
 
 .artboard {
-  position: fixed;
   left: 0;
+  position: fixed;
+  height: 100vh;
   top: 0;
   width: 100vw;
-  height: 100vh;
 }
 
 .artboard.with-grid {
@@ -23,28 +30,49 @@ body {
     linear-gradient(to bottom, #0002 1px, transparent 1px);
 }
 
-.toolbar {
+.navbar {
+  align-items: center;
+  display: flex;
+  gap: 15px;
+  left: 15px;
   position: fixed;
+  top: 15px;
   z-index: 2;
 }
 
-button {
-  background: none;
-  border: 2px solid transparent;
-  border-radius: 2px;
-  cursor: pointer;
+.toolbar {
+  background: hsl(0 0% 0% / 75%);
+  border-radius: 5px;
+  display: flex;
+  gap: 10px;
+  padding: 5px 10px;
 }
 
-button.selected {
-  border: 2px solid black;
+.toolbar .button {
+  color: #fff;
+}
+
+.button {
+  border-radius: 2px;
+  padding: 2px 5px;
+}
+
+.button:hover {
+  background: hsl(0 0% 100% / 25%);
+}
+
+.button.selected {
+  background: hsl(0 0% 100% / 90%);
+  color: hsl(0 0% 0%);
+}
+
+.color-picker, .stroke-picker {
+  background: hsl(0 0% 0% / 15%);
+  display: flex;
 }
 
 .color-picker {
-  display: flex;
   gap: 0.4rem;
-  position: fixed;
-  right: 8px;
-  top: 8px;
 }
 
 .color {
@@ -52,13 +80,6 @@ button.selected {
   border-radius: 50%;
   height: 20px;
   width: 20px;
-}
-
-.stroke-picker {
-  display: flex;
-  position: fixed;
-  right: 8px;
-  top: 40px;
 }
 
 .stroke {
@@ -107,4 +128,15 @@ button.selected {
 
 .selection-wrapper {
   pointer-events: none;
+}
+
+.sidebar {
+  background: hsl(0 0% 90%);
+  border-radius: 5px;
+  bottom: 15px;
+  padding: 15px;
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  width: 25vw;
 }

@@ -15,9 +15,11 @@ export default function App() {
         <SelectionProvider>
             <div className="App">
               <Pad />
-              <ToolBar />
-              <ColorPicker />
-              <StrokeWidthPicker />
+              <nav className="navbar">
+                <ToolBar />
+                <ColorPicker />
+                <StrokeWidthPicker />
+              </nav>
             </div>
         </SelectionProvider>
       </BoardProvider>

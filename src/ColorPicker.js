@@ -8,10 +8,10 @@ export default function ColorPicker() {
   };
 
   return (
-    <div className="color-picker">
+    <div className="color-picker toolbar">
       {colors.map((c) => (
         <button
-          className="color"
+          className="color picker-button"
           style={{ "--color": c.code }}
           key={c.name}
           onClick={(e) => onColorClick(c.code)}

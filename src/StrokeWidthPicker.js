@@ -8,9 +8,10 @@ export default function StrokeWidthPicker() {
   };
 
   return (
-    <div className="stroke-picker">
+    <div className="stroke-picker toolbar">
       {strokeWidths.map((c) => (
         <button
+          className="picker-button"
           key={c.name}
           onClick={(e) => onStrokeClick(c.width)}
           title={c.name}

@@ -5,6 +5,7 @@ import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
 import TextElement from "./TextElement";
 import SelectionWrapper from "./SelectionWrapper";
+import Sidebar from "./Sidebar";
 import useBoard from "./BoardContext";
 import useSelection from "./SelectionContext";
 
@@ -82,6 +83,7 @@ export default function Pad() {
         });
       }
     } else if (tool === "path" && pressed) {
+      console.log('EE',e);
       addPoint({
         x: e.clientX,
         y: e.clientY
@@ -201,7 +203,7 @@ export default function Pad() {
   });
   
   return (
-    <>
+    <main className="main">
       {tempText && <textarea
         style={{ 'position': 'fixed', left: tempText.x + 'px', top: tempText.y + 'px', background: 'red', opacity: 0.01 }}
         autoFocus
@@ -244,6 +246,7 @@ export default function Pad() {
           ))}
         </g>
       </svg>
-    </>
+      <Sidebar />
+    </main>
   );
 }
