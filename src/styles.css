@@ -34,8 +34,12 @@ button {
     linear-gradient(to bottom, #0002 1px, transparent 1px);
 }
 
-.artboard {
+.artboard.tool {
   cursor: crosshair;
+}
+
+.artboard.is-dragging {
+  cursor: move;
 }
 
 .navbar {
@@ -113,14 +117,18 @@ button {
   stroke-opacity: 0.2;
 }
 
+.grabbable:hover {
+  cursor: move;
+}
+
 .grabbable:hover, .grabbable.active {
   stroke: blue;
 }
 
 .point-handler {
   fill: blue;
-  fill-opacity: 0.25;
-  stroke-width: 0.75;
+  fill-opacity: .8;
+  stroke-width: 1;
   stroke: blue;
   r: 4;
 }

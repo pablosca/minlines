@@ -32,7 +32,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
         width={vector.box.width}
         height={vector.box.height}
         stroke="blue"
-        strokeOpacity=".4"
+        strokeOpacity=".75"
         strokeDasharray="4"
         fill="none"
       />}
