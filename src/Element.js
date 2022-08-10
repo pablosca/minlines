@@ -7,7 +7,7 @@ import useSelection from "./SelectionContext";
 
 export default function Element({ vector, onPointerDown, onPointerUp }) {
   const { tool } = useTools();
-  const { resizeStyle, selectedVectors, select, isResizing, dragStyle, isDragging, pointedVectorId } = useSelection();
+  const { resizeStyle, selectedVectors, isResizing, dragStyle, isDragging, pointedVectorId, isSelectingArea } = useSelection();
   const elementRef = useRef(null);
 
   const isSelected = selectedVectors.includes(vector.createdAt);
@@ -16,16 +16,6 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
 
   if (isSelected && isResizing) style = resizeStyle;
   if ((isSelected || isPointed) && isDragging) style = dragStyle;
-
-  // const onClick = useCallback((e) => {
-  //   e.stopPropagation();
-
-  //   if (tool !== "select" || isDragging || isSelected) return; // Fix this so we don't need the 'isSelected' flag here and we can deselect by clicking the selected element itself
-  //   select({
-  //     box: elementRef.current.querySelector(".vector").getBoundingClientRect(),
-  //     newSelectedId: vector.createdAt,
-  //   });
-  // }, [tool, vector, select]);
 
   return (
     <g
@@ -36,12 +26,23 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
       onPointerDown={onPointerDown(vector)}
       onPointerUp={onPointerUp}
     >
+      {isSelected && isSelectingArea && <rect
+        x={vector.box.x}
+        y={vector.box.y}
+        width={vector.box.width}
+        height={vector.box.height}
+        stroke="blue"
+        strokeOpacity=".4"
+        strokeDasharray="4"
+        fill="none"
+      />}
       {vector.type === "polyline" && (
         <PolylineElement
           key={vector.createdAt}
           points={vector.points}
           color={vector.color}
           strokeWidth={vector.strokeWidth}
+          vectorId={vector.createdAt}
         />
       )}
       {vector.type === "path" && (
@@ -50,6 +51,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           points={vector.points}
           color={vector.color}
           strokeWidth={vector.strokeWidth}
+          vectorId={vector.createdAt}
         />
       )}
       {/* {vector.type === "text" && (

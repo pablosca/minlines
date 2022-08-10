@@ -83,7 +83,7 @@ button.selected {
   stroke-opacity: 0.2;
 }
 
-.grabbable:hover {
+.grabbable:hover, .grabbable.active {
   stroke: blue;
 }
 

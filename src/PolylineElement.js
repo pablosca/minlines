@@ -1,8 +1,11 @@
+import useSelection from "./SelectionContext";
 import useTools from "./ToolsContext";
 
-export default function PolylineElement({ points, color, drawing, strokeWidth, id }) {
+export default function PolylineElement({ points, color, drawing, strokeWidth, id, vectorId }) {
   const { tool } = useTools();
   const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
+  const { selectedVectors, isSelectingArea } = useSelection();
+  const isSelected = selectedVectors.includes(vectorId);
 
   return (
     <g>
@@ -17,7 +20,7 @@ export default function PolylineElement({ points, color, drawing, strokeWidth, i
         ))}
       {tool === "select" && (
         <polyline
-          className="grabbable"
+          className={`grabbable ${(isSelected && isSelectingArea) && 'active'}`}
           strokeWidth={strokeWidth + 6}
           points={`${pointsString}`}
           vectorEffect="non-scaling-stroke"
