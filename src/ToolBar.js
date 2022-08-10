@@ -29,7 +29,7 @@ export default function ToolBar() {
           {t.name}
         </button>
       ))}
-      {drawing && <button onClick={onDoneClick}>Done</button>}
+      {drawing && <button className="button" onClick={onDoneClick}>Done</button>}
     </nav>
   );
 }
