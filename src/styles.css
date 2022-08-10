@@ -1,3 +1,7 @@
+:root {
+  --secondary-bg: hsl(0 0% 0% / 15%);
+}
+
 body {
   margin: 0;
 }
@@ -67,7 +71,8 @@ button {
 }
 
 .color-picker, .stroke-picker {
-  background: hsl(0 0% 0% / 15%);
+  background: var(--secondary-bg);
+  backdrop-filter: blur(1px);
   display: flex;
 }
 
@@ -131,7 +136,8 @@ button {
 }
 
 .sidebar {
-  background: hsl(0 0% 90%);
+  background: var(--secondary-bg);
+  backdrop-filter: blur(2px);
   border-radius: 5px;
   bottom: 15px;
   padding: 15px;
