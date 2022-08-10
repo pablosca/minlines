@@ -18,7 +18,7 @@ export default function PolylineElement({ points, color, drawing, strokeWidth, i
       {tool === "select" && (
         <polyline
           className="grabbable"
-          strokeWidth="6"
+          strokeWidth={strokeWidth + 6}
           points={`${pointsString}`}
           vectorEffect="non-scaling-stroke"
         />

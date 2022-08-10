@@ -14,7 +14,7 @@ export default function PathElement(props) {
       {tool === "select" && (
         <path
           className="grabbable"
-          strokeWidth="8"
+          strokeWidth={renderedStrokeWidth + 6}
           d={`M${pointsString}`}
           vectorEffect="non-scaling-stroke"
         />
