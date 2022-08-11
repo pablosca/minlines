@@ -83,7 +83,6 @@ export default function Pad() {
         });
       }
     } else if (tool === "path" && pressed) {
-      console.log('EE',e);
       addPoint({
         x: e.clientX,
         y: e.clientY

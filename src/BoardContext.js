@@ -183,6 +183,15 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
+  const updateVectorsById = (ids, updates) => {
+    setVectors(vectors => {
+      ids.forEach(id => {
+        vectors[id] = { ...vectors[id], ...updates }
+      });
+      return { ...vectors };
+    });
+  };
+
   return (
     <BoardContext.Provider
       value={{
@@ -200,6 +209,7 @@ export const BoardProvider = ({ children }) => {
         tempText,
         setTempText,
         saveTextVector,
+        updateVectorsById,
       }}
     >
       {children}
