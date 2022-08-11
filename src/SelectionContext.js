@@ -268,7 +268,11 @@ export const SelectionProvider = ({ children }) => {
         const x2IsInsideX = (box.x + box.width) >= newSelectionBox.x && (box.x + box.width) <= selectionX2;
         const y2IsInsideY = (box.y + box.height) >= newSelectionBox.y && (box.y + box.height) <= selectionY2;
 
-        if (x1IsInsideX && y1IsInsideY || x2IsInsideX && y2IsInsideY) {
+        // TODO: Fix it so you can select not only the corners!
+        if (
+          x1IsInsideX && y1IsInsideY || x2IsInsideX && y2IsInsideY ||
+          x1IsInsideX && y2IsInsideY || x2IsInsideX && y1IsInsideY
+        ) {
           selectedVectors.push(createdAt);
         }
       });
