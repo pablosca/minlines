@@ -152,9 +152,19 @@ button {
   backdrop-filter: blur(2px);
   border-radius: 5px;
   bottom: 15px;
+  color: hsl(0 0% 5%);
+  font-size: 14px;
   padding: 15px;
   position: fixed;
   right: 15px;
   top: 15px;
-  width: 25vw;
+  width: 15vw;
+  z-index: 2;
+}
+
+.sidebar-close {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 3;
 }
