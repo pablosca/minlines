@@ -10,6 +10,10 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
   const onStrokeWidthChange = (e) => {
     updateVectorsById(vectorsIds, { strokeWidth: parseInt(e.currentTarget.value) });
   };
+
+  const onStrokeColorChange = (e) => {
+    updateVectorsById(vectorsIds, { strokeColor: e.currentTarget.value });
+  };
   
   return (
     <section>
@@ -22,6 +26,15 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
         max="20"
         defaultValue={multiple ? 3 : vectors[0].strokeWidth}
         onChange={onStrokeWidthChange}
+      />
+
+      <label htmlFor="strokeColor">Stroke color {multiple && '(multiple stroke colors)'}</label>
+      <input
+        type="color"
+        id="strokeColor"
+        name="strokeColor"
+        defaultValue={multiple ? '#000' : vectors[0].strokeColor}
+        onChange={onStrokeColorChange}
       />
     </section>
   );

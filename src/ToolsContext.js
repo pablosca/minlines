@@ -22,19 +22,19 @@ export const tools = [
 export const colors = [
   {
     name: "Black",
-    code: "#000"
+    code: "#000000"
   },
   {
     name: "Red",
-    code: "#f00"
+    code: "#ff0000"
   },
   {
     name: "Green",
-    code: "#0F0"
+    code: "#00ff00"
   },
   {
     name: "Blue",
-    code: "#00F"
+    code: "#0000ff"
   }
 ];
 
