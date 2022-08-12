@@ -23,14 +23,17 @@ export default function Sidebar() {
         {isClosed ? 'Open sidebar' : 'Close'}
       </button>
 
-      {!isClosed && <aside className="sidebar">
-        <label>
-          <input type="checkbox" onChange={onGridChange} checked={withGrid} />
-          {withGrid ? 'Hide' : 'Show'} grid
-        </label>
-
-        {!isSelectingArea && selectedVectors.length && <BasicAttributes vectors={selectedVectors} />}
-      </aside>}
+      {!isClosed && (
+        <aside className="sidebar">
+          <section className="attribute-section">
+            <label>
+              <input type="checkbox" onChange={onGridChange} checked={withGrid} />
+              {withGrid ? 'Hide' : 'Show'} grid
+            </label>
+          </section>
+          {!isSelectingArea && !!selectedVectors.length && <BasicAttributes vectors={selectedVectors} />}
+        </aside>
+      )}
     </>
   )
 }

@@ -58,6 +58,7 @@ export const BoardProvider = ({ children }) => {
       type,
       strokeColor,
       strokeWidth,
+      strokeOpacity: 1,
       box: { x, y, height, width },
     };
 

@@ -1,7 +1,8 @@
 import useSelection from "./SelectionContext";
 import useTools from "./ToolsContext";
 
-export default function PolylineElement({ points, strokeColor, drawing, strokeWidth, id, vectorId }) {
+export default function PolylineElement(props) {
+  const { points, strokeColor, drawing, strokeWidth, id, vectorId, strokeOpacity } = props;
   const { tool } = useTools();
   const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
   const { selectedVectors, isSelectingArea } = useSelection();
@@ -32,6 +33,7 @@ export default function PolylineElement({ points, strokeColor, drawing, strokeWi
         className="vector"
         stroke={strokeColor}
         strokeWidth={strokeWidth}
+        strokeOpacity={strokeOpacity || 1}
         points={`${pointsString}`}
         vectorEffect="non-scaling-stroke"
       />

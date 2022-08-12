@@ -28,6 +28,7 @@ export default function PathElement(props) {
         fill="none"
         stroke={renderedStrokeColor}
         strokeWidth={renderedStrokeWidth}
+        strokeOpacity={props.strokeOpacity || 1}
         d={`M${pointsString}`}
         vectorEffect="non-scaling-stroke"
       />

@@ -42,6 +42,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           points={vector.points}
           strokeColor={vector.strokeColor}
           strokeWidth={vector.strokeWidth}
+          strokeOpacity={vector.strokeOpacity}
           vectorId={vector.createdAt}
         />
       )}
@@ -51,6 +52,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           points={vector.points}
           strokeColor={vector.strokeColor}
           strokeWidth={vector.strokeWidth}
+          strokeOpacity={vector.strokeOpacity}
           vectorId={vector.createdAt}
         />
       )}
