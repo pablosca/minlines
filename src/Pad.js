@@ -11,7 +11,7 @@ import useSelection from "./SelectionContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, color, strokeWidth, withGrid } = useTools();
+  const { tool, drawing, setDrawing, strokeColor, strokeWidth, withGrid } = useTools();
   const {
     points,
     vectors,
@@ -107,7 +107,7 @@ export default function Pad() {
     } else if (tool === "path" && pressed) {
       savePointsVector({
         type: "path",
-        color,
+        strokeColor,
         strokeWidth,
       });
       clearPoints();
@@ -196,7 +196,7 @@ export default function Pad() {
       x,
       y,
       content,
-      color,
+      strokeColor,
       fontSize: 16,
     });
   });
@@ -225,7 +225,7 @@ export default function Pad() {
             id="temp-element"
             drawing={drawing}
             points={points}
-            color={color}
+            strokeColor={strokeColor}
             strokeWidth={strokeWidth}
           />
         )}

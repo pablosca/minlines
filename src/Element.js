@@ -40,7 +40,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
         <PolylineElement
           key={vector.createdAt}
           points={vector.points}
-          color={vector.color}
+          strokeColor={vector.strokeColor}
           strokeWidth={vector.strokeWidth}
           vectorId={vector.createdAt}
         />
@@ -49,7 +49,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
         <PathElement
           key={vector.createdAt}
           points={vector.points}
-          color={vector.color}
+          strokeColor={vector.strokeColor}
           strokeWidth={vector.strokeWidth}
           vectorId={vector.createdAt}
         />

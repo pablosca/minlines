@@ -47,7 +47,7 @@ export const BoardProvider = ({ children }) => {
     clearPointByIndex(points.length - 1);
   };
 
-  const savePointsVector = ({ type, color, strokeWidth }) => {
+  const savePointsVector = ({ type, strokeColor, strokeWidth }) => {
     // TODO: Use a useRef, instead of using the id
     const tempElement = document.getElementById('temp-element');
     const { x, y, height, width } = tempElement.getBoundingClientRect();
@@ -56,7 +56,7 @@ export const BoardProvider = ({ children }) => {
       points,
       createdAt: now,
       type,
-      color,
+      strokeColor,
       strokeWidth,
       box: { x, y, height, width },
     };
@@ -67,7 +67,7 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const saveTextVector = ({ x, y, content, fontSize = 16, color = 'black' }) => {
+  const saveTextVector = ({ x, y, content, fontSize = 16, strokeColor = 'black' }) => {
     const now = Date.now();
     const newVector = {
       createdAt: now,
@@ -76,7 +76,7 @@ export const BoardProvider = ({ children }) => {
       y,
       content,
       fontSize,
-      color,
+      strokeColor,
     };
 
     setVectors({

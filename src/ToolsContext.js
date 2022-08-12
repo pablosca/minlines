@@ -63,7 +63,7 @@ export const strokeWidths = [
 
 const initialState = {
   tool: 'path',
-  color: "#000",
+  strokeColor: "#000",
   drawing: false,
   isDragging: false,
   strokeWidth: 2,
@@ -74,7 +74,7 @@ const ToolsContext = createContext(initialState);
 
 export const ToolsProvider = ({ children }) => {
   const [tool, setTool] = useState(initialState.tool);
-  const [color, setColor] = useState(initialState.color);
+  const [strokeColor, setStrokeColor] = useState(initialState.strokeColor);
   const [drawing, setDrawing] = useState(false);
   const [isDragging, setIsDragging] = useState(null);
   const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
@@ -92,8 +92,8 @@ export const ToolsProvider = ({ children }) => {
         selectTool,
         drawing,
         setDrawing,
-        color,
-        setColor,
+        strokeColor,
+        setStrokeColor,
         isDragging,
         setIsDragging,
         strokeWidth,

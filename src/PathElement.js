@@ -4,9 +4,9 @@ import useSelection from "./SelectionContext";
 
 export default function PathElement(props) {
   const { points } = useBoard();
-  const { color, strokeWidth, tool } = useTools();
+  const { strokeColor, strokeWidth, tool } = useTools();
   const renderedPoints = props.points || points;
-  const renderedColor = props.color || color;
+  const renderedStrokeColor = props.strokeColor || strokeColor;
   const renderedStrokeWidth = props.strokeWidth || strokeWidth;
   const pointsString = renderedPoints.map((p) => `${p.x},${p.y}`).join(" ");
   const { selectedVectors, isSelectingArea } = useSelection();
@@ -26,7 +26,7 @@ export default function PathElement(props) {
         id={props.id}
         className="vector"
         fill="none"
-        stroke={renderedColor}
+        stroke={renderedStrokeColor}
         strokeWidth={renderedStrokeWidth}
         d={`M${pointsString}`}
         vectorEffect="non-scaling-stroke"
