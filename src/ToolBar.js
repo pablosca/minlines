@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import useBoard from "./BoardContext";
 import useTools, { tools } from "./ToolsContext";
 
@@ -26,7 +28,7 @@ export default function ToolBar() {
           key={t.key}
           className={`button ${t.key === tool ? 'selected' : ''}`}
         >
-          {t.name}
+          <FontAwesomeIcon icon={t.icon} size="lg" />
         </button>
       ))}
       {drawing && <button className="button" onClick={onDoneClick}>Done</button>}

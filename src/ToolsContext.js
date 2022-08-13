@@ -3,19 +3,23 @@ import { useState, createContext, useContext } from "react";
 export const tools = [
   {
     name: "Path",
-    key: "path"
+    key: "path",
+    icon: 'pencil',
   },
   {
     name: "Polyline",
-    key: "polyline"
+    key: "polyline",
+    icon: 'pen-nib',
   },
   {
     name: "Rectangle",
-    key: "rectangle"
+    key: "rectangle",
+    icon: 'vector-square',
   },
   {
     name: "Select",
-    key: "select"
+    key: "select",
+    icon: 'arrow-pointer',
   },
   // {
   //   name: "Text",

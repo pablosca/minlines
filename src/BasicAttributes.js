@@ -118,7 +118,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
             max="1"
             step="0.01"
             className="range"
-            defaultValue={multiple ? 1 : (vectors[0].fillOpacity || 1)}
+            defaultValue={multiple ? .5 : (vectors[0].fillOpacity || .5)}
             onChange={onFillOpacityChange}
           />
           <small>{multiple && '(multiple)'}</small>

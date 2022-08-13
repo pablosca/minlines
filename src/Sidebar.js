@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import { useState } from "react";
 import BasicAttributes from "./BasicAttributes";
 import useSelection from "./SelectionContext";
@@ -19,8 +21,8 @@ export default function Sidebar() {
 
   return (
     <>
-      <button className="button sidebar-close" onClick={toggleSidebar}>
-        {isClosed ? 'Open sidebar' : 'Close'}
+      <button className={`button sidebar-close ${isClosed && 'inverse'}`} onClick={toggleSidebar}>
+        {<FontAwesomeIcon icon={isClosed ? 'chevron-left' : 'chevron-right'} size="lg" />}
       </button>
 
       {!isClosed && (

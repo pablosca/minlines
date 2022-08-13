@@ -201,7 +201,7 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = '#999999', fillOpacity = 1 }) => {
+  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = '#999999', fillOpacity = .5 }) => {
     const { x, y, height, width } = tempShape;
     const now = Date.now();
     const newVector = {

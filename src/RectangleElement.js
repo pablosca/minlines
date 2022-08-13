@@ -34,7 +34,7 @@ export default function RectangleElement(props) {
         strokeWidth={renderedStrokeWidth}
         strokeOpacity={props.strokeOpacity || 1}
         fill={renderedFillColor}
-        fillOpacity={props.fillOpacity}
+        fillOpacity={props.fillOpacity || .5}
         vectorEffect="non-scaling-stroke"
       />
     </g>
