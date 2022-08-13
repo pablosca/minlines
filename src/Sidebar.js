@@ -1,11 +1,11 @@
 import { useState } from "react";
 import BasicAttributes from "./BasicAttributes";
 import useSelection from "./SelectionContext";
-import useTools from "./ToolsContext";
+import useBoard from "./BoardContext";
 
 export default function Sidebar() {
   const [isClosed, setIsClosed] = useState(false);
-  const { withGrid, setWithGrid } = useTools();
+  const { withGrid, setWithGrid } = useBoard();
   const { selectedVectors, isSelectingArea } = useSelection();
 
   const toggleSidebar = () => {

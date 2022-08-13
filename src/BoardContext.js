@@ -12,6 +12,7 @@ const initialState = {
   vectors: {},
   tempText: null,
   tempShape: null,
+  withGrid: true,
 };
 
 const BoardContext = createContext(initialState);
@@ -21,6 +22,7 @@ export const BoardProvider = ({ children }) => {
   const [vectors, setVectors] = useState({});
   const [tempText, setTempText] = useState(null);
   const [tempShape, setTempShape] = useState(null);
+  const [withGrid, setWithGrid] = useState(initialState.withGrid);
 
   const clearPoints = () => setPoints([]);
 
@@ -260,6 +262,8 @@ export const BoardProvider = ({ children }) => {
         addShape,
         updateShape,
         saveShape,
+        withGrid,
+        setWithGrid,
       }}
     >
       {children}

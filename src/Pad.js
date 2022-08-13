@@ -12,7 +12,7 @@ import useSelection from "./SelectionContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, strokeColor, strokeWidth, withGrid } = useTools();
+  const { tool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
   const {
     points,
     vectors,
@@ -27,7 +27,8 @@ export default function Pad() {
     tempShape,
     addShape,
     updateShape,
-    saveShape
+    saveShape,
+    withGrid,
   } = useBoard();
   const {
     selectionBox,
