@@ -114,7 +114,7 @@ button {
 }
 
 .grabbable:not(.vector) {
-  fill: none;
+  fill: transparent;
   stroke: transparent;
   stroke-opacity: 0.2;
 }
