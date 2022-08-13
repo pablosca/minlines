@@ -17,8 +17,8 @@ export default function App() {
               <Pad />
               <nav className="navbar">
                 <ToolBar />
-                <ColorPicker />
-                <StrokeWidthPicker />
+                {/* <ColorPicker />
+                <StrokeWidthPicker /> */}
               </nav>
             </div>
         </SelectionProvider>

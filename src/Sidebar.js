@@ -31,7 +31,7 @@ export default function Sidebar() {
               {withGrid ? 'Hide' : 'Show'} grid
             </label>
           </section>
-          {!isSelectingArea && !!selectedVectors.length && <BasicAttributes vectors={selectedVectors} />}
+          {!isSelectingArea && <BasicAttributes vectors={selectedVectors} />}
         </aside>
       )}
     </>

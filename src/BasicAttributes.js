@@ -1,18 +1,34 @@
-import { useState } from "react";
 import useBoard from "./BoardContext";
+import useTools from "./ToolsContext";
 
 export default function BasicAttributes({ vectors: vectorsIds }) {
+  const { tool, strokeColor, strokeWidth, setStrokeColor, setStrokeWidth } = useTools();
   const { vectors: allVectors, updateVectorsById } = useBoard();
-
+  // const notSelectTool = tool && tool !== 'select';
+  const isNascentVector = !vectorsIds.length;
   const vectors = vectorsIds.map(id => allVectors[id]);
   const multiple = vectors.length > 1;
+  const renderedStrokeWidth = isNascentVector ? strokeWidth : (multiple ? 3 : vectors[0].strokeWidth);
+  const renderedStrokeColor = isNascentVector ? strokeColor :  (multiple ? '#000000' : vectors[0].strokeColor);
 
   const onStrokeWidthChange = (e) => {
-    updateVectorsById(vectorsIds, { strokeWidth: parseInt(e.currentTarget.value) });
+    const newValue = parseInt(e.currentTarget.value);
+    if (isNascentVector) {
+      setStrokeWidth(newValue);
+      return;
+    }
+
+    updateVectorsById(vectorsIds, { strokeWidth: newValue });
   };
 
   const onStrokeColorChange = (e) => {
-    updateVectorsById(vectorsIds, { strokeColor: e.currentTarget.value });
+    const newValue = e.currentTarget.value;
+    if (isNascentVector) {
+      setStrokeColor(newValue);
+      return;
+    }
+
+    updateVectorsById(vectorsIds, { strokeColor: newValue });
   };
 
   const onStrokeOpacityChange = (e) => {
@@ -40,7 +56,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
             min="1"
             max="20"
             className="range"
-            defaultValue={multiple ? 3 : vectors[0].strokeWidth}
+            defaultValue={renderedStrokeWidth}
             onChange={onStrokeWidthChange}
           />
           <small>{multiple && '(multiple)'}</small>
@@ -52,14 +68,14 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
             type="color"
             id="strokeColor"
             name="strokeColor"
-            defaultValue={multiple ? '#000' : vectors[0].strokeColor}
+            defaultValue={renderedStrokeColor}
             onChange={onStrokeColorChange}
           />
 
           <small>{multiple && '(multiple)'}</small>
         </div>
 
-        <div className="attribute">
+        {!!vectors.length && <div className="attribute">
           <label htmlFor="strokeOpacity">Opacity</label>
           <input
             type="range"
@@ -73,10 +89,10 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
             onChange={onStrokeOpacityChange}
           />
           <small>{multiple && '(multiple)'}</small>
-        </div>
+        </div>}
       </section>
 
-      <section className="attribute-section">
+      {!!vectors.length && <section className="attribute-section">
         <h4 className="attribute-section-title">Fill</h4>
 
         <div className="attribute">
@@ -107,7 +123,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
           />
           <small>{multiple && '(multiple)'}</small>
         </div>
-      </section>
+      </section>}
     </>
   );
 }
