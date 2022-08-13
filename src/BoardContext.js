@@ -199,7 +199,7 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const saveShape = ({ type, strokeColor, strokeWidth }) => {
+  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = '#999999', fillOpacity = 1 }) => {
     const { x, y, height, width } = tempShape;
     const now = Date.now();
     const newVector = {
@@ -208,6 +208,8 @@ export const BoardProvider = ({ children }) => {
       strokeColor,
       strokeWidth,
       strokeOpacity: 1,
+      fillColor,
+      fillOpacity,
       box: { x, y, height, width },
     };
 

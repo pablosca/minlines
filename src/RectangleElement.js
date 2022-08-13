@@ -4,6 +4,7 @@ import useSelection from "./SelectionContext";
 export default function RectangleElement(props) {
   const { strokeColor, strokeWidth, tool } = useTools();
   const renderedStrokeColor = props.strokeColor || strokeColor;
+  const renderedFillColor = props.fillColor || '#999999';
   const renderedStrokeWidth = props.strokeWidth || strokeWidth;
   const { selectedVectors, isSelectingArea } = useSelection();
   const isSelected = selectedVectors.includes(props.vectorId);
@@ -25,7 +26,6 @@ export default function RectangleElement(props) {
       <rect
         id={props.id}
         className="vector"
-        fill="none"
         x={x}
         y={y}
         width={width}
@@ -33,6 +33,8 @@ export default function RectangleElement(props) {
         stroke={renderedStrokeColor}
         strokeWidth={renderedStrokeWidth}
         strokeOpacity={props.strokeOpacity || 1}
+        fill={renderedFillColor}
+        fillOpacity={props.fillOpacity}
         vectorEffect="non-scaling-stroke"
       />
     </g>

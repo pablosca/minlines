@@ -63,6 +63,8 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           strokeColor={vector.strokeColor}
           strokeWidth={vector.strokeWidth}
           strokeOpacity={vector.strokeOpacity}
+          fillColor={vector.fillColor}
+          fillOpacity={vector.fillOpacity}
           vectorId={vector.createdAt}
           box={vector.box}
         />

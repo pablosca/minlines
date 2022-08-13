@@ -113,11 +113,6 @@ button {
   pointer-events: none;
 }
 
-.selectable {
-  border: 3px solid red;
-  fill: red;
-}
-
 .grabbable:not(.vector) {
   fill: none;
   stroke: transparent;
