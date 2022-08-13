@@ -10,6 +10,10 @@ export const tools = [
     key: "polyline"
   },
   {
+    name: "Rectangle",
+    key: "rectangle"
+  },
+  {
     name: "Select",
     key: "select"
   },

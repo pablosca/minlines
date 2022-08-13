@@ -11,6 +11,7 @@ const initialState = {
   points: [],
   vectors: {},
   tempText: null,
+  tempShape: null,
 };
 
 const BoardContext = createContext(initialState);
@@ -19,6 +20,7 @@ export const BoardProvider = ({ children }) => {
   const [points, setPoints] = useState([]);
   const [vectors, setVectors] = useState({});
   const [tempText, setTempText] = useState(null);
+  const [tempShape, setTempShape] = useState(null);
 
   const clearPoints = () => setPoints([]);
 
@@ -113,12 +115,15 @@ export const BoardProvider = ({ children }) => {
         };
       }
 
-      // text vectors
-      if (vector.type.match(/text/)) {
-        newVector[id] = {
+      // shape vectors
+      if (vector.type.match(/text|rectangle/)) {
+        updatedVectors[id] = {
           ...vector,
-          x: vector.x + deltaX,
-          y: vector.y + deltaY,
+          box: {
+            ...vector.box,
+            x: vector.box.x + deltaX,
+            y: vector.box.y + deltaY,
+          }
         }
       }
     });
@@ -136,11 +141,11 @@ export const BoardProvider = ({ children }) => {
     selectedVectors.forEach(id => {
       const vector = vectors[id];
       const newVector = { ...vector };
+      const firstY = corners.bottom ? y : y + height;
+      const firstX = corners.right ? x : x + width;
       let newPoints = [];
 
       if (vector.type.match(/polyline|path/)) {
-        const firstX = corners.right ? x : x + width;
-        const firstY = corners.bottom ? y : y + height;
     
         newPoints = vector.points.map((p) => {
           const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
@@ -162,9 +167,13 @@ export const BoardProvider = ({ children }) => {
         };
       }
 
-      if (vector.type === 'text') {
-        newVector.x = scaleX * vector.x + (1 - scaleX) * vector.x;
-        newVector.y = scaleY * vector.y + (1 - scaleY) * vector.y;
+      if (vector.type.match(/text|rectangle/)) {
+        newVector.box = {
+          x: scaleX * vector.box.x + (1 - scaleX) * firstX,
+          y: scaleY * vector.box.y + (1 - scaleY) * firstY,
+          width: vector.box.width * scaleX,
+          height: vector.box.height * scaleY,
+        };
         newVector.resizeStyle = resizeStyle;
       }
 
@@ -174,6 +183,39 @@ export const BoardProvider = ({ children }) => {
     setVectors({
       ...vectors,
       ...updatedVectors
+    });
+  };
+
+  const addShape = ({ x, y }) => {
+    setTempShape({ x, y });
+  };
+
+  const updateShape = ({ x, y }) => {
+    setTempShape(tempShape => {
+      return {...tempShape,
+        width: x - tempShape.x,
+        height: y - tempShape.y,
+      }
+    });
+  };
+
+  const saveShape = ({ type, strokeColor, strokeWidth }) => {
+    const { x, y, height, width } = tempShape;
+    const now = Date.now();
+    const newVector = {
+      createdAt: now,
+      type,
+      strokeColor,
+      strokeWidth,
+      strokeOpacity: 1,
+      box: { x, y, height, width },
+    };
+
+    setTempShape(null);
+
+    setVectors({
+      ...vectors,
+      [now]: newVector
     });
   };
 
@@ -211,6 +253,11 @@ export const BoardProvider = ({ children }) => {
         setTempText,
         saveTextVector,
         updateVectorsById,
+        tempShape,
+        setTempShape,
+        addShape,
+        updateShape,
+        saveShape,
       }}
     >
       {children}

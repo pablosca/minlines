@@ -4,6 +4,7 @@ import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
 import TextElement from "./TextElement";
 import useSelection from "./SelectionContext";
+import RectangleElement from "./RectangleElement";
 
 export default function Element({ vector, onPointerDown, onPointerUp }) {
   const { tool } = useTools();
@@ -54,6 +55,16 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           strokeWidth={vector.strokeWidth}
           strokeOpacity={vector.strokeOpacity}
           vectorId={vector.createdAt}
+        />
+      )}
+      {vector.type === "rectangle" && (
+        <RectangleElement
+          key={vector.createdAt}
+          strokeColor={vector.strokeColor}
+          strokeWidth={vector.strokeWidth}
+          strokeOpacity={vector.strokeOpacity}
+          vectorId={vector.createdAt}
+          box={vector.box}
         />
       )}
       {/* {vector.type === "text" && (

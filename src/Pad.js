@@ -3,6 +3,7 @@ import useTools from "./ToolsContext";
 import Element from "./Element";
 import PathElement from "./PathElement";
 import PolylineElement from "./PolylineElement";
+import RectangleElement from "./RectangleElement";
 import TextElement from "./TextElement";
 import SelectionWrapper from "./SelectionWrapper";
 import Sidebar from "./Sidebar";
@@ -23,6 +24,10 @@ export default function Pad() {
     tempText,
     setTempText,
     saveTextVector,
+    tempShape,
+    addShape,
+    updateShape,
+    saveShape
   } = useBoard();
   const {
     selectionBox,
@@ -45,13 +50,17 @@ export default function Pad() {
     stopSelectArea,
   } = useSelection();
 
-  const onPadPointerDown = (e, vector) => {
+  const onPadPointerDown = (e) => {
     if (!tool) return;
-    tool === "path" && setPressed(true);
+    tool.match(/path|rectangle/) && setPressed(true);
     tool === "polyline" && setDrawing(true);
 
     if (tool.match(/path|polyline/)) {
       addPoint({ x: e.clientX, y: e.clientY });
+    }
+
+    if (tool.match(/rectangle/)) {
+      addShape({x: e.clientX, y: e.clientY});
     }
 
     if (tool === 'select') {
@@ -92,6 +101,11 @@ export default function Pad() {
         x: e.clientX,
         y: e.clientY
       });
+    } else if (tool === 'rectangle' && pressed) {
+      updateShape({
+        x: e.clientX,
+        y: e.clientY
+      });
     }
   };
 
@@ -114,6 +128,13 @@ export default function Pad() {
       setPressed(false);
     } else if (tool === 'text') {
       setTempText({ x: e.clientX, y: e.clientY, content: '' });
+    } else if (tool === 'rectangle') {
+      saveShape({
+        type: 'rectangle',
+        strokeColor,
+        strokeWidth,
+      });
+      setPressed(false);
     }
   };
 
@@ -185,6 +206,7 @@ export default function Pad() {
   const hasTempPath = points.length && pressed && tool === "path";
   const hasTempLine = points.length && drawing && tool === "polyline";
   const hasTempText = tempText && tool === "text";
+  const hasTempShape = tempShape && tool === 'rectangle';
 
   const onTextChange = useCallback((e) => {
     setTempText({ ...tempText, content: e.currentTarget.value });
@@ -229,10 +251,15 @@ export default function Pad() {
             strokeWidth={strokeWidth}
           />
         )}
+        {hasTempShape && (
+          <RectangleElement
+            id="temp-element"
+            drawing={drawing}
+            box={tempShape}
+          />
+        )}
 
         {/* {hasTempText && <TextElement id="temp-element" data={tempText} />} */}
-
-        {!isDragging && selectionBox && <SelectionWrapper />}
 
         <g>
           {Object.values(vectors).map((v) => (
@@ -244,6 +271,8 @@ export default function Pad() {
             />
           ))}
         </g>
+
+        {!isDragging && selectionBox && <SelectionWrapper />}
       </svg>
       <Sidebar />
     </main>
