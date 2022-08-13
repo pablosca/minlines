@@ -235,7 +235,7 @@ export default function Pad() {
       />}
 
       <svg
-        className={`artboard ${tool && 'tool'} ${withGrid && 'with-grid'} ${isDragging && 'is-dragging'}`}
+        className={`artboard ${tool && `tool tool-${tool}`} ${withGrid && 'with-grid'} ${isDragging && 'is-dragging'}`}
         viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
         onPointerDown={onPadPointerDown}
         onPointerMove={onPadPointerMove}

@@ -45,6 +45,10 @@ button {
   cursor: move;
 }
 
+.artboard:not(.tool-select) .vector {
+  pointer-events: none;
+}
+
 .navbar {
   align-items: center;
   display: flex;
