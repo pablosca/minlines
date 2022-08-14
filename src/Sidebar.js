@@ -30,7 +30,7 @@ export default function Sidebar() {
           <section className="attribute-section">
             <label>
               <input type="checkbox" onChange={onGridChange} checked={withGrid} />
-              {withGrid ? 'Hide' : 'Show'} grid
+              Show grid
             </label>
           </section>
           {!isSelectingArea && <BasicAttributes vectors={selectedVectors} />}
