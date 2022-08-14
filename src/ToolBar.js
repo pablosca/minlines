@@ -22,16 +22,18 @@ export default function ToolBar() {
 
   return (
     <nav className="toolbar">
-      {tools.map((t) => (
-        <button
-          onClick={(e) => onToolClick(e, t.key)}
-          key={t.key}
-          className={`button ${t.key === tool ? 'selected' : ''}`}
-        >
-          <FontAwesomeIcon icon={t.icon} size="lg" />
-        </button>
-      ))}
-      {drawing && <button className="button" onClick={onDoneClick}>Done</button>}
+      <div className="toolbar-main">
+        {tools.map((t) => (
+          <button
+            onClick={(e) => onToolClick(e, t.key)}
+            key={t.key}
+            className={`button ${t.key === tool ? 'selected' : ''}`}
+          >
+            <FontAwesomeIcon icon={t.icon} size="lg" />
+          </button>
+        ))}
+      </div>
+      {drawing && <button className="button accent toolbar-done" onClick={onDoneClick}>Done</button>}
     </nav>
   );
 }

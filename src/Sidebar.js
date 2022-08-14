@@ -21,7 +21,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <button className={`button sidebar-close ${isClosed && 'inverse'}`} onClick={toggleSidebar}>
+      <button className={`button sidebar-close ${isClosed ? 'inverse' : 'light'}`} onClick={toggleSidebar}>
         {<FontAwesomeIcon icon={isClosed ? 'chevron-left' : 'chevron-right'} size="lg" />}
       </button>
 
