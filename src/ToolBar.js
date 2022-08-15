@@ -4,7 +4,7 @@ import useBoard from "./BoardContext";
 import useTools, { tools } from "./ToolsContext";
 
 export default function ToolBar() {
-  const { tool, selectTool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
+  const { tool, selectTool, drawing, setDrawing, strokeColor, strokeWidth, zoom } = useTools();
   const { clearPoints, savePointsVector, clearLastPoint } = useBoard();
 
   const onToolClick = (e, t) => {
@@ -34,6 +34,8 @@ export default function ToolBar() {
         ))}
       </div>
       {drawing && <button className="button accent toolbar-done" onClick={onDoneClick}>Done</button>}
+      
+      {zoom.scale !== 0 && `${ parseInt(100 / zoom.scale) }% zoom`}
     </nav>
   );
 }

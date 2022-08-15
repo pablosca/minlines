@@ -11,9 +11,9 @@ import useBoard from "./BoardContext";
 import useSelection from "./SelectionContext";
 
 export default function Pad() {
+  const artboard = useRef();
   const [pressed, setPressed] = useState(false);
-  const [zoom, setZoom] = useState(1);
-  const { tool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
+  const { tool, drawing, setDrawing, strokeColor, strokeWidth, zoom, setZoom } = useTools();
   const {
     points,
     vectors,
@@ -192,11 +192,25 @@ export default function Pad() {
 
   useEffect(() => {
     document.addEventListener("keyup", deleteVector);
+    const onPadWheel = e => {
+      e.preventDefault();
+      let newScale = zoom.scale - e.deltaY * -0.001;
+      
+      // Restrict scale
+      newScale = Math.min(Math.max(.5, newScale), 3);
+      
+      setZoom({ x: e.clientX, y: e.clientY, scale: Math.round(newScale * 100) / 100 });
+      e.preventDefault();
+    };
+
+    // we need the passive: false
+    artboard.current.addEventListener('wheel', onPadWheel, { passive: false });
 
     return () => {
       document.removeEventListener("keyup", deleteVector);
+      artboard.current.removeEventListener('wheel', onPadWheel);
     };
-  }, [deleteVector]);
+  }, [deleteVector, artboard, zoom]);
 
   // TODO: put this in a better place
   useEffect(() => {
@@ -225,15 +239,7 @@ export default function Pad() {
     });
   });
 
-  const onPadWheel = useCallback(e => {
-    console.log('E', e);
-    let newZoom = zoom + e.deltaY * -0.01;
 
-    // Restrict scale
-    newZoom = Math.min(Math.max(.125, newZoom), 4);
-
-    setZoom(newZoom);
-  });
 
   // const onPadTouchStart = useCallback(e => {
   //   if (e.touches.length === 2) {
@@ -251,8 +257,9 @@ export default function Pad() {
   // const onPadTouchEnd = useCallback(e => {
   //   console.log('PINCH end!');
   // });
-  
-  const viewBox = `0 0 ${window.innerWidth * zoom} ${window.innerHeight * zoom}`;
+  const viewBoxX = zoom.x ? zoom.x - zoom.x * zoom.scale : 0;
+  const viewBoxY = zoom.y ? zoom.y - zoom.y * zoom.scale : 0;
+  const viewBox = `${viewBoxX} ${viewBoxY} ${window.innerWidth * (zoom.scale)} ${window.innerHeight * zoom.scale}`;
     // scaleX * p.x + (1 - scaleX) * firstX
   return (
     <main className="main">
@@ -272,7 +279,7 @@ export default function Pad() {
         onPointerDown={onPadPointerDown}
         onPointerMove={onPadPointerMove}
         onPointerUp={onPadPointerUp}
-        onWheel={onPadWheel}
+        ref={artboard}
         // onTouchStart={onPadTouchStart}
         // onTouchMove={onPadTouchMove}
         // onTouchEnd={onPadTouchEnd}

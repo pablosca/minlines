@@ -35,6 +35,7 @@ const initialState = {
   drawing: false,
   isDragging: false,
   strokeWidth: 6,
+  zoom: { x: 0, y: 0, scale: 1 },
 };
 
 const ToolsContext = createContext(initialState);
@@ -45,6 +46,7 @@ export const ToolsProvider = ({ children }) => {
   const [drawing, setDrawing] = useState(false);
   const [isDragging, setIsDragging] = useState(null);
   const [strokeWidth, setStrokeWidth] = useState(initialState.strokeWidth);
+  const [zoom, setZoom] = useState(initialState.zoom);
 
   const selectTool = (tool) => {
     setDrawing(false);
@@ -64,6 +66,8 @@ export const ToolsProvider = ({ children }) => {
         setIsDragging,
         strokeWidth,
         setStrokeWidth,
+        zoom,
+        setZoom,
       }}
     >
       {children}
