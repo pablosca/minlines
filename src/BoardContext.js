@@ -189,14 +189,36 @@ export const BoardProvider = ({ children }) => {
   };
 
   const addShape = ({ x, y }) => {
-    setTempShape({ x, y });
+    setTempShape({ startingPoint: { x, y } });
   };
 
   const updateShape = ({ x, y }) => {
+    const { startingPoint } = tempShape;
+    const shape = {};
+
+    if (x > startingPoint.x) {
+      // going right
+      shape.x = startingPoint.x;
+      shape.width = x - startingPoint.x;
+    } else {
+      shape.x = x;
+      shape.width = startingPoint.x - x;
+    }
+
+    // y axis
+    if (y > startingPoint.y) {
+      // going right
+      shape.y = startingPoint.y;
+      shape.height = y - startingPoint.y;
+    } else {
+      shape.y = y;
+      shape.height = startingPoint.y - y;
+    }
+
     setTempShape(tempShape => {
-      return {...tempShape,
-        width: x - tempShape.x,
-        height: y - tempShape.y,
+      return {
+        ...tempShape,
+        ...shape,
       }
     });
   };
