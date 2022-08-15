@@ -5,7 +5,7 @@ export default function RectangleElement(props) {
   const { strokeColor, strokeWidth, tool } = useTools();
   const renderedStrokeColor = props.strokeColor || strokeColor;
   const renderedFillColor = props.fillColor || '#999999';
-  const renderedStrokeWidth = props.strokeWidth || strokeWidth;
+  const renderedStrokeWidth = isNaN(props.strokeWidth) ? strokeWidth : props.strokeWidth;
   const { selectedVectors, isSelectingArea } = useSelection();
   const isSelected = selectedVectors.includes(props.vectorId);
   const { x, y, height, width } = props.box;

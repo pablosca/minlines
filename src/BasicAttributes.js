@@ -53,7 +53,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
             type="range"
             id="strokeWidth"
             name="strokeWidth"
-            min="1"
+            min="0"
             max="20"
             className="range"
             defaultValue={renderedStrokeWidth}
