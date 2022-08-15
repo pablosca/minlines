@@ -225,16 +225,6 @@ export default function Pad() {
     });
   });
 
-  const onPadWheel = useCallback(e => {
-    console.log('E', e);
-    let newZoom = zoom + e.deltaY * -0.01;
-
-    // Restrict scale
-    newZoom = Math.min(Math.max(.125, newZoom), 4);
-
-    setZoom(newZoom);
-  });
-
   // const onPadTouchStart = useCallback(e => {
   //   if (e.touches.length === 2) {
   //     console.log('PINCH STARTED');
@@ -272,7 +262,6 @@ export default function Pad() {
         onPointerDown={onPadPointerDown}
         onPointerMove={onPadPointerMove}
         onPointerUp={onPadPointerUp}
-        onWheel={onPadWheel}
         // onTouchStart={onPadTouchStart}
         // onTouchMove={onPadTouchMove}
         // onTouchEnd={onPadTouchEnd}
