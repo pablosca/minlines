@@ -27,54 +27,14 @@ export const tools = [
   // },
 ];
 
-export const colors = [
-  {
-    name: "Black",
-    code: "#000000"
-  },
-  {
-    name: "Red",
-    code: "#ff0000"
-  },
-  {
-    name: "Green",
-    code: "#00ff00"
-  },
-  {
-    name: "Blue",
-    code: "#0000ff"
-  }
-];
-
-export const strokeWidths = [
-  {
-    name: "Extra small",
-    width: 1
-  },
-  {
-    name: "Small",
-    width: 2
-  },
-  {
-    name: "Medium",
-    width: 4
-  },
-  {
-    name: "Large",
-    width: 6
-  },
-  {
-    name: "Extra large",
-    width: 10
-  }
-];
+export const defaultFillColor = '#63d99c';
 
 const initialState = {
   tool: 'path',
-  strokeColor: "#000",
+  strokeColor: "#ff8800",
   drawing: false,
   isDragging: false,
-  strokeWidth: 2,
+  strokeWidth: 6,
 };
 
 const ToolsContext = createContext(initialState);

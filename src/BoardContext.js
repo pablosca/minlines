@@ -1,5 +1,5 @@
 import { useState, createContext, useContext, useRef } from "react";
-import useSelection from "./SelectionContext";
+import { defaultFillColor } from "./ToolsContext";
 
 /*type Vector = {
   points?: Array,
@@ -201,7 +201,7 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = '#999999', fillOpacity = .5 }) => {
+  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = defaultFillColor, fillOpacity = .5 }) => {
     const { x, y, height, width } = tempShape;
     const now = Date.now();
     const newVector = {

@@ -12,6 +12,7 @@ import useSelection from "./SelectionContext";
 
 export default function Pad() {
   const [pressed, setPressed] = useState(false);
+  const [zoom, setZoom] = useState(1);
   const { tool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
   const {
     points,
@@ -223,7 +224,36 @@ export default function Pad() {
       fontSize: 16,
     });
   });
+
+  const onPadWheel = useCallback(e => {
+    console.log('E', e);
+    let newZoom = zoom + e.deltaY * -0.01;
+
+    // Restrict scale
+    newZoom = Math.min(Math.max(.125, newZoom), 4);
+
+    setZoom(newZoom);
+  });
+
+  // const onPadTouchStart = useCallback(e => {
+  //   if (e.touches.length === 2) {
+  //     console.log('PINCH STARTED');
+  //   }
+  // });
+
+  // const onPadTouchMove = useCallback(e => {
+  //   var dist = Math.hypot(
+  //     e.touches[0].pageX - e.touches[1].pageX,
+  //     e.touches[0].pageY - e.touches[1].pageY);
+  //   console.log('PINCH move', dist);
+  // });
+
+  // const onPadTouchEnd = useCallback(e => {
+  //   console.log('PINCH end!');
+  // });
   
+  const viewBox = `0 0 ${window.innerWidth * zoom} ${window.innerHeight * zoom}`;
+    // scaleX * p.x + (1 - scaleX) * firstX
   return (
     <main className="main">
       {tempText && <textarea
@@ -236,10 +266,16 @@ export default function Pad() {
 
       <svg
         className={`artboard ${tool && `tool tool-${tool}`} ${withGrid && 'with-grid'} ${isDragging && 'is-dragging'}`}
-        viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
+        viewBox={viewBox}
+        width={window.innerWidth}
+        height={window.innerHeight}
         onPointerDown={onPadPointerDown}
         onPointerMove={onPadPointerMove}
         onPointerUp={onPadPointerUp}
+        onWheel={onPadWheel}
+        // onTouchStart={onPadTouchStart}
+        // onTouchMove={onPadTouchMove}
+        // onTouchEnd={onPadTouchEnd}
       >
         {/* TODO: Instead of using id, use a global ref? */}
         {hasTempPath && <PathElement id="temp-element" />}
