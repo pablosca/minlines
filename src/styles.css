@@ -14,6 +14,17 @@ body {
 input {
   --accent-color-luminosity: 90%;
   accent-color: hsl(var(--accent-color));
+  background: none;
+  border: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  appearance: none;
 }
 
 button {
@@ -218,10 +229,41 @@ button {
   margin-top: 15px;
 }
 
+.attribute.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 .attribute label {
   flex-basis: 25%;
 }
 
 .attribute small {
   margin-left: auto;
+}
+
+.mini-field {
+  align-items: center;
+  background-color: hsl(0 0% 100% / 25%);
+  border-radius: 5px;
+  color: hsl(0 0% 25%);
+  display: flex;
+  gap: 4px;
+  padding: 5px 10px 5px 5px;
+}
+
+.mini-field:hover {
+  background-color: hsl(0 0% 100% / 50%);
+}
+
+.mini-field:focus-within {
+  background-color: hsl(0 0% 100% / 75%);
+}
+
+.mini-field input {
+  appearance: none;
+  background: none;
+  color: hsl(0 0% 0%);
+  flex: 1;
+  width: 100%;
 }

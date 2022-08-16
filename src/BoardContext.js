@@ -252,7 +252,16 @@ export const BoardProvider = ({ children }) => {
     });
   };
 
-  const updateVectorsById = (ids, updates) => {
+  const updateVectorsById = async (ids, updates) => {
+    if (updates.deltaX || updates.deltaY) {
+      const deltaX = updates.deltaX || 0;
+      const deltaY = updates.deltaY || 0;
+
+      await updateVectorPosition({ deltaX, deltaY, idsToChange: ids });
+
+      return;
+    }
+
     setVectors(vectors => {
       ids.forEach(id => {
         vectors[id] = { ...vectors[id], ...updates }
