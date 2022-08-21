@@ -262,6 +262,22 @@ export const BoardProvider = ({ children }) => {
       return;
     }
 
+    if (updates.scaleX || updates.scaleY) {
+      const { selectionBox, resizeStyle } = updates
+
+      await updateVectorResize({
+        scaleX: updates.scaleX || 1,
+        scaleY: updates.scaleY || 1,
+        selectionBox,
+        // TODO: make it resize from the center
+        corners: { bottom: true, right: true },
+        resizeStyle,
+        selectedVectors: ids,
+      });
+
+      return
+    }
+
     setVectors(vectors => {
       ids.forEach(id => {
         vectors[id] = { ...vectors[id], ...updates }
