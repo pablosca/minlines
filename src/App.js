@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./styles.scss";
 
 import { ToolsProvider } from "./ToolsContext";
 import ToolBar from "./ToolBar";
