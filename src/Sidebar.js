@@ -28,7 +28,7 @@ export default function Sidebar() {
       {!isClosed && (
         <aside className="sidebar">
           <section className="attribute-section">
-            <label class="grid-toggle">
+            <label className="grid-toggle">
               <input type="checkbox" onChange={onGridChange} checked={withGrid} />
               <span>Show grid</span>
             </label>
