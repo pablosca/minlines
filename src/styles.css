@@ -3,7 +3,6 @@
   --accent-color-luminosity: 40%;
   --accent-color: 150 78% var(--accent-color-luminosity);
   --primary-color: hsl(0 0% 0% / 75%);
-  --sidebar-padding: 15px;
   --sidebar-width: 180px;
 }
 
@@ -31,6 +30,41 @@ button {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.button {
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.button:hover {
+  background: hsl(0 0% 100% / 25%);
+}
+
+.button.light {
+  color: hsl(0 0% 90%);
+}
+
+.button.selected {
+  background: hsl(0 0% 100% / 90%);
+  color: hsl(0 0% 0%);
+}
+
+.button.inverse {
+  background: var(--primary-color);
+  color: hsl(0 0% 100%);
+}
+
+.button.inverse:hover {
+  background: hsl(0 0% 0%);
+}
+
+.button.accent {
+  background: hsl(var(--accent-color));
+}
+
+.button.accent:hover {
+  --accent-color-luminosity: 55%;
 }
 
 .App {
@@ -88,52 +122,14 @@ button {
   border-radius: 5px;
   box-shadow: var(--box-shadow);
   display: flex;
-  gap: 10px;
-  padding: 5px 10px;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
 }
 
 .toolbar-done.button {
   box-shadow: var(--box-shadow);
   padding: 8px 12px;
-}
-
-.toolbar .button {
-  color: #fff;
-}
-
-.button {
-  border-radius: 3px;
-  padding: 2px 5px;
-}
-
-.button:hover {
-  background: hsl(0 0% 100% / 25%);
-}
-
-.button.light {
-  color: hsl(0 0% 90%);
-}
-
-.button.selected {
-  background: hsl(0 0% 100% / 90%);
-  color: hsl(0 0% 0%);
-}
-
-.button.inverse {
-  background: var(--primary-color);
-  color: hsl(0 0% 100%);
-}
-
-.button.inverse:hover {
-  background: hsl(0 0% 0%);
-}
-
-.button.accent {
-  background: hsl(var(--accent-color));
-}
-
-.button.accent:hover {
-  --accent-color-luminosity: 55%;
 }
 
 .range {
@@ -188,7 +184,7 @@ button {
   box-shadow: var(--box-shadow);
   color: hsl(0 0% 95%);
   font-size: 14px;
-  padding: var(--sidebar-padding);
+  padding: 15px 15px 25px;
   position: fixed;
   right: 15px;
   top: 15px;
@@ -197,20 +193,16 @@ button {
 }
 
 .sidebar-close {
+  padding: 3px 5px;
   position: fixed;
   right: 20px;
   top: 20px;
   z-index: 3;
 }
 
-.attribute-section {
-  margin-bottom: 25px;
-}
-
 .attribute-section + .attribute-section {
-  border-top: 1px solid hsl(0 0% 35%);
-  padding-top: 25px;
-  margin-top: 10px;
+  padding-top: 20px;
+  margin-top: 20px;
 }
 
 .attribute-section-title {
@@ -226,7 +218,7 @@ button {
   color:hsl(0 0% 60%);
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .attribute.row {

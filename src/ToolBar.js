@@ -27,7 +27,7 @@ export default function ToolBar() {
           <button
             onClick={(e) => onToolClick(e, t.key)}
             key={t.key}
-            className={`button ${t.key === tool ? 'selected' : ''}`}
+            className={`button light ${t.key === tool ? 'selected' : ''}`}
           >
             <FontAwesomeIcon icon={t.icon} size="lg" />
           </button>
