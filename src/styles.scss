@@ -16,6 +16,7 @@ input {
   accent-color: hsl(var(--accent-color));
   background: none;
   border: none;
+  margin: 0;
 }
 
 input:focus {
@@ -181,11 +182,10 @@ button {
   background: var(--primary-color);
   backdrop-filter: blur(2px);
   border-radius: 5px;
-  /* bottom: 15px; */
   box-shadow: var(--box-shadow);
   color: hsl(0 0% 95%);
   font-size: 14px;
-  padding: 15px 15px 25px;
+  padding: 15px 15px 20px;
   position: fixed;
   right: var(--ui-inset);
   top: var(--ui-inset);
@@ -206,9 +206,15 @@ button {
   }
 }
 
+.grid-toggle {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
 .attribute-section + .attribute-section {
-  padding-top: 20px;
-  margin-top: 20px;
+  padding-top: 15px;
+  margin-top: 15px;
 }
 
 .attribute-section-title {
