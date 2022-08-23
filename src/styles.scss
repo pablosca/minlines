@@ -2,7 +2,7 @@
   --box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
   --accent-color-luminosity: 40%;
   --accent-color: 150 78% var(--accent-color-luminosity);
-  --primary-color: hsl(0 0% 0% / 75%);
+  --primary-color: hsl(0 0% 0% / 85%);
   --sidebar-width: 180px;
   --ui-inset: 15px;
 }
@@ -41,7 +41,7 @@ input[type=color] {
   
   &::-webkit-color-swatch {
     border-radius: 5px;
-    border: 1px solid var(--primary-color);
+    border: 1px solid hsl(0 0% 100% / 30%);
   }
 }
 
