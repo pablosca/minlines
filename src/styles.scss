@@ -4,6 +4,7 @@
   --accent-color: 150 78% var(--accent-color-luminosity);
   --primary-color: hsl(0 0% 0% / 75%);
   --sidebar-width: 180px;
+  --ui-inset: 15px;
 }
 
 body {
@@ -105,9 +106,9 @@ button {
   align-items: center;
   display: flex;
   gap: 15px;
-  left: 15px;
+  left: var(--ui-inset);
   position: fixed;
-  top: 15px;
+  top: var(--ui-inset);
   z-index: 2;
 }
 
@@ -186,8 +187,8 @@ button {
   font-size: 14px;
   padding: 15px 15px 25px;
   position: fixed;
-  right: 15px;
-  top: 15px;
+  right: var(--ui-inset);
+  top: var(--ui-inset);
   width: var(--sidebar-width);
   z-index: 2;
 }
@@ -195,9 +196,14 @@ button {
 .sidebar-close {
   padding: 3px 5px;
   position: fixed;
-  right: 20px;
-  top: 20px;
+  right: calc(var(--ui-inset) + 5px);
+  top: calc(var(--ui-inset) + 5px);
   z-index: 3;
+
+  &.is-closed {
+    right: var(--ui-inset);
+    top: var(--ui-inset);
+  }
 }
 
 .attribute-section + .attribute-section {
