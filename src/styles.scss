@@ -8,6 +8,7 @@
 }
 
 body {
+  font-family: 'Rubik', sans-serif;
   margin: 0;
 }
 
@@ -17,6 +18,7 @@ input {
   background: none;
   border: none;
   margin: 0;
+  padding: 0;
 }
 
 input:focus {
@@ -26,6 +28,21 @@ input:focus {
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   appearance: none;
+}
+
+input[type=color] {
+  cursor: pointer;
+  height: 20px;
+  width: 35px;
+  
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  
+  &::-webkit-color-swatch {
+    border-radius: 5px;
+    border: 1px solid var(--primary-color);
+  }
 }
 
 button {
@@ -70,7 +87,6 @@ button {
 }
 
 .App {
-  font-family: sans-serif;
   height: 100vh;
   width: 100vw;
 }
@@ -220,7 +236,7 @@ button {
 .attribute-section-title {
   color: hsl(0 0% 95%);
   font-size: .75rem;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   margin: 0 0 .75rem;
   text-transform: uppercase;
 }
@@ -231,19 +247,22 @@ button {
   display: flex;
   gap: 10px;
   margin-top: 10px;
-}
 
-.attribute.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
+  &.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 
-.attribute label {
-  flex-basis: 25%;
-}
+  label {
+    flex-basis: 32%;
+    font-size: .75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
 
-.attribute small {
-  margin-left: auto;
+  small {
+    margin-left: auto;
+  }
 }
 
 .mini-field {
