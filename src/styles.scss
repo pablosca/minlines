@@ -130,8 +130,8 @@ button {
 }
 
 .toolbar {
-  align-items: center;
   display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -147,7 +147,7 @@ button {
 
 .toolbar-done.button {
   box-shadow: var(--box-shadow);
-  padding: 8px 12px;
+  aspect-ratio: 1 / .85;
 }
 
 .range {
