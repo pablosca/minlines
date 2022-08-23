@@ -33,7 +33,7 @@ export default function ToolBar() {
           </button>
         ))}
       </div>
-      {<button className="button accent toolbar-done" onClick={onDoneClick}>
+      {drawing && <button className="button accent toolbar-done" onClick={onDoneClick}>
         <FontAwesomeIcon icon="check" size="xl" />
       </button>}
     </nav>
