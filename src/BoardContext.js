@@ -1,18 +1,19 @@
-import { useState, createContext, useContext, useRef } from "react";
-import { defaultFillColor } from "./ToolsContext";
+import { useState, createContext, useContext, useRef } from 'react';
+import { defaultFillColor } from './ToolsContext';
+import PropTypes from 'prop-types';
 
-/*type Vector = {
+/* type Vector = {
   points?: Array,
   createdAt: number,
   type: string
-};*/
+}; */
 
 const initialState = {
   points: [],
   vectors: {},
   tempText: null,
   tempShape: null,
-  withGrid: true,
+  withGrid: true
 };
 
 const BoardContext = createContext(initialState);
@@ -63,7 +64,7 @@ export const BoardProvider = ({ children }) => {
       strokeColor,
       strokeWidth,
       strokeOpacity: 1,
-      box: { x, y, height, width },
+      box: { x, y, height, width }
     };
 
     setVectors({
@@ -81,7 +82,7 @@ export const BoardProvider = ({ children }) => {
       y,
       content,
       fontSize,
-      strokeColor,
+      strokeColor
     };
 
     setVectors({
@@ -95,7 +96,7 @@ export const BoardProvider = ({ children }) => {
 
     idsToChange.forEach(id => {
       const vector = vectors[id];
-      
+
       // vectors with points
       if (vector.type.match(/polyline|path/)) {
         const newPoints = vector.points.map((p) => {
@@ -105,14 +106,14 @@ export const BoardProvider = ({ children }) => {
             y: p.y + deltaY
           };
         });
-  
+
         updatedVectors[id] = {
           ...vector,
           points: newPoints,
           box: {
             ...vector.box,
             x: vector.box.x + deltaX,
-            y: vector.box.y + deltaY,
+            y: vector.box.y + deltaY
           }
         };
       }
@@ -124,20 +125,20 @@ export const BoardProvider = ({ children }) => {
           box: {
             ...vector.box,
             x: vector.box.x + deltaX,
-            y: vector.box.y + deltaY,
+            y: vector.box.y + deltaY
           }
-        }
+        };
       }
     });
 
     setVectors({
       ...vectors,
-      ...updatedVectors,
+      ...updatedVectors
     });
   };
 
   const updateVectorResize = ({ scaleX, scaleY, selectionBox, corners, resizeStyle, selectedVectors }) => {
-    const {x, y, width, height } = selectionBox;
+    const { x, y, width, height } = selectionBox;
     const updatedVectors = {};
 
     selectedVectors.forEach(id => {
@@ -148,11 +149,10 @@ export const BoardProvider = ({ children }) => {
       let newPoints = [];
 
       if (vector.type.match(/polyline|path/)) {
-    
         newPoints = vector.points.map((p) => {
           const newX = scaleX * p.x + (1 - scaleX) * firstX; // (cx+(1-c)a,cy+(1-c)b),
           const newY = scaleY * p.y + (1 - scaleY) * firstY;
-    
+
           return {
             ...p,
             x: newX,
@@ -165,7 +165,7 @@ export const BoardProvider = ({ children }) => {
           x: scaleX * vector.box.x + (1 - scaleX) * firstX,
           y: scaleY * vector.box.y + (1 - scaleY) * firstY,
           width: vector.box.width * scaleX,
-          height: vector.box.height * scaleY,
+          height: vector.box.height * scaleY
         };
       }
 
@@ -174,7 +174,7 @@ export const BoardProvider = ({ children }) => {
           x: scaleX * vector.box.x + (1 - scaleX) * firstX,
           y: scaleY * vector.box.y + (1 - scaleY) * firstY,
           width: vector.box.width * scaleX,
-          height: vector.box.height * scaleY,
+          height: vector.box.height * scaleY
         };
         newVector.resizeStyle = resizeStyle;
       }
@@ -218,12 +218,12 @@ export const BoardProvider = ({ children }) => {
     setTempShape(tempShape => {
       return {
         ...tempShape,
-        ...shape,
-      }
+        ...shape
+      };
     });
   };
 
-  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = defaultFillColor, fillOpacity = .5 }) => {
+  const saveShape = ({ type, strokeColor, strokeWidth, fillColor = defaultFillColor, fillOpacity = 0.5 }) => {
     const { x, y, height, width } = tempShape;
     const now = Date.now();
     const newVector = {
@@ -234,7 +234,7 @@ export const BoardProvider = ({ children }) => {
       strokeOpacity: 1,
       fillColor,
       fillOpacity,
-      box: { x, y, height, width },
+      box: { x, y, height, width }
     };
 
     setTempShape(null);
@@ -263,7 +263,7 @@ export const BoardProvider = ({ children }) => {
     }
 
     if (updates.scaleX || updates.scaleY) {
-      const { selectionBox, resizeStyle } = updates
+      const { selectionBox, resizeStyle } = updates;
 
       await updateVectorResize({
         scaleX: updates.scaleX || 1,
@@ -272,15 +272,15 @@ export const BoardProvider = ({ children }) => {
         // TODO: make it resize from the center
         corners: { bottom: true, right: true },
         resizeStyle,
-        selectedVectors: ids,
+        selectedVectors: ids
       });
 
-      return
+      return;
     }
 
     setVectors(vectors => {
       ids.forEach(id => {
-        vectors[id] = { ...vectors[id], ...updates }
+        vectors[id] = { ...vectors[id], ...updates };
       });
       return { ...vectors };
     });
@@ -310,7 +310,7 @@ export const BoardProvider = ({ children }) => {
         updateShape,
         saveShape,
         withGrid,
-        setWithGrid,
+        setWithGrid
       }}
     >
       {children}
@@ -318,11 +318,15 @@ export const BoardProvider = ({ children }) => {
   );
 };
 
+BoardProvider.propTypes = {
+  children: PropTypes.element,
+};
+
 const useBoard = () => {
   const context = useContext(BoardContext);
 
   if (context === undefined) {
-    throw new Error("useBoard must be used within a BoardProvider");
+    throw new Error('useBoard must be used within a BoardProvider');
   }
   return context;
 };

@@ -1,7 +1,8 @@
-import useTools from "./ToolsContext";
-import useSelection from "./SelectionContext";
+import useTools from './ToolsContext';
+import useSelection from './SelectionContext';
+import PropTypes from 'prop-types';
 
-export default function RectangleElement(props) {
+export default function RectangleElement (props) {
   const { strokeColor, strokeWidth, tool } = useTools();
   const renderedStrokeColor = props.strokeColor || strokeColor;
   const renderedFillColor = props.fillColor || '#999999';
@@ -12,7 +13,7 @@ export default function RectangleElement(props) {
 
   return (
     <g>
-      {tool === "select" && (
+      {tool === 'select' && (
         <rect
           className={`grabbable ${(isSelected && isSelectingArea) && 'active'}`}
           x={x}
@@ -34,9 +35,20 @@ export default function RectangleElement(props) {
         strokeWidth={renderedStrokeWidth}
         strokeOpacity={props.strokeOpacity || 1}
         fill={renderedFillColor}
-        fillOpacity={props.fillOpacity || .5}
+        fillOpacity={props.fillOpacity || 0.5}
         vectorEffect="non-scaling-stroke"
       />
     </g>
   );
 }
+
+RectangleElement.propTypes = {
+  strokeColor: PropTypes.string,
+  fillColor: PropTypes.string,
+  strokeWidth: PropTypes.number,
+  strokeOpacity: PropTypes.number,
+  fillOpacity: PropTypes.number,
+  vectorId: PropTypes.number,
+  id: PropTypes.string,
+  box: PropTypes.object,
+};
