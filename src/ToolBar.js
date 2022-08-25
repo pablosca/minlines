@@ -39,7 +39,7 @@ export default function ToolBar() {
         </button>
       }
       
-      {zoom.scale !== 0 && `${ parseInt(100 / zoom.scale) }% zoom`}
+      {zoom.scale !== 0 && `${ parseInt(100 / zoom.scale) }%`}
     </nav>
   );
 }
