@@ -1,5 +1,6 @@
 import useBoard from "./BoardContext";
 import useTools from "./ToolsContext";
+import Dimensions from "./Dimensions";
 
 export default function BasicAttributes({ vectors: vectorsIds }) {
   const { tool, strokeColor, strokeWidth, setStrokeColor, setStrokeWidth } = useTools();
@@ -7,6 +8,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
   // const notSelectTool = tool && tool !== 'select';
   const isNascentVector = !vectorsIds.length;
   const vectors = vectorsIds.map(id => allVectors[id]);
+  const single = vectors.length === 1;
   const multiple = vectors.length > 1;
   const renderedStrokeWidth = isNascentVector ? strokeWidth : (multiple ? 3 : vectors[0].strokeWidth);
   const renderedStrokeColor = isNascentVector ? strokeColor :  (multiple ? '#000000' : vectors[0].strokeColor);
@@ -42,9 +44,12 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
   const onFillOpacityChange = (e) => {
     updateVectorsById(vectorsIds, { fillOpacity: parseFloat(e.currentTarget.value) });
   };
+
   
   return (
     <>
+      {single && <Dimensions vectorsIds={vectorsIds} />}
+
       <section className="attribute-section">
         <h4 className="attribute-section-title">Stroke</h4>
         <div className="attribute">

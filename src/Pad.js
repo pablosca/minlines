@@ -239,8 +239,6 @@ export default function Pad() {
     });
   });
 
-
-
   // const onPadTouchStart = useCallback(e => {
   //   if (e.touches.length === 2) {
   //     console.log('PINCH STARTED');

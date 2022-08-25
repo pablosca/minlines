@@ -427,6 +427,15 @@ export const SelectionProvider = ({ children }) => {
         payload: { draggingCoords }
       });
     },
+
+    updateSelectionBox: (newSelectionBox) => {
+      dispatch({
+        type: "UPDATE_SELECTION_BOX",
+        payload: {
+          selectionBox: newSelectionBox,
+        }
+      });
+    }
   };
 
   // TODO: put this in a more global context (WindowContext?)

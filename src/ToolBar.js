@@ -27,13 +27,17 @@ export default function ToolBar() {
           <button
             onClick={(e) => onToolClick(e, t.key)}
             key={t.key}
-            className={`button ${t.key === tool ? 'selected' : ''}`}
+            className={`button light ${t.key === tool ? 'selected' : ''}`}
           >
             <FontAwesomeIcon icon={t.icon} size="lg" />
           </button>
         ))}
       </div>
-      {drawing && <button className="button accent toolbar-done" onClick={onDoneClick}>Done</button>}
+      {
+        drawing && <button className="button accent toolbar-done" onClick={onDoneClick}>
+          <FontAwesomeIcon icon="check" size="xl" />
+        </button>
+      }
       
       {zoom.scale !== 0 && `${ parseInt(100 / zoom.scale) }% zoom`}
     </nav>

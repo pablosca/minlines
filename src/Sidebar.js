@@ -21,16 +21,16 @@ export default function Sidebar() {
 
   return (
     <>
-      <button className={`button sidebar-close ${isClosed ? 'inverse' : 'light'}`} onClick={toggleSidebar}>
+      <button className={`button sidebar-close ${isClosed ? 'inverse is-closed' : 'light'}`} onClick={toggleSidebar}>
         {<FontAwesomeIcon icon={isClosed ? 'chevron-left' : 'chevron-right'} size="lg" />}
       </button>
 
       {!isClosed && (
         <aside className="sidebar">
           <section className="attribute-section">
-            <label>
+            <label className="grid-toggle">
               <input type="checkbox" onChange={onGridChange} checked={withGrid} />
-              Show grid
+              <span>Show grid</span>
             </label>
           </section>
           {!isSelectingArea && <BasicAttributes vectors={selectedVectors} />}
