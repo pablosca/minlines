@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
-import { round } from "./utils";
-import useBoard from "./BoardContext";
-import useSelection from "./SelectionContext";
+import { useCallback, useEffect, useState } from 'react';
+import { round } from './utils';
+import useBoard from './BoardContext';
+import useSelection from './SelectionContext';
+import PropTypes from 'prop-types';
 
-export default function Dimensions({ vectorsIds }) {
+export default function Dimensions ({ vectorsIds }) {
   const { vectors: allVectors, updateVectorsById } = useBoard();
   const { updateSelectionBox } = useSelection();
   const vectors = vectorsIds.map(id => allVectors[id]);
@@ -21,7 +22,7 @@ export default function Dimensions({ vectorsIds }) {
   const onPositionBlur = (difference, property) => {
     return e => {
       updateVectorsById(vectorsIds, {
-        [difference]: parseFloat(e.currentTarget.value) - vectors[0].box[property],
+        [difference]: parseFloat(e.currentTarget.value) - vectors[0].box[property]
       });
     };
   };
@@ -31,7 +32,7 @@ export default function Dimensions({ vectorsIds }) {
       updateVectorsById(vectorsIds, {
         [difference]: parseFloat(e.currentTarget.value) / vectors[0].box[property],
         selectionBox: vectors[0].box,
-        resizeStyle: vectors[0].resizeStyle,
+        resizeStyle: vectors[0].resizeStyle
       });
     };
   };
@@ -123,3 +124,7 @@ export default function Dimensions({ vectorsIds }) {
     </section>
   );
 }
+
+Dimensions.propTypes = {
+  vectorsIds: PropTypes.array,
+};

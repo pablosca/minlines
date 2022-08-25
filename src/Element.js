@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import useTools from "./ToolsContext";
-import PathElement from "./PathElement";
-import PolylineElement from "./PolylineElement";
-import TextElement from "./TextElement";
-import useSelection from "./SelectionContext";
-import RectangleElement from "./RectangleElement";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import useTools from './ToolsContext';
+import PathElement from './PathElement';
+import PolylineElement from './PolylineElement';
+import TextElement from './TextElement';
+import useSelection from './SelectionContext';
+import RectangleElement from './RectangleElement';
 
-export default function Element({ vector, onPointerDown, onPointerUp }) {
+export default function Element ({ vector, onPointerDown, onPointerUp }) {
   const { tool } = useTools();
   const { resizeStyle, selectedVectors, isResizing, dragStyle, isDragging, pointedVectorId, isSelectingArea } = useSelection();
   const elementRef = useRef(null);
@@ -22,7 +23,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
     <g
       style={style}
       dataselected={selectedVectors}
-      className={tool === "select" ? "selectable" : ""}
+      className={tool === 'select' ? 'selectable' : ''}
       ref={elementRef}
       onPointerDown={onPointerDown(vector)}
       onPointerUp={onPointerUp}
@@ -37,7 +38,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
         strokeDasharray="4"
         fill="none"
       />}
-      {vector.type === "polyline" && (
+      {vector.type === 'polyline' && (
         <PolylineElement
           key={vector.createdAt}
           points={vector.points}
@@ -47,7 +48,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           vectorId={vector.createdAt}
         />
       )}
-      {vector.type === "path" && (
+      {vector.type === 'path' && (
         <PathElement
           key={vector.createdAt}
           points={vector.points}
@@ -57,7 +58,7 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
           vectorId={vector.createdAt}
         />
       )}
-      {vector.type === "rectangle" && (
+      {vector.type === 'rectangle' && (
         <RectangleElement
           key={vector.createdAt}
           strokeColor={vector.strokeColor}
@@ -78,3 +79,9 @@ export default function Element({ vector, onPointerDown, onPointerUp }) {
     </g>
   );
 }
+
+Element.propTypes = {
+  vector: PropTypes.object,
+  onPointerDown: PropTypes.func,
+  onPointerUp: PropTypes.func,
+};

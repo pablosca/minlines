@@ -1,9 +1,9 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import useBoard from "./BoardContext";
-import useTools, { tools } from "./ToolsContext";
+import useBoard from './BoardContext';
+import useTools, { tools } from './ToolsContext';
 
-export default function ToolBar() {
+export default function ToolBar () {
   const { tool, selectTool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
   const { clearPoints, savePointsVector, clearLastPoint } = useBoard();
 
@@ -15,7 +15,7 @@ export default function ToolBar() {
   const onDoneClick = async (e) => {
     e.stopPropagation();
     await clearLastPoint();
-    await savePointsVector({ type: "polyline", strokeColor, strokeWidth });
+    await savePointsVector({ type: 'polyline', strokeColor, strokeWidth });
     setDrawing(false);
     clearPoints();
   };

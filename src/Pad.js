@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import useTools from "./ToolsContext";
-import Element from "./Element";
-import PathElement from "./PathElement";
-import PolylineElement from "./PolylineElement";
-import RectangleElement from "./RectangleElement";
-import TextElement from "./TextElement";
-import SelectionWrapper from "./SelectionWrapper";
-import Sidebar from "./Sidebar";
-import useBoard from "./BoardContext";
-import useSelection from "./SelectionContext";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import useTools from './ToolsContext';
+import Element from './Element';
+import PathElement from './PathElement';
+import PolylineElement from './PolylineElement';
+import RectangleElement from './RectangleElement';
+import TextElement from './TextElement';
+import SelectionWrapper from './SelectionWrapper';
+import Sidebar from './Sidebar';
+import useBoard from './BoardContext';
+import useSelection from './SelectionContext';
 
-export default function Pad() {
+export default function Pad () {
   const [pressed, setPressed] = useState(false);
   const [zoom, setZoom] = useState(1);
   const { tool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
@@ -29,7 +29,7 @@ export default function Pad() {
     addShape,
     updateShape,
     saveShape,
-    withGrid,
+    withGrid
   } = useBoard();
   const {
     selectionBox,
@@ -49,34 +49,34 @@ export default function Pad() {
     isSelectingArea,
     startSelectArea,
     moveSelectArea,
-    stopSelectArea,
+    stopSelectArea
   } = useSelection();
 
   const onPadPointerDown = (e) => {
     if (!tool) return;
     tool.match(/path|rectangle/) && setPressed(true);
-    tool === "polyline" && setDrawing(true);
+    tool === 'polyline' && setDrawing(true);
 
     if (tool.match(/path|polyline/)) {
       addPoint({ x: e.clientX, y: e.clientY });
     }
 
     if (tool.match(/rectangle/)) {
-      addShape({x: e.clientX, y: e.clientY});
+      addShape({ x: e.clientX, y: e.clientY });
     }
 
     if (tool === 'select') {
       startSelectArea({
         selectionBox: {
           x: e.clientX,
-          y: e.clientY,
-        },
+          y: e.clientY
+        }
       });
     }
   };
 
   const onPadPointerMove = (e) => {
-    if (tool === "select") {
+    if (tool === 'select') {
       if (pointedVectorId) {
         drag({
           x: e.clientX - initialCoords.x,
@@ -90,15 +90,15 @@ export default function Pad() {
       } else if (isSelectingArea) {
         moveSelectArea({
           x: e.clientX,
-          y: e.clientY,
+          y: e.clientY
         });
       }
-    } else if (tool === "path" && pressed) {
+    } else if (tool === 'path' && pressed) {
       addPoint({
         x: e.clientX,
         y: e.clientY
       });
-    } else if (tool === "polyline" && drawing) {
+    } else if (tool === 'polyline' && drawing) {
       replaceLastPoint({
         x: e.clientX,
         y: e.clientY
@@ -120,11 +120,11 @@ export default function Pad() {
       } else if (isSelectingArea) {
         await stopSelectArea();
       }
-    } else if (tool === "path" && pressed) {
+    } else if (tool === 'path' && pressed) {
       savePointsVector({
-        type: "path",
+        type: 'path',
         strokeColor,
-        strokeWidth,
+        strokeWidth
       });
       clearPoints();
       setPressed(false);
@@ -134,7 +134,7 @@ export default function Pad() {
       saveShape({
         type: 'rectangle',
         strokeColor,
-        strokeWidth,
+        strokeWidth
       });
       setPressed(false);
     }
@@ -157,32 +157,32 @@ export default function Pad() {
           y: e.clientY
         },
         type: vector.type,
-        pointedVectorId: vector.createdAt,
+        pointedVectorId: vector.createdAt
       });
     }, [tool, isShiftOn, selectedVectors]);
 
   const onElementPointerUp = (e) => {
-      if (isSelectingArea && selectionBox) return;
+    if (isSelectingArea && selectionBox) return;
 
-      e.stopPropagation();
-      if (tool !== "select") return;
+    e.stopPropagation();
+    if (tool !== 'select') return;
 
-      const isPointedVectorSelected = selectedVectors.includes(pointedVectorId);
+    const isPointedVectorSelected = selectedVectors.includes(pointedVectorId);
 
-      if (pointedVectorId) unPointVector();
-      if (!isPointedVectorSelected && !isResizing && !isSelectingArea) {
-        select({ newSelectedId: pointedVectorId });
-      }
+    if (pointedVectorId) unPointVector();
+    if (!isPointedVectorSelected && !isResizing && !isSelectingArea) {
+      select({ newSelectedId: pointedVectorId });
+    }
 
-      if (isResizing) {
-        completeResize();
-      }
-    };
+    if (isResizing) {
+      completeResize();
+    }
+  };
 
   const deleteVector = useCallback(
     (e) => {
       if (![8, 46].includes(e.keyCode)) return;
-      if (tool !== "select" && !selectedVectors.length) return;
+      if (tool !== 'select' && !selectedVectors.length) return;
 
       removeVector(selectedVectors);
       deselect();
@@ -191,23 +191,23 @@ export default function Pad() {
   );
 
   useEffect(() => {
-    document.addEventListener("keyup", deleteVector);
+    document.addEventListener('keyup', deleteVector);
 
     return () => {
-      document.removeEventListener("keyup", deleteVector);
+      document.removeEventListener('keyup', deleteVector);
     };
   }, [deleteVector]);
 
   // TODO: put this in a better place
   useEffect(() => {
-    if (tool !== "select") {
+    if (tool !== 'select') {
       deselect();
     }
   }, [tool]);
 
-  const hasTempPath = points.length && pressed && tool === "path";
-  const hasTempLine = points.length && drawing && tool === "polyline";
-  const hasTempText = tempText && tool === "text";
+  const hasTempPath = points.length && pressed && tool === 'path';
+  const hasTempLine = points.length && drawing && tool === 'polyline';
+  const hasTempText = tempText && tool === 'text';
   const hasTempShape = tempShape && tool === 'rectangle';
 
   const onTextChange = useCallback((e) => {
@@ -221,7 +221,7 @@ export default function Pad() {
       y,
       content,
       strokeColor,
-      fontSize: 16,
+      fontSize: 16
     });
   });
 
@@ -241,13 +241,13 @@ export default function Pad() {
   // const onPadTouchEnd = useCallback(e => {
   //   console.log('PINCH end!');
   // });
-  
+
   const viewBox = `0 0 ${window.innerWidth * zoom} ${window.innerHeight * zoom}`;
-    // scaleX * p.x + (1 - scaleX) * firstX
+  // scaleX * p.x + (1 - scaleX) * firstX
   return (
     <main className="main">
       {tempText && <textarea
-        style={{ 'position': 'fixed', left: tempText.x + 'px', top: tempText.y + 'px', background: 'red', opacity: 0.01 }}
+        style={{ position: 'fixed', left: tempText.x + 'px', top: tempText.y + 'px', background: 'red', opacity: 0.01 }}
         autoFocus
         onChange={onTextChange}
         onBlur={onTextBlur}

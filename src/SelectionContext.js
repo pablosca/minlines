@@ -1,60 +1,61 @@
-import { createContext, useContext, useEffect, useReducer, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from 'react';
+import PropTypes from 'prop-types';
 
-import useBoard from "./BoardContext";
+import useBoard from './BoardContext';
 
-function selectReducer(state, action) {
+function selectReducer (state, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case "SHIFT_CHANGE": {
+    case 'SHIFT_CHANGE': {
       return {
         ...state,
-        isShiftOn: payload.isShiftOn,
+        isShiftOn: payload.isShiftOn
       };
     }
-    case "SELECT": {
+    case 'SELECT': {
       return {
         ...state,
         selectedVectors: payload.selectedVectors,
-        selectionBox: payload.selectionBox,
+        selectionBox: payload.selectionBox
       };
     }
-    case "UPDATE_SELECTION_BOX": {
+    case 'UPDATE_SELECTION_BOX': {
       return {
         ...state,
-        selectionBox: payload.selectionBox,
+        selectionBox: payload.selectionBox
       };
     }
-    case "DESELECT": {
+    case 'DESELECT': {
       return {
         ...state,
         selectedVectors: [],
         selectionBox: null,
-        isSelectingArea: false,
+        isSelectingArea: false
       };
     }
-    case "START_SELECT_AREA": {
+    case 'START_SELECT_AREA': {
       return {
         ...state,
         isSelectingArea: true,
-        startingPoint: payload.startingPoint,
+        startingPoint: payload.startingPoint
         // selectionBox: payload.selectionBox,
       };
     }
-    case "STOP_SELECT_AREA": {
+    case 'STOP_SELECT_AREA': {
       return {
         ...state,
-        isSelectingArea: false,
+        isSelectingArea: false
       };
     }
-    case "START_RESIZE":
+    case 'START_RESIZE':
       return {
         ...state,
         isResizing: true,
         corners: payload.corners,
         initialResizeRect: { ...state.selectionBox }
       };
-    case "RESIZE": {
+    case 'RESIZE': {
       const { initialResizeRect, corners } = state;
       const { x, y, width, height } = initialResizeRect;
       const { resizingCoords } = payload;
@@ -75,20 +76,20 @@ function selectReducer(state, action) {
         resizeStyle: {
           transform: `scale(${scaleX}, ${scaleY})`,
           transformOrigin: `${corners.right ? 'left' : 'right'} ${corners.bottom ? 'top' : 'bottom'}`,
-          transformBox: "fill-box"
+          transformBox: 'fill-box'
         }
       };
     }
-    case "STOP_RESIZE":
+    case 'STOP_RESIZE':
       return {
         ...state,
         resizingCoords: null,
         isResizing: false,
         resizeStyle: null,
         initialResizeCoords: null,
-        corners: null,
+        corners: null
       };
-    case "DRAGGING": {
+    case 'DRAGGING': {
       const { x, y } = payload.draggingCoords;
 
       return {
@@ -97,31 +98,31 @@ function selectReducer(state, action) {
         draggingCoords: { x, y },
         dragStyle: {
           transform: `translate(${x}px, ${y}px)`
-        },
-      }
+        }
+      };
     }
-    case "POINT_VECTOR": {
+    case 'POINT_VECTOR': {
       return {
         ...state,
         initialCoords: payload.initialCoords,
         pointedVectorId: payload.pointedVectorId,
-        type: payload.type,
+        type: payload.type
       };
     }
-    case "UNPOINT_VECTOR": {
+    case 'UNPOINT_VECTOR': {
       return {
         ...state,
         initialCoords: null,
         type: null,
-        pointedVectorId: null,
+        pointedVectorId: null
       };
     }
-    case "STOP_DRAG": {
+    case 'STOP_DRAG': {
       return {
         ...state,
         isDragging: false,
         draggingCoords: null,
-        dragStyle: null,
+        dragStyle: null
       };
     }
     default:
@@ -144,7 +145,7 @@ const initialSelectState = {
   dragStyle: null,
   pointedVectorId: null,
   isSelectingArea: false,
-  startingPoint: {},
+  startingPoint: {}
 };
 
 const SelectionContext = createContext(initialSelectState);
@@ -187,7 +188,7 @@ export const SelectionProvider = ({ children }) => {
         const { x: currentX1, y: currentY1, width: currentWidth, height: currentHeight } = state.selectionBox;
         const currentX2 = currentX1 + currentWidth;
         const currentY2 = currentY1 + currentHeight;
-  
+
         // check if boundaries are further than those in the state
         // otherwise keep what we have
         if (newX1 > currentX1) newX1 = currentX1;
@@ -199,7 +200,7 @@ export const SelectionProvider = ({ children }) => {
           x: newX1,
           y: newY1,
           width: newX2 - newX1,
-          height: newY2 - newY1,
+          height: newY2 - newY1
         };
       }
 
@@ -208,22 +209,22 @@ export const SelectionProvider = ({ children }) => {
       }
 
       dispatch({
-        type: "SELECT",
+        type: 'SELECT',
         payload: {
           selectedVectors: newSelectedVectors,
-          selectionBox: newSelectionBox,
+          selectionBox: newSelectionBox
         }
       });
     },
 
     startSelectArea: ({ selectionBox }) => {
       dispatch({
-        type: "START_SELECT_AREA",
+        type: 'START_SELECT_AREA',
         payload: {
           startingPoint: {
             x: selectionBox.x,
-            y: selectionBox.y,
-          },
+            y: selectionBox.y
+          }
           // selectionBox: {
           //   x: selectionBox.x,
           //   y: selectionBox.y,
@@ -262,7 +263,7 @@ export const SelectionProvider = ({ children }) => {
       const selectionY2 = newSelectionBox.y + newSelectionBox.height;
 
       Object.values(vectors).forEach(v => {
-        const { box, createdAt} = v;
+        const { box, createdAt } = v;
         const x1IsInsideX = box.x >= newSelectionBox.x && box.x <= selectionX2;
         const y1IsInsideY = box.y >= newSelectionBox.y && box.y <= selectionY2;
         const x2IsInsideX = (box.x + box.width) >= newSelectionBox.x && (box.x + box.width) <= selectionX2;
@@ -278,19 +279,19 @@ export const SelectionProvider = ({ children }) => {
       });
 
       dispatch({
-        type: "SELECT",
+        type: 'SELECT',
         payload: {
           selectedVectors: [...new Set([...selectedVectors])],
-          selectionBox: newSelectionBox,
+          selectionBox: newSelectionBox
         }
       });
     },
 
     stopSelectArea: () => {
-      dispatch({ type: "STOP_SELECT_AREA" });
-      
+      dispatch({ type: 'STOP_SELECT_AREA' });
+
       if (!state.selectedVectors.length) {
-        dispatch({ type: "DESELECT" });
+        dispatch({ type: 'DESELECT' });
         return;
       }
 
@@ -310,32 +311,32 @@ export const SelectionProvider = ({ children }) => {
       });
 
       dispatch({
-        type: "UPDATE_SELECTION_BOX",
+        type: 'UPDATE_SELECTION_BOX',
         payload: {
           selectionBox: {
             x: x1,
             y: y1,
             width: x2 - x1,
-            height: y2 - y1,
-          },
+            height: y2 - y1
+          }
         }
       });
     },
 
     deselect: () => {
-      dispatch({ type: "DESELECT" });
+      dispatch({ type: 'DESELECT' });
     },
 
     startResize: (corners) => {
       dispatch({
-        type: "START_RESIZE",
+        type: 'START_RESIZE',
         payload: { corners }
       });
     },
 
     resize: (resizingCoords) => {
       dispatch({
-        type: "RESIZE",
+        type: 'RESIZE',
         payload: { resizingCoords }
       });
     },
@@ -347,7 +348,7 @@ export const SelectionProvider = ({ children }) => {
         initialResizeRect,
         selectionBox,
         corners,
-        resizeStyle,
+        resizeStyle
       } = state;
 
       if (selectedVectors.length && isResizing) {
@@ -357,20 +358,20 @@ export const SelectionProvider = ({ children }) => {
           selectionBox,
           corners,
           resizeStyle,
-          selectedVectors,
+          selectedVectors
         });
       }
 
-      dispatch({ type: "STOP_RESIZE" });
+      dispatch({ type: 'STOP_RESIZE' });
     },
 
     pointVector: ({ initialCoords, type, pointedVectorId }) => {
       dispatch({
-        type: "POINT_VECTOR",
+        type: 'POINT_VECTOR',
         payload: {
           initialCoords,
           type,
-          pointedVectorId,
+          pointedVectorId
         }
       });
     },
@@ -385,37 +386,36 @@ export const SelectionProvider = ({ children }) => {
         await updateVectorPosition({
           idsToChange,
           deltaX: draggingCoords.x,
-          deltaY: draggingCoords.y,
+          deltaY: draggingCoords.y
         });
       }
 
-      dispatch({ type: "UNPOINT_VECTOR" });
-      
+      dispatch({ type: 'UNPOINT_VECTOR' });
+
       if (isDragging) {
         const isPointedVectorSelected = selectedVectors.includes(pointedVectorId);
         let newSelectionBox = vector.box;
 
-        dispatch({ type: "STOP_DRAG" });
-        
+        dispatch({ type: 'STOP_DRAG' });
 
         if (state.selectionBox) {
           newSelectionBox = {
             ...state.selectionBox,
             x: state.selectionBox.x + draggingCoords.x,
-            y: state.selectionBox.y + draggingCoords.y,
-          }
+            y: state.selectionBox.y + draggingCoords.y
+          };
         } else {
           newSelectionBox = {
             ...vector.box,
             x: vector.box.x + draggingCoords.x,
-            y: vector.box.y + draggingCoords.y,
+            y: vector.box.y + draggingCoords.y
           };
         }
 
         dispatch({
-          type: "UPDATE_SELECTION_BOX",
+          type: 'UPDATE_SELECTION_BOX',
           payload: {
-            selectionBox: newSelectionBox,
+            selectionBox: newSelectionBox
           }
         });
       }
@@ -423,16 +423,16 @@ export const SelectionProvider = ({ children }) => {
 
     drag: (draggingCoords) => {
       dispatch({
-        type: "DRAGGING",
+        type: 'DRAGGING',
         payload: { draggingCoords }
       });
     },
 
     updateSelectionBox: (newSelectionBox) => {
       dispatch({
-        type: "UPDATE_SELECTION_BOX",
+        type: 'UPDATE_SELECTION_BOX',
         payload: {
-          selectionBox: newSelectionBox,
+          selectionBox: newSelectionBox
         }
       });
     }
@@ -448,7 +448,7 @@ export const SelectionProvider = ({ children }) => {
     return () => {
       window.removeEventListener('keyup', onShiftChange);
       window.removeEventListener('keydown', onShiftChange);
-    }
+    };
   }, []);
 
   return (
@@ -458,11 +458,15 @@ export const SelectionProvider = ({ children }) => {
   );
 };
 
+SelectionProvider.propTypes = {
+  children: PropTypes.element,
+};
+
 const useSelection = () => {
   const context = useContext(SelectionContext);
 
   if (context === undefined) {
-    throw new Error("useSelection must be used within a SelectionProvider");
+    throw new Error('useSelection must be used within a SelectionProvider');
   }
   return context;
 };

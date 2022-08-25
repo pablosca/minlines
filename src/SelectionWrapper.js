@@ -1,17 +1,17 @@
-import { useCallback } from "react";
-import useSelection from "./SelectionContext";
+import { useCallback } from 'react';
+import useSelection from './SelectionContext';
 
-export default function SelectionWrapper() {
+export default function SelectionWrapper () {
   const { selectionBox, startResize } = useSelection();
   const { x, y, width, height } = selectionBox;
 
   const onPointerDown = useCallback(
     (corners) =>
-    (e) => {
-      e.stopPropagation();
+      (e) => {
+        e.stopPropagation();
 
-      startResize(corners);
-    },
+        startResize(corners);
+      },
     [startResize]
   );
 

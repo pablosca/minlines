@@ -1,26 +1,27 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 export const tools = [
   {
-    name: "Path",
-    key: "path",
-    icon: 'pencil',
+    name: 'Path',
+    key: 'path',
+    icon: 'pencil'
   },
   {
-    name: "Polyline",
-    key: "polyline",
-    icon: 'pen-nib',
+    name: 'Polyline',
+    key: 'polyline',
+    icon: 'pen-nib'
   },
   {
-    name: "Rectangle",
-    key: "rectangle",
-    icon: 'vector-square',
+    name: 'Rectangle',
+    key: 'rectangle',
+    icon: 'vector-square'
   },
   {
-    name: "Select",
-    key: "select",
-    icon: 'arrow-pointer',
-  },
+    name: 'Select',
+    key: 'select',
+    icon: 'arrow-pointer'
+  }
   // {
   //   name: "Text",
   //   key: "text"
@@ -31,10 +32,10 @@ export const defaultFillColor = '#63d99c';
 
 const initialState = {
   tool: 'path',
-  strokeColor: "#ff8800",
+  strokeColor: '#ff8800',
   drawing: false,
   isDragging: false,
-  strokeWidth: 6,
+  strokeWidth: 6
 };
 
 const ToolsContext = createContext(initialState);
@@ -63,7 +64,7 @@ export const ToolsProvider = ({ children }) => {
         isDragging,
         setIsDragging,
         strokeWidth,
-        setStrokeWidth,
+        setStrokeWidth
       }}
     >
       {children}
@@ -71,11 +72,15 @@ export const ToolsProvider = ({ children }) => {
   );
 };
 
+ToolsProvider.propTypes = {
+  children: PropTypes.element,
+};
+
 const useTools = () => {
   const context = useContext(ToolsContext);
 
   if (context === undefined) {
-    throw new Error("useTools must be used within a ToolsProvider");
+    throw new Error('useTools must be used within a ToolsProvider');
   }
   return context;
 };

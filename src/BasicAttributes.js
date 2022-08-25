@@ -1,8 +1,9 @@
-import useBoard from "./BoardContext";
-import useTools from "./ToolsContext";
-import Dimensions from "./Dimensions";
+import useBoard from './BoardContext';
+import useTools from './ToolsContext';
+import Dimensions from './Dimensions';
+import PropTypes from 'prop-types';
 
-export default function BasicAttributes({ vectors: vectorsIds }) {
+export default function BasicAttributes ({ vectors: vectorsIds }) {
   const { tool, strokeColor, strokeWidth, setStrokeColor, setStrokeWidth } = useTools();
   const { vectors: allVectors, updateVectorsById } = useBoard();
   // const notSelectTool = tool && tool !== 'select';
@@ -11,7 +12,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
   const single = vectors.length === 1;
   const multiple = vectors.length > 1;
   const renderedStrokeWidth = isNascentVector ? strokeWidth : (multiple ? 3 : vectors[0].strokeWidth);
-  const renderedStrokeColor = isNascentVector ? strokeColor :  (multiple ? '#000000' : vectors[0].strokeColor);
+  const renderedStrokeColor = isNascentVector ? strokeColor : (multiple ? '#000000' : vectors[0].strokeColor);
 
   const onStrokeWidthChange = (e) => {
     const newValue = parseInt(e.currentTarget.value);
@@ -45,7 +46,6 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
     updateVectorsById(vectorsIds, { fillOpacity: parseFloat(e.currentTarget.value) });
   };
 
-  
   return (
     <>
       {single && <Dimensions vectorsIds={vectorsIds} />}
@@ -123,7 +123,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
             max="1"
             step="0.01"
             className="range"
-            defaultValue={multiple ? .5 : (vectors[0].fillOpacity || .5)}
+            defaultValue={multiple ? 0.5 : (vectors[0].fillOpacity || 0.5)}
             onChange={onFillOpacityChange}
           />
           <small>{multiple && '(multiple)'}</small>
@@ -132,3 +132,7 @@ export default function BasicAttributes({ vectors: vectorsIds }) {
     </>
   );
 }
+
+BasicAttributes.propTypes = {
+  vectors: PropTypes.array
+};
