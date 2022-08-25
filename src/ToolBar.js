@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useBoard from './BoardContext';
 import useTools, { tools } from './ToolsContext';
 
-export default function ToolBar() {
+export default function ToolBar () {
   const { tool, selectTool, drawing, setDrawing, strokeColor, strokeWidth, zoom } = useTools();
   const { clearPoints, savePointsVector, clearLastPoint } = useBoard();
 
@@ -38,8 +38,8 @@ export default function ToolBar() {
           <FontAwesomeIcon icon="check" size="xl" />
         </button>
       }
-      
-      {zoom.scale !== 0 && `${ parseInt(100 / zoom.scale) }%`}
+
+      {zoom.scale !== 0 && `${parseInt(100 / zoom.scale)}%`}
     </nav>
   );
 }

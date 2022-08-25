@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import useTools from "./ToolsContext";
-import Element from "./Element";
-import PathElement from "./PathElement";
-import PolylineElement from "./PolylineElement";
-import RectangleElement from "./RectangleElement";
-import TextElement from "./TextElement";
-import SelectionWrapper from "./SelectionWrapper";
-import Sidebar from "./Sidebar";
-import useBoard from "./BoardContext";
-import useSelection from "./SelectionContext";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import useTools from './ToolsContext';
+import Element from './Element';
+import PathElement from './PathElement';
+import PolylineElement from './PolylineElement';
+import RectangleElement from './RectangleElement';
+import TextElement from './TextElement';
+import SelectionWrapper from './SelectionWrapper';
+import Sidebar from './Sidebar';
+import useBoard from './BoardContext';
+import useSelection from './SelectionContext';
 
 export default function Pad () {
   const artboard = useRef();
@@ -191,14 +191,14 @@ export default function Pad () {
   );
 
   useEffect(() => {
-    document.addEventListener("keyup", deleteVector);
+    document.addEventListener('keyup', deleteVector);
     const onPadWheel = e => {
       e.preventDefault();
       let newScale = zoom.scale - e.deltaY * -0.001;
-      
+
       // Restrict scale
-      newScale = Math.min(Math.max(.5, newScale), 3);
-      
+      newScale = Math.min(Math.max(0.5, newScale), 3);
+
       setZoom({ x: e.clientX, y: e.clientY, scale: Math.round(newScale * 100) / 100 });
       e.preventDefault();
     };
@@ -207,7 +207,7 @@ export default function Pad () {
     artboard.current.addEventListener('wheel', onPadWheel, { passive: false });
 
     return () => {
-      document.removeEventListener("keyup", deleteVector);
+      document.removeEventListener('keyup', deleteVector);
       artboard.current.removeEventListener('wheel', onPadWheel);
     };
   }, [deleteVector, artboard, zoom]);
