@@ -11,8 +11,11 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
   const vectors = vectorsIds.map(id => allVectors[id]);
   const single = vectors.length === 1;
   const multiple = vectors.length > 1;
+
+  // TODO: Refactor these and make them more legible
   const renderedStrokeWidth = isNascentVector ? strokeWidth : (multiple ? 3 : vectors[0].strokeWidth);
   const renderedStrokeColor = isNascentVector ? strokeColor : (multiple ? '#000000' : vectors[0].strokeColor);
+  const renderedFillColor = multiple ? '#000000' : single ? vectors[0].fillColor || '#000000' : '#000000';
 
   const onStrokeWidthChange = (e) => {
     const newValue = parseInt(e.currentTarget.value);
@@ -106,7 +109,7 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
             type="color"
             id="fillColor"
             name="fillColor"
-            defaultValue={multiple ? '#000' : vectors[0].fillColor}
+            defaultValue={renderedFillColor}
             onChange={onFillColorChange}
           />
 
