@@ -21,6 +21,7 @@ export default function PathElement (props) {
           strokeWidth={renderedStrokeWidth + 6}
           d={`M${pointsString}`}
           vectorEffect="non-scaling-stroke"
+          pointerEvents="stroke"
         />
       )}
       <path

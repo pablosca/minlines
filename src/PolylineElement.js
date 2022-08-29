@@ -26,6 +26,7 @@ export default function PolylineElement (props) {
           strokeWidth={strokeWidth + 6}
           points={`${pointsString}`}
           vectorEffect="non-scaling-stroke"
+          pointerEvents="stroke"
         />
       )}
       <polyline
