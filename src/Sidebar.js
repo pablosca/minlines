@@ -33,7 +33,7 @@ export default function Sidebar () {
               <span>Show grid</span>
             </label>
           </section>
-          {!isSelectingArea && <BasicAttributes vectors={selectedVectors} />}
+          {!isSelectingArea && !!selectedVectors.length && <BasicAttributes vectors={selectedVectors} />}
         </aside>
       )}
     </>
