@@ -441,15 +441,22 @@ export const SelectionProvider = ({ children }) => {
   // TODO: put this in a more global context (WindowContext?)
   useEffect(() => {
     const onShiftChange = (e) => setShift(e.shiftKey);
+    const onKeyUp = (e) => {
+      if (e.key === 'Escape') {
+        if (state.selectedVectors.length) dispatch({ type: 'DESELECT' });
+      } else {
+        onShiftChange(e);
+      }
+    };
 
-    window.addEventListener('keyup', onShiftChange);
     window.addEventListener('keydown', onShiftChange);
+    window.addEventListener('keyup', onKeyUp);
 
     return () => {
-      window.removeEventListener('keyup', onShiftChange);
       window.removeEventListener('keydown', onShiftChange);
+      window.removeEventListener('keyup', onKeyUp);
     };
-  }, []);
+  }, [state.selectedVectors.length]);
 
   return (
     <SelectionContext.Provider value={value}>
