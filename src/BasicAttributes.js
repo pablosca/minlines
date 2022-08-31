@@ -58,7 +58,11 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
       <section className="attribute-section">
         <h4 className="attribute-section-title">Stroke</h4>
         <div className="attribute">
-          <label htmlFor="strokeWidth">Width</label>
+          <label htmlFor="strokeWidth">
+            <svg className="icon">
+              <use xlinkHref="#icon-stroke-width" />
+            </svg>
+          </label>
           <input
             type="range"
             id="strokeWidth"

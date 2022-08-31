@@ -86,6 +86,27 @@ button {
   --accent-color-luminosity: 55%;
 }
 
+.icon {
+  --icon-size: 24px;
+
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  fill: currentColor;
+  flex-shrink: 0;
+  height: var(--icon-size);
+  justify-content: center;
+  width: var(--icon-size);
+
+  &:not([fill]) {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1;
+  }
+}
+
 .ml-auto {
   margin-left: auto;
 }
@@ -257,11 +278,8 @@ button {
     grid-template-columns: 1fr 1fr;
   }
 
-  label {
-    flex-basis: 32%;
-    font-size: .75rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  .icon {
+    --icon-size: 20px;
   }
 
   small {

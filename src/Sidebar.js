@@ -30,7 +30,7 @@ export default function Sidebar () {
           <section className="attribute-section">
             <label className="grid-toggle">
               <input type="checkbox" onChange={onGridChange} checked={withGrid} />
-              <span>Show grid</span>
+              <span>Grid</span>
             </label>
           </section>
           {!isSelectingArea && !!selectedVectors.length && <BasicAttributes vectors={selectedVectors} />}
