@@ -184,6 +184,7 @@ export default function Pad () {
     (e) => {
       if (![8, 46].includes(e.keyCode)) return;
       if (tool !== 'select' && !selectedVectors.length) return;
+      if (e.target.tagName === 'INPUT') return;
 
       removeVector(selectedVectors);
       deselect();
