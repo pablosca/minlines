@@ -104,7 +104,7 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
         </div>
       </section>
 
-      {!!vectors.length && <section className="attribute-section">
+      {!vectors.find(v => v.type.match(/path|polyline/)) && <section className="attribute-section">
         <h4 className="attribute-section-title">Fill</h4>
 
         <div className="attribute">
