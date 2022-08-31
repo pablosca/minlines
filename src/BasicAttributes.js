@@ -16,8 +16,10 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
   const renderedStrokeWidth = isNascentVector ? strokeWidth : (multiple ? 3 : vectors[0].strokeWidth);
   const renderedStrokeColor = isNascentVector ? strokeColor : (multiple ? '#000000' : vectors[0].strokeColor);
   const renderedStrokeOpacity = (isNascentVector ? 1 : (multiple ? 1 : vectors[0].strokeOpacity)) * 100;
+  const renderedStrokeLinecap = isNascentVector ? 'square' : (multiple ? 'square' : vectors[0].strokeLinecap);
   const renderedFillColor = multiple ? '#000000' : single ? vectors[0].fillColor || '#000000' : '#000000';
   const renderedFillOpacity = (isNascentVector ? 1 : (multiple ? 1 : vectors[0].fillOpacity || 1)) * 100;
+  const hasPointsVectors = vectors.find(v => v.type.match(/path|polyline/));
 
   const onStrokeWidthChange = (e) => {
     const newValue = parseInt(e.currentTarget.value);
@@ -51,29 +53,55 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
     updateVectorsById(vectorsIds, { fillOpacity: parseInt(e.currentTarget.value) / 100 });
   };
 
+  const onStrokeLinecapChange = (value) => {
+    return _ => {
+      updateVectorsById(vectorsIds, { strokeLinecap: value });
+    };
+  };
+
   return (
     <>
       {single && <Dimensions vectorsIds={vectorsIds} />}
-
       <section className="attribute-section">
         <h4 className="attribute-section-title">Stroke</h4>
         <div className="attribute">
-          <label htmlFor="strokeWidth">
+          <label className="group">
             <svg className="icon">
               <use xlinkHref="#icon-stroke-width" />
             </svg>
+
+            <input
+              className="mini-field short-field"
+              type="number"
+              id="strokeWidth"
+              name="strokeWidth"
+              defaultValue={renderedStrokeWidth}
+              onChange={onStrokeWidthChange}
+            />
+            <span>{multiple && 'multiple'}</span>
           </label>
-          <input
-            type="range"
-            id="strokeWidth"
-            name="strokeWidth"
-            min="0"
-            max="20"
-            className="range"
-            defaultValue={renderedStrokeWidth}
-            onChange={onStrokeWidthChange}
-          />
-          <span>{multiple ? 'multiple' : renderedStrokeWidth}</span>
+
+          {hasPointsVectors && (
+            <div className="group ml-auto">
+              <button
+                onClick={onStrokeLinecapChange('square')}
+                className={`button light small ${renderedStrokeLinecap === 'square' && 'selected'}`}
+              >
+                <svg className="icon">
+                  <use xlinkHref="#icon-stroke-cap-square" />
+                </svg>
+              </button>
+
+              <button
+                onClick={onStrokeLinecapChange('round')}
+                className={`button light small ${renderedStrokeLinecap === 'round' && 'selected'}`}
+              >
+                <svg className="icon">
+                  <use xlinkHref="#icon-stroke-cap-round" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="attribute">
@@ -87,15 +115,11 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
 
           <span>{multiple ? 'multiple' : renderedStrokeColor}</span>
 
-          <label className="mini-field ml-auto">
+          <label className="mini-field short-field ml-auto">
             <input
               type="number"
               id="strokeOpacity"
               name="strokeOpacity"
-              min="0.05"
-              max="1"
-              step="0.01"
-              className="range"
               defaultValue={renderedStrokeOpacity}
               onChange={onStrokeOpacityChange}
             />
@@ -104,7 +128,7 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
         </div>
       </section>
 
-      {!vectors.find(v => v.type.match(/path|polyline/)) && <section className="attribute-section">
+      {!hasPointsVectors && <section className="attribute-section">
         <h4 className="attribute-section-title">Fill</h4>
 
         <div className="attribute">
