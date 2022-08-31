@@ -128,36 +128,38 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
         </div>
       </section>
 
-      {!hasPointsVectors && <section className="attribute-section">
-        <h4 className="attribute-section-title">Fill</h4>
+      {!hasPointsVectors && (
+        <section className="attribute-section">
+          <h4 className="attribute-section-title">Fill</h4>
 
-        <div className="attribute">
-          <input
-            type="color"
-            id="fillColor"
-            name="fillColor"
-            defaultValue={renderedFillColor}
-            onChange={onFillColorChange}
-          />
-
-          <span>{multiple ? 'multiple' : renderedFillColor}</span>
-
-          <label className="mini-field ml-auto">
+          <div className="attribute">
             <input
-              type="number"
-              id="fillOpacity"
-              name="fillOpacity"
-              min="0.05"
-              max="1"
-              step="0.01"
-              className="range"
-              defaultValue={renderedFillOpacity}
-              onChange={onFillOpacityChange}
+              type="color"
+              id="fillColor"
+              name="fillColor"
+              defaultValue={renderedFillColor}
+              onChange={onFillColorChange}
             />
-            <span className="value">%</span>
-          </label>
-        </div>
-      </section>}
+
+            <span>{multiple ? 'multiple' : renderedFillColor}</span>
+
+            <label className="mini-field ml-auto">
+              <input
+                type="number"
+                id="fillOpacity"
+                name="fillOpacity"
+                min="0.05"
+                max="1"
+                step="0.01"
+                className="range"
+                defaultValue={renderedFillOpacity}
+                onChange={onFillOpacityChange}
+              />
+              <span className="value">%</span>
+            </label>
+          </div>
+        </section>
+      )}
     </>
   );
 }

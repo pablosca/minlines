@@ -8,6 +8,7 @@ export default function Dimensions ({ vectorsIds }) {
   const { vectors: allVectors, updateVectorsById } = useBoard();
   const { updateSelectionBox } = useSelection();
   const vectors = vectorsIds.map(id => allVectors[id]);
+  const hasRectVectors = vectors.find(v => v.type === 'rectangle');
 
   const [deltaX, setDeltaX] = useState(0);
   const [deltaY, setDeltaY] = useState(0);
@@ -18,6 +19,7 @@ export default function Dimensions ({ vectorsIds }) {
   const [yValue, setYValue] = useState(round(vectors[0].box.y));
   const [widthValue, setWidthValue] = useState(round(vectors[0].box.width));
   const [heightValue, setHeightValue] = useState(round(vectors[0].box.height));
+  const [cornerRadius, setCornerRadius] = useState(round(vectors[0].cornerRadius));
 
   const onPositionBlur = (difference, property) => {
     return e => {
@@ -35,6 +37,10 @@ export default function Dimensions ({ vectorsIds }) {
         resizeStyle: vectors[0].resizeStyle
       });
     };
+  };
+
+  const onCornerRadiusBlur = () => {
+    updateVectorsById(vectorsIds, { cornerRadius });
   };
 
   const onXChange = e => {
@@ -55,6 +61,10 @@ export default function Dimensions ({ vectorsIds }) {
   const onHeightChange = e => {
     setHeightValue(parseFloat(e.currentTarget.value));
     setScaleY(heightValue / vectors[0].box.height);
+  };
+
+  const onCornerRadiusChange = e => {
+    setCornerRadius(parseFloat(e.currentTarget.value));
   };
 
   const blurOnEnter = useCallback(e => e.key === 'Enter' && e.currentTarget.blur());
@@ -121,6 +131,21 @@ export default function Dimensions ({ vectorsIds }) {
           <span>h</span>
         </label>
       </div>
+
+      {hasRectVectors && (
+        <div className="attribute row">
+          <label className="mini-field">
+            <input
+              type="number"
+              value={cornerRadius}
+              onChange={onCornerRadiusChange}
+              onBlur={onCornerRadiusBlur}
+              onKeyPress={blurOnEnter}
+            />
+            <span>deg</span>
+          </label>
+        </div>
+      )}
     </section>
   );
 }

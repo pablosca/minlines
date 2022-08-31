@@ -69,6 +69,7 @@ export default function Element ({ vector, onPointerDown, onPointerUp }) {
           fillColor={vector.fillColor}
           fillOpacity={vector.fillOpacity}
           vectorId={vector.createdAt}
+          cornerRadius={vector.cornerRadius}
           box={vector.box}
         />
       )}

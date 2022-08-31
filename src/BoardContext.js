@@ -239,6 +239,7 @@ export const BoardProvider = ({ children }) => {
       strokeOpacity: 1,
       fillColor,
       fillOpacity,
+      cornerRadius: 0,
       box: { x, y, height, width }
     };
 
