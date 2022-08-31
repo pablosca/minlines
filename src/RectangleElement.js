@@ -21,6 +21,7 @@ export default function RectangleElement (props) {
           width={width}
           height={height}
           strokeWidth={renderedStrokeWidth + 6}
+          rx={props.cornerRadius || 0}
           vectorEffect="non-scaling-stroke"
         />
       )}
