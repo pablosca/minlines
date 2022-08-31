@@ -73,7 +73,7 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
             defaultValue={renderedStrokeWidth}
             onChange={onStrokeWidthChange}
           />
-          <small>{multiple && '(multiple)'}</small>
+          <span>{multiple ? 'multiple' : renderedStrokeWidth}</span>
         </div>
 
         <div className="attribute">
