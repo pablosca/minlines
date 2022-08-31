@@ -48,7 +48,7 @@ export default function BasicAttributes ({ vectors: vectorsIds }) {
   };
 
   const onFillOpacityChange = (e) => {
-    updateVectorsById(vectorsIds, { fillOpacity: parseFloat(e.currentTarget.value) });
+    updateVectorsById(vectorsIds, { fillOpacity: parseInt(e.currentTarget.value) / 100 });
   };
 
   return (
