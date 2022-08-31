@@ -13,7 +13,8 @@ const initialState = {
   vectors: {},
   tempText: null,
   tempShape: null,
-  withGrid: true
+  withGrid: true,
+  lastCreatedVectorId: null,
 };
 
 const BoardContext = createContext(initialState);
@@ -24,6 +25,7 @@ export const BoardProvider = ({ children }) => {
   const [tempText, setTempText] = useState(null);
   const [tempShape, setTempShape] = useState(null);
   const [withGrid, setWithGrid] = useState(initialState.withGrid);
+  const [lastCreatedVectorId, setLastCreatedVectorId] = useState(initialState.lastCreatedVector);
 
   const clearPoints = () => setPoints([]);
 
@@ -67,10 +69,12 @@ export const BoardProvider = ({ children }) => {
       box: { x, y, height, width }
     };
 
-    setVectors({
+    setVectors(vectors => ({
       ...vectors,
       [now]: newVector
-    });
+    }));
+
+    setLastCreatedVectorId(now);
   };
 
   const saveTextVector = ({ x, y, content, fontSize = 16, strokeColor = 'black' }) => {
@@ -243,6 +247,8 @@ export const BoardProvider = ({ children }) => {
       ...vectors,
       [now]: newVector
     });
+
+    setLastCreatedVectorId(now);
   };
 
   const removeVector = (id) => {
@@ -310,7 +316,8 @@ export const BoardProvider = ({ children }) => {
         updateShape,
         saveShape,
         withGrid,
-        setWithGrid
+        setWithGrid,
+        lastCreatedVectorId,
       }}
     >
       {children}

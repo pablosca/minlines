@@ -13,7 +13,7 @@ import useSelection from './SelectionContext';
 export default function Pad () {
   const [pressed, setPressed] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const { tool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
+  const { tool, drawing, setDrawing, strokeColor, strokeWidth, selectTool } = useTools();
   const {
     points,
     vectors,
@@ -29,7 +29,8 @@ export default function Pad () {
     addShape,
     updateShape,
     saveShape,
-    withGrid
+    withGrid,
+    lastCreatedVectorId,
   } = useBoard();
   const {
     selectionBox,
@@ -204,6 +205,12 @@ export default function Pad () {
       deselect();
     }
   }, [tool]);
+
+  useEffect(() => {
+    if (!lastCreatedVectorId) return;
+    selectTool('select');
+    select({ newSelectedId: lastCreatedVectorId });
+  }, [lastCreatedVectorId]);
 
   const hasTempPath = points.length && pressed && tool === 'path';
   const hasTempLine = points.length && drawing && tool === 'polyline';
