@@ -33,15 +33,15 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=color] {
   cursor: pointer;
   height: 20px;
-  width: 35px;
+  width: 20px;
   
   &::-webkit-color-swatch-wrapper {
     padding: 0;
   }
   
   &::-webkit-color-swatch {
-    border-radius: 5px;
-    border: 1px solid hsl(0 0% 100% / 30%);
+    border-radius: 3px;
+    border: 1px solid hsl(0 0% 100% / 50%);
   }
 }
 
@@ -84,6 +84,10 @@ button {
 
 .button.accent:hover {
   --accent-color-luminosity: 55%;
+}
+
+.ml-auto {
+  margin-left: auto;
 }
 
 .App {
@@ -151,7 +155,7 @@ button {
 }
 
 .range {
-  width: 80px;
+  width: 70px;
 }
 
 .selectable .vector:not(.grabbable) {
@@ -245,8 +249,8 @@ button {
   align-items: center;
   color:hsl(0 0% 50%);
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 12px;
 
   &.row {
     display: grid;
@@ -267,12 +271,12 @@ button {
 
 .mini-field {
   align-items: center;
-  background-color: hsl(0 0% 100% / 25%);
-  border-radius: 5px;
-  color: hsl(0 0% 25%);
+  background-color: hsl(0 0% 100% / 20%);
+  border-radius: 3px;
+  color: hsl(0 0% 0%);
   display: flex;
   gap: 4px;
-  padding: 5px 10px 5px 5px;
+  padding: 3px 5px 3px 5px;
 }
 
 .mini-field:hover {
@@ -289,4 +293,29 @@ button {
   color: hsl(0 0% 0%);
   flex: 1;
   width: 100%;
+}
+
+.opacity {
+  position: relative;
+
+  &:hover {
+    color:hsl(0 0% 100%);
+
+    .range {
+      opacity: 1;
+    }
+
+    .value {
+      display: none;
+    }
+  }
+
+  .value {
+    position: absolute;
+    right: 0;
+  }
+
+  .range {
+    opacity: 0;
+  }
 }

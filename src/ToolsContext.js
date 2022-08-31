@@ -32,7 +32,7 @@ export const defaultFillColor = '#63d99c';
 
 const initialState = {
   tool: 'path',
-  strokeColor: '#0000ff',
+  strokeColor: '#ae00ff',
   drawing: false,
   isDragging: false,
   strokeWidth: 3
