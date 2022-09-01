@@ -271,6 +271,11 @@ button {
   align-items: center;
   display: flex;
   gap: 10px;
+
+  .icon {
+    --icon-size: 14px;
+    color: hsl(0 0% 100% / 50%);
+  }
 }
 
 .attribute-section + .attribute-section {
