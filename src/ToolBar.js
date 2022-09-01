@@ -7,9 +7,11 @@ export default function ToolBar () {
   const { tool, selectTool, drawing, setDrawing, strokeColor, strokeWidth } = useTools();
   const { clearPoints, savePointsVector, clearLastPoint } = useBoard();
 
-  const onToolClick = (e, t) => {
-    clearPoints();
-    selectTool(t === tool ? null : t);
+  const onToolClick = (key) => {
+    return _ => {
+      clearPoints();
+      selectTool(key);
+    };
   };
 
   const onDoneClick = async (e) => {
@@ -25,7 +27,7 @@ export default function ToolBar () {
       <div className="toolbar-main">
         {tools.map((t) => (
           <button
-            onClick={(e) => onToolClick(e, t.key)}
+            onClick={onToolClick(t.key)}
             key={t.key}
             className={`button light ${t.key === tool ? 'selected' : ''}`}
           >
