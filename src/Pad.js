@@ -113,6 +113,7 @@ export default function Pad () {
   };
 
   const onPadPointerUp = async (e) => {
+    if (document.activeElement.tagName === 'INPUT') return;
     if (tool === 'select') {
       if (isResizing) {
         completeResize();
