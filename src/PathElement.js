@@ -21,6 +21,7 @@ export default function PathElement (props) {
           strokeWidth={renderedStrokeWidth + 6}
           d={`M${pointsString}`}
           vectorEffect="non-scaling-stroke"
+          pointerEvents="stroke"
         />
       )}
       <path
@@ -30,6 +31,7 @@ export default function PathElement (props) {
         stroke={renderedStrokeColor}
         strokeWidth={renderedStrokeWidth}
         strokeOpacity={props.strokeOpacity || 1}
+        strokeLinecap={props.strokeLinecap || 'square'}
         d={`M${pointsString}`}
         vectorEffect="non-scaling-stroke"
       />
@@ -42,6 +44,7 @@ PathElement.propTypes = {
   strokeColor: PropTypes.string,
   strokeWidth: PropTypes.number,
   strokeOpacity: PropTypes.number,
+  strokeLinecap: PropTypes.any,
   vectorId: PropTypes.number,
   id: PropTypes.string,
 };

@@ -21,6 +21,7 @@ export default function RectangleElement (props) {
           width={width}
           height={height}
           strokeWidth={renderedStrokeWidth + 6}
+          rx={props.cornerRadius || 0}
           vectorEffect="non-scaling-stroke"
         />
       )}
@@ -36,6 +37,7 @@ export default function RectangleElement (props) {
         strokeOpacity={props.strokeOpacity || 1}
         fill={renderedFillColor}
         fillOpacity={props.fillOpacity || 0.5}
+        rx={props.cornerRadius || 0}
         vectorEffect="non-scaling-stroke"
       />
     </g>
@@ -51,4 +53,5 @@ RectangleElement.propTypes = {
   vectorId: PropTypes.number,
   id: PropTypes.string,
   box: PropTypes.object,
+  cornerRadius: PropTypes.number,
 };

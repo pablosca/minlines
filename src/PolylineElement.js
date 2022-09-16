@@ -3,7 +3,7 @@ import useTools from './ToolsContext';
 import PropTypes from 'prop-types';
 
 export default function PolylineElement (props) {
-  const { points, strokeColor, drawing, strokeWidth, id, vectorId, strokeOpacity } = props;
+  const { points, strokeColor, drawing, strokeWidth, id, vectorId, strokeOpacity, strokeLinecap } = props;
   const { tool } = useTools();
   const pointsString = points.map((p) => `${p.x},${p.y}`).join(' ');
   const { selectedVectors, isSelectingArea } = useSelection();
@@ -26,6 +26,7 @@ export default function PolylineElement (props) {
           strokeWidth={strokeWidth + 6}
           points={`${pointsString}`}
           vectorEffect="non-scaling-stroke"
+          pointerEvents="stroke"
         />
       )}
       <polyline
@@ -35,6 +36,7 @@ export default function PolylineElement (props) {
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         strokeOpacity={strokeOpacity || 1}
+        strokeLinecap={strokeLinecap || 1}
         points={`${pointsString}`}
         vectorEffect="non-scaling-stroke"
       />
@@ -50,4 +52,5 @@ PolylineElement.propTypes = {
   id: PropTypes.string,
   vectorId: PropTypes.any, // TODO: change this to number (right now, it's undefined when created)
   strokeOpacity: PropTypes.number,
+  strokeLinecap: PropTypes.any,
 };

@@ -13,7 +13,7 @@ import useSelection from './SelectionContext';
 export default function Pad () {
   const artboard = useRef();
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, strokeColor, strokeWidth, zoom, setZoom } = useTools();
+  const { tool, drawing, setDrawing, strokeColor, strokeWidth, selectTool zoom, setZoom } = useTools();
   const {
     points,
     vectors,
@@ -29,7 +29,8 @@ export default function Pad () {
     addShape,
     updateShape,
     saveShape,
-    withGrid
+    withGrid,
+    lastCreatedVectorId,
   } = useBoard();
   const {
     selectionBox,
@@ -112,6 +113,7 @@ export default function Pad () {
   };
 
   const onPadPointerUp = async (e) => {
+    if (document.activeElement.tagName === 'INPUT') return;
     if (tool === 'select') {
       if (isResizing) {
         completeResize();
@@ -183,6 +185,7 @@ export default function Pad () {
     (e) => {
       if (![8, 46].includes(e.keyCode)) return;
       if (tool !== 'select' && !selectedVectors.length) return;
+      if (e.target.tagName === 'INPUT') return;
 
       removeVector(selectedVectors);
       deselect();
@@ -218,6 +221,12 @@ export default function Pad () {
       deselect();
     }
   }, [tool]);
+
+  useEffect(() => {
+    if (!lastCreatedVectorId) return;
+    selectTool('select');
+    select({ newSelectedId: lastCreatedVectorId });
+  }, [lastCreatedVectorId]);
 
   const hasTempPath = points.length && pressed && tool === 'path';
   const hasTempLine = points.length && drawing && tool === 'polyline';
