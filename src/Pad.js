@@ -13,7 +13,7 @@ import useSelection from './SelectionContext';
 export default function Pad () {
   const artboard = useRef();
   const [pressed, setPressed] = useState(false);
-  const { tool, drawing, setDrawing, strokeColor, strokeWidth, selectTool zoom, setZoom } = useTools();
+  const { tool, drawing, setDrawing, strokeColor, strokeWidth, selectTool, zoom, setZoom } = useTools();
   const {
     points,
     vectors,
